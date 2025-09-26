@@ -176,6 +176,228 @@ app.post('/login', async (req, res) => {
   }
 });
 
+// Rota para buscar perfil do usuário
+app.get('/perfil/:cpf', async (req, res) => {
+  try {
+    const { cpf } = req.params;
+
+    if (!cpf) {
+      return res.status(400).json({ 
+        error: 'CPF é obrigatório' 
+      });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { cpf },
+      select: {
+        id: true,
+        nome: true,
+        cpf: true,
+        createdAt: true,
+        curso: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({ 
+        error: 'Usuário não encontrado' 
+      });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    res.status(500).json({ 
+      error: 'Erro ao buscar perfil do usuário'
+    });
+  }
+});
+
+// Rotas de Conversas (estilo WhatsApp)
+
+// Buscar todas as conversas do usuário
+app.get('/conversas/:userId', async (req, res) => {
+  try {
+    const userId = parseInt(req.params.userId);
+
+    const conversas = await prisma.conversa.findMany({
+      where: {
+        OR: [
+          { usuario1Id: userId },
+          { usuario2Id: userId }
+        ]
+      },
+      include: {
+        usuario1: {
+          select: { id: true, nome: true }
+        },
+        usuario2: {
+          select: { id: true, nome: true }
+        },
+        mensagens: {
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          include: {
+            remetente: {
+              select: { id: true, nome: true }
+            }
+          }
+        },
+        _count: {
+          select: {
+            mensagens: {
+              where: {
+                lida: false,
+                remetenteId: { not: userId }
+              }
+            }
+          }
+        }
+      },
+      orderBy: { updatedAt: 'desc' }
+    });
+
+    res.json(conversas);
+  } catch (error) {
+    console.error('Error fetching conversations:', error);
+    res.status(500).json({ error: 'Failed to fetch conversations' });
+  }
+});
+
+// Buscar mensagens de uma conversa específica
+app.get('/conversa/:conversaId/mensagens', async (req, res) => {
+  try {
+    const conversaId = parseInt(req.params.conversaId);
+
+    const mensagens = await prisma.mensagem.findMany({
+      where: { conversaId },
+      include: {
+        remetente: {
+          select: { id: true, nome: true }
+        }
+      },
+      orderBy: { createdAt: 'asc' }
+    });
+
+    res.json(mensagens);
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    res.status(500).json({ error: 'Failed to fetch messages' });
+  }
+});
+
+// Criar ou buscar conversa entre dois usuários
+app.post('/conversa', async (req, res) => {
+  try {
+    const { usuario1Id, usuario2Id } = req.body;
+
+    if (!usuario1Id || !usuario2Id) {
+      return res.status(400).json({ error: 'IDs dos usuários são obrigatórios' });
+    }
+
+    // Garantir ordem consistente dos IDs
+    const menorId = Math.min(usuario1Id, usuario2Id);
+    const maiorId = Math.max(usuario1Id, usuario2Id);
+
+    let conversa = await prisma.conversa.findUnique({
+      where: {
+        usuario1Id_usuario2Id: {
+          usuario1Id: menorId,
+          usuario2Id: maiorId
+        }
+      },
+      include: {
+        usuario1: { select: { id: true, nome: true } },
+        usuario2: { select: { id: true, nome: true } }
+      }
+    });
+
+    if (!conversa) {
+      conversa = await prisma.conversa.create({
+        data: {
+          usuario1Id: menorId,
+          usuario2Id: maiorId
+        },
+        include: {
+          usuario1: { select: { id: true, nome: true } },
+          usuario2: { select: { id: true, nome: true } }
+        }
+      });
+    }
+
+    res.json(conversa);
+  } catch (error) {
+    console.error('Error creating/finding conversation:', error);
+    res.status(500).json({ error: 'Failed to create/find conversation' });
+  }
+});
+
+// Enviar mensagem
+app.post('/mensagem', async (req, res) => {
+  try {
+    const { conteudo, remetenteId, conversaId } = req.body;
+
+    if (!conteudo || !remetenteId || !conversaId) {
+      return res.status(400).json({ error: 'Conteúdo, remetenteId e conversaId são obrigatórios' });
+    }
+
+    const novaMensagem = await prisma.mensagem.create({
+      data: {
+        conteudo,
+        remetenteId: parseInt(remetenteId),
+        conversaId: parseInt(conversaId)
+      },
+      include: {
+        remetente: {
+          select: { id: true, nome: true }
+        }
+      }
+    });
+
+    // Atualizar timestamp da conversa
+    await prisma.conversa.update({
+      where: { id: parseInt(conversaId) },
+      data: { updatedAt: new Date() }
+    });
+
+    // Emitir mensagem via Socket.IO
+    io.emit(`conversa-${conversaId}`, novaMensagem);
+
+    res.status(201).json(novaMensagem);
+  } catch (error) {
+    console.error('Error creating message:', error);
+    res.status(500).json({ error: 'Failed to create message' });
+  }
+});
+
+// Listar todos os usuários (para iniciar conversas)
+app.get('/usuarios', async (req, res) => {
+  try {
+    const usuarios = await prisma.user.findMany({
+      select: {
+        id: true,
+        nome: true,
+        curso: {
+          select: {
+            nome: true
+          }
+        }
+      },
+      orderBy: { nome: 'asc' }
+    });
+
+    res.json(usuarios);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
 // Rotas do Mural
 app.get('/mural', async (req, res) => {
   try {

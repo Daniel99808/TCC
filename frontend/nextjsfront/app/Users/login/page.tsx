@@ -43,6 +43,9 @@ export default function AuthForm() {
       if (response.ok) {
         setMessage('Login realizado com sucesso!');
         
+        // Salvar dados do usuário no localStorage
+        localStorage.setItem('usuarioLogado', JSON.stringify(data.user));
+        
         // ✅ Redireciona após 1 segundo (ou direto, se preferir)
         setTimeout(() => {
           router.push('/Users/mural'); // Redireciona para o mural na nova estrutura

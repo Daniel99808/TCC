@@ -11,13 +11,16 @@ datasource db {
 
 
 model User {
-  id        Int       @id @default(autoincrement())
-  nome      String    @unique
-  cpf       String    @unique
-  password  String
-  createdAt DateTime  @default(now())
-  cursoId   Int?
-  curso     Curso?    @relation(fields: [cursoId], references: [id])
+  id                Int       @id @default(autoincrement())
+  nome              String    @unique
+  cpf               String    @unique
+  password          String
+  createdAt         DateTime  @default(now())
+  cursoId           Int?
+  curso             Curso?    @relation(fields: [cursoId], references: [id])
+  mensagensEnviadas Mensagem[]
+  conversasUsuario1 Conversa[] @relation("ConversasUsuario1")
+  conversasUsuario2 Conversa[] @relation("ConversasUsuario2")
 }
 
 model Curso {
@@ -39,4 +42,28 @@ model Calendario {
   titulo    String  
   descricao String
   data    DateTime
+}
+
+model Conversa {
+  id          Int      @id @default(autoincrement())
+  usuario1Id  Int
+  usuario2Id  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  usuario1    User     @relation("ConversasUsuario1", fields: [usuario1Id], references: [id])
+  usuario2    User     @relation("ConversasUsuario2", fields: [usuario2Id], references: [id])
+  mensagens   Mensagem[]
+  
+  @@unique([usuario1Id, usuario2Id])
+}
+
+model Mensagem {
+  id          Int      @id @default(autoincrement())
+  conteudo    String
+  createdAt   DateTime @default(now())
+  lida        Boolean  @default(false)
+  remetenteId Int
+  conversaId  Int
+  remetente   User     @relation(fields: [remetenteId], references: [id])
+  conversa    Conversa @relation(fields: [conversaId], references: [id])
 }
