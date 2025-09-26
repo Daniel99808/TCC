@@ -9,8 +9,7 @@ interface Evento {
   id: number;
   titulo: string;
   descricao: string;
-  inicio: string;
-  fim: string;
+  data: string;
 }
 
 const CalendarioPage = () => {
@@ -56,8 +55,8 @@ const CalendarioPage = () => {
 
   const eventosDoDia = eventosDoMes.filter(evento => {
     if (diaSelecionado === null) return false;
-    const diaEvento = new Date(evento.inicio).getDate();
-    const mesEvento = new Date(evento.inicio).getMonth();
+    const diaEvento = new Date(evento.data).getDate();
+    const mesEvento = new Date(evento.data).getMonth();
     return diaEvento === diaSelecionado && mesEvento === dataAtual.getMonth();
   });
 
@@ -82,7 +81,7 @@ const CalendarioPage = () => {
     for (let i = 1; i <= ultimoDiaMes; i++) {
       const isHoje = new Date().toDateString() === new Date(ano, mes, i).toDateString();
       const temEvento = eventosDoMes.some(evento => {
-        const dataEvento = new Date(evento.inicio);
+        const dataEvento = new Date(evento.data);
         return dataEvento.getDate() === i && dataEvento.getMonth() === mes;
       });
       const isSelecionado = diaSelecionado === i;

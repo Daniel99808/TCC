@@ -8,8 +8,7 @@ interface CalendarioEvento {
   id: number;
   titulo: string;
   descricao: string;
-  inicio: string;
-  fim?: string;
+  data: string;
 }
 
 export default function CalendarioAdm() {
@@ -67,8 +66,7 @@ export default function CalendarioAdm() {
         body: JSON.stringify({
           titulo,
           descricao,
-          inicio: dataEvento.toISOString(),
-          fim: dataFim.toISOString(),
+          data: dataEvento.toISOString(),
         }),
       });
 
@@ -252,7 +250,7 @@ export default function CalendarioAdm() {
                           {evento.titulo}
                         </h3>
                         <span className="text-xs text-gray-500 bg-white px-2 py-1 rounded">
-                          {formatarData(evento.inicio)}
+                          {formatarData(evento.data)}
                         </span>
                       </div>
                       <p className="text-xs text-gray-600 whitespace-pre-wrap">

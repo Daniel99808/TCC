@@ -238,36 +238,19 @@ app.get('/calendario', async (req, res) => {
 
     const eventos = await prisma.calendario.findMany({
       where: {
-        OR: [
-          {
-            AND: [
-              { inicio: { gte: dataInicio } },
-              { inicio: { lte: dataFim } },
-            ],
-          },
-          {
-            AND: [
-              { fim: { gte: dataInicio } },
-              { fim: { lte: dataFim } },
-            ],
-          },
-          {
-            AND: [
-              { inicio: { lte: dataInicio } },
-              { fim: { gte: dataFim } },
-            ],
-          },
-        ],
+        data: {
+          gte: dataInicio,
+          lte: dataFim,
+        },
       },
       select: {
         id: true,
         titulo: true,
         descricao: true,
-        inicio: true,
-        fim: true,
+        data: true,
       },
       orderBy: {
-        inicio: 'asc',
+        data: 'asc',
       },
     });
 
@@ -280,18 +263,17 @@ app.get('/calendario', async (req, res) => {
 
 app.post('/calendario', async (req, res) => {
   try {
-    const { titulo, descricao, inicio, fim } = req.body;
+    const { titulo, descricao, data } = req.body;
 
-    if (!titulo || !inicio || !fim) {
-      return res.status(400).json({ error: 'Os campos "titulo", "inicio" e "fim" são obrigatórios.' });
+    if (!titulo || !data) {
+      return res.status(400).json({ error: 'Os campos "titulo" e "data" são obrigatórios.' });
     }
 
     const novoEvento = await prisma.calendario.create({
       data: {
         titulo,
         descricao,
-        inicio: new Date(inicio),
-        fim: new Date(fim),
+        data: new Date(data),
       },
     });
 

@@ -38,5 +38,5 @@ model Calendario {
   id        Int      @id @default(autoincrement())
   titulo    String  
   descricao String
-  inicio    DateTime
+  data    DateTime
 }
