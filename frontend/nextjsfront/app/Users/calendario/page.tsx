@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import Header from '../../components/header';
+import { useDarkMode } from '../../contexts/DarkModeContext';
 
 // Tipagem para os eventos, para garantir que os dados da API estejam corretos
 interface Evento {
@@ -18,6 +19,7 @@ const CalendarioPage = () => {
   const [diaSelecionado, setDiaSelecionado] = useState<number | null>(null);
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+  const { isDarkMode } = useDarkMode();
 
   const meses = [
     'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
@@ -71,7 +73,7 @@ const CalendarioPage = () => {
     // Dias do mês anterior
     for (let i = primeiroDiaSemana - 1; i >= 0; i--) {
         dias.push(
-            <div key={`vazio-${i}`} className="p-2 text-center text-gray-200">
+            <div key={`vazio-${i}`} className={`p-2 text-center transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-gray-200'}`}>
                 {ultimoDiaMesAnterior - i}
             </div>
         );
@@ -85,11 +87,12 @@ const CalendarioPage = () => {
         return dataEvento.getDate() === i && dataEvento.getMonth() === mes;
       });
       const isSelecionado = diaSelecionado === i;
-      const classes = `p-2 rounded-lg text-center cursor-pointer transition-colors duration-200 relative text-gray-800
-        ${isSelecionado ? 'bg-red-200 border-2 border-red-500 font-bold' : ''}
+      const classes = `p-2 rounded-lg text-center cursor-pointer transition-colors duration-200 relative
+        ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}
+        ${isSelecionado ? (isDarkMode ? 'bg-red-700 border-2 border-red-400 font-bold' : 'bg-red-200 border-2 border-red-500 font-bold') : ''}
         ${isHoje ? 'border-2 border-blue-500' : ''}
         ${temEvento ? 'text-red-600' : ''}
-        ${!isSelecionado && !isHoje ? 'hover:bg-gray-100' : ''}
+        ${!isSelecionado && !isHoje ? (isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100') : ''}
       `;
 
       dias.push(
@@ -110,7 +113,7 @@ const CalendarioPage = () => {
     const diasRestantes = 42 - dias.length; // 6 semanas * 7 dias
     for (let i = 1; i <= diasRestantes; i++) {
       dias.push(
-          <div key={`proximo-${i}`} className="p-2 text-center text-gray-400 cursor-pointer">
+          <div key={`proximo-${i}`} className={`p-2 text-center cursor-pointer transition-colors duration-300 ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>
               {i}
           </div>
       );
@@ -120,7 +123,7 @@ const CalendarioPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100 font-sans">
+    <div className={`flex flex-col h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
       <Header />
       <main className="flex-1 p-8 overflow-auto">
         {erro && (
@@ -129,11 +132,15 @@ const CalendarioPage = () => {
           </div>
         )}
         
-        <div className="max-w-4xl mx-auto p-4 bg-white rounded-xl shadow-2xl">
+        <div className={`max-w-4xl mx-auto p-4 rounded-xl shadow-2xl transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
           <div className="flex justify-between items-center mb-6">
             <button 
               onClick={() => setDataAtual(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
-              className="p-2 text-xl font-bold text-gray-600 hover:bg-gray-200 rounded-full transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className={`p-2 text-xl font-bold rounded-full transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+                isDarkMode 
+                  ? 'text-gray-300 hover:bg-gray-700' 
+                  : 'text-gray-600 hover:bg-gray-200'
+              }`}
               disabled={carregando || (
                 dataAtual.getFullYear() === new Date().getFullYear() && dataAtual.getMonth() === 0
               )}
@@ -147,7 +154,11 @@ const CalendarioPage = () => {
 
             <button 
               onClick={() => setDataAtual(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))}
-              className="p-2 text-xl font-bold text-gray-600 hover:bg-gray-200 rounded-full transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className={`p-2 text-xl font-bold rounded-full transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+                isDarkMode 
+                  ? 'text-gray-300 hover:bg-gray-700' 
+                  : 'text-gray-600 hover:bg-gray-200'
+              }`}
               disabled={carregando || (
                 dataAtual.getFullYear() === new Date().getFullYear() && dataAtual.getMonth() === 11
               )}
@@ -159,7 +170,7 @@ const CalendarioPage = () => {
 
           {carregando && (
             <div className="text-center mb-4">
-              <div className="text-gray-500">Carregando eventos...</div>
+              <div className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Carregando eventos...</div>
             </div>
           )}
 
@@ -173,21 +184,21 @@ const CalendarioPage = () => {
 
           {/* Seção de Eventos */}
           <div className="mt-8">
-            <h3 className="text-2xl font-bold text-gray-800 text-center mb-4">
+            <h3 className={`text-2xl font-bold text-center mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
               {diaSelecionado ? `Eventos do dia ${diaSelecionado}` : 'Selecione um dia para ver os eventos'}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {eventosDoDia.length > 0 ? (
                 eventosDoDia.map(evento => (
-                  <div key={evento.id} className="p-4 bg-gray-100 rounded-lg shadow-inner">
+                  <div key={evento.id} className={`p-4 rounded-lg shadow-inner transition-colors duration-300 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
                     <p className="text-2xl font-bold text-red-600">
                       {evento.titulo}
                     </p>
-                    <p className="text-sm text-gray-600 mt-1">{evento.descricao}</p>
+                    <p className={`text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{evento.descricao}</p>
                   </div>
                 ))
               ) : (
-                <p className="col-span-3 text-center text-gray-500">
+                <p className={`col-span-3 text-center transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                   {diaSelecionado ? 'Nenhum evento para este dia.' : 'Clique em um dia para ver os eventos.'}
                 </p>
               )}
