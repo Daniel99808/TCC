@@ -62,13 +62,13 @@ export default function MuralAdm() {
       });
 
       if (response.ok) {
-        const novaMsg = await response.json();
+        await response.json();
         setMessage('Mensagem publicada com sucesso!');
         setNewMessage('');
         setIsModalOpen(false);
         
-        // Atualizar lista de mensagens
-        setMessages(prev => [novaMsg, ...prev]);
+        // Nota: A mensagem será adicionada automaticamente via Socket.IO
+        // Não é necessário atualizar manualmente para evitar duplicação
       } else {
         const errorData = await response.json();
         setMessage(`Erro ao publicar: ${errorData.error}`);

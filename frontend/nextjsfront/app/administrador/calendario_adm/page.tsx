@@ -53,10 +53,10 @@ export default function CalendarioAdm() {
     setMessage('');
 
     try {
-      // Converter a data para ISO string e usar a mesma para início e fim
-      const dataEvento = new Date(data);
-      const dataFim = new Date(data);
-      dataFim.setHours(23, 59, 59); // Fim do dia
+      // Converter a data para o formato correto, mantendo o fuso horário local
+      // O input date retorna YYYY-MM-DD, precisamos criar a data corretamente
+      const [ano, mes, dia] = data.split('-').map(Number);
+      const dataEvento = new Date(ano, mes - 1, dia, 12, 0, 0); // Meio-dia para evitar problemas de fuso horário
 
       const response = await fetch('http://localhost:3000/calendario', {
         method: 'POST',
