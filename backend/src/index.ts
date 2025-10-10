@@ -515,6 +515,17 @@ io.on('connection', (socket) => {
     console.log('User disconnected');
   });
 
+  // Typing indicator events
+  socket.on('typing-start', (data) => {
+    const { conversaId, userId } = data;
+    socket.broadcast.emit(`typing-${conversaId}`, { userId, isTyping: true });
+  });
+
+  socket.on('typing-stop', (data) => {
+    const { conversaId, userId } = data;
+    socket.broadcast.emit(`typing-${conversaId}`, { userId, isTyping: false });
+  });
+
   socket.on('novaMensagem', async (data) => {
     try {
       const newMessage = await prisma.mural.create({

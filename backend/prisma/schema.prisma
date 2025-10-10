@@ -1,34 +1,31 @@
 generator client {
   provider = "prisma-client-js"
-  // Adicione a linha abaixo para forçar o output para o local padrão
   output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id                Int       @id @default(autoincrement())
-  nome              String    @unique
-  cpf               String    @unique
+  id                Int        @id @default(autoincrement())
+  nome              String     @unique
+  cpf               String     @unique
   password          String
-  createdAt         DateTime  @default(now())
+  createdAt         DateTime   @default(now())
   cursoId           Int?
-  curso             Curso?    @relation(fields: [cursoId], references: [id])
-  mensagensEnviadas Mensagem[]
   conversasUsuario1 Conversa[] @relation("ConversasUsuario1")
   conversasUsuario2 Conversa[] @relation("ConversasUsuario2")
+  mensagensEnviadas Mensagem[]
+  curso             Curso?     @relation(fields: [cursoId], references: [id])
 }
 
 model Curso {
-  id    Int    @id @default(autoincrement())
-  nome  String @unique
-  alunos  User[]
+  id     Int    @id @default(autoincrement())
+  nome   String @unique
+  alunos User[]
 }
-
 
 model Mural {
   id        Int      @id @default(autoincrement())
@@ -36,24 +33,23 @@ model Mural {
   createdAt DateTime @default(now())
 }
 
-
 model Calendario {
   id        Int      @id @default(autoincrement())
-  titulo    String  
+  titulo    String
   descricao String
-  data    DateTime
+  data      DateTime
 }
 
 model Conversa {
-  id          Int      @id @default(autoincrement())
-  usuario1Id  Int
-  usuario2Id  Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  usuario1    User     @relation("ConversasUsuario1", fields: [usuario1Id], references: [id])
-  usuario2    User     @relation("ConversasUsuario2", fields: [usuario2Id], references: [id])
-  mensagens   Mensagem[]
-  
+  id         Int        @id @default(autoincrement())
+  usuario1Id Int
+  usuario2Id Int
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  usuario1   User       @relation("ConversasUsuario1", fields: [usuario1Id], references: [id])
+  usuario2   User       @relation("ConversasUsuario2", fields: [usuario2Id], references: [id])
+  mensagens  Mensagem[]
+
   @@unique([usuario1Id, usuario2Id])
 }
 
@@ -64,6 +60,6 @@ model Mensagem {
   lida        Boolean  @default(false)
   remetenteId Int
   conversaId  Int
-  remetente   User     @relation(fields: [remetenteId], references: [id])
   conversa    Conversa @relation(fields: [conversaId], references: [id])
+  remetente   User     @relation(fields: [remetenteId], references: [id])
 }

@@ -1,10 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
+import { supabase } from '../../../lib/supabase';
 import Header from '../../components/header_adm';
 import Footer from '../../components/footer';
-
-const socket = io('http://localhost:3000');
 
 interface Message {
   id: number;
@@ -22,12 +20,20 @@ export default function MuralAdm() {
   useEffect(() => {
     fetchMessages();
 
-    socket.on('novaMensagem', (message: Message) => {
-      setMessages(prev => [...prev, message]);
-    });
+    // Configurar real-time subscription do Supabase
+    const subscription = supabase
+      .channel('mural-realtime')
+      .on('postgres_changes', 
+        { event: 'INSERT', schema: 'public', table: 'Mural' },
+        (payload) => {
+          const newMsg = payload.new as Message;
+          setMessages(prev => [newMsg, ...prev]);
+        }
+      )
+      .subscribe();
 
     return () => {
-      socket.off('novaMensagem');
+      subscription.unsubscribe();
     };
   }, []);
 
@@ -164,7 +170,7 @@ export default function MuralAdm() {
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-vertical"
+                  className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-vertical"
                   placeholder="Digite a mensagem para o mural..."
                   maxLength={500}
                 />
