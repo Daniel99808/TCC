@@ -101,8 +101,8 @@ export default function PerfilPage() {
     <div className={`flex flex-col h-full transition-colors duration-300 ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-100'}`}>
       <Header />
       
-      <main className="flex-1 p-8">
-        <div className="max-w-4xl mx-auto">
+      <main className="flex-1 p-21.5">
+        <div className="max-w-6xl mx-auto">
           {/* Título */}
           <h1 className={`text-3xl font-bold text-center mb-8 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Perfil</h1>
           
@@ -137,7 +137,7 @@ export default function PerfilPage() {
                   {/* Botões Laterais */}
                   <div className="space-y-4">
                     <button 
-                      onClick={() => alert('Funcionalidade de frequência em breve!')}
+                      onClick={() => window.open('https://docs.google.com/spreadsheets/d/1w-pSrGjvFTxZJDJDvYruBM1dTcorfh6zw1Bl2VdNX74/edit', '_blank')}
                       className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors font-semibold shadow-md"
                     >
                       Frequência

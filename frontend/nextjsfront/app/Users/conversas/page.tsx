@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Header from '../../components/header';
 import { io } from 'socket.io-client';
 import { useDarkMode } from '../../contexts/DarkModeContext';
+import Image from 'next/image';
 
 const socket = io('http://localhost:3000');
 
@@ -46,6 +47,9 @@ export default function ConversasPage() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [mostrarUsuarios, setMostrarUsuarios] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isNexusChat, setIsNexusChat] = useState(false);
+  const [nexusMensagens, setNexusMensagens] = useState<any[]>([]);
+  const [nexusTyping, setNexusTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { isDarkMode } = useDarkMode();
 
@@ -133,6 +137,7 @@ export default function ConversasPage() {
   };
 
   const selecionarConversa = (conversa: Conversa) => {
+    setIsNexusChat(false); // Desmarcar chat da NEXUS IA
     setConversaSelecionada(conversa);
     buscarMensagensConversa(conversa.id);
     
@@ -178,6 +183,88 @@ export default function ConversasPage() {
 
   const getOutroUsuario = (conversa: Conversa) => {
     return conversa.usuario1.id === usuarioLogado?.id ? conversa.usuario2 : conversa.usuario1;
+  };
+
+  // Função para iniciar chat com NEXUS IA
+  const iniciarChatNexus = () => {
+    setIsNexusChat(true);
+    setConversaSelecionada(null);
+    setMostrarUsuarios(false);
+    // Mensagem de boas-vindas
+    if (nexusMensagens.length === 0) {
+      setNexusMensagens([{
+        id: 1,
+        conteudo: `Olá ${usuarioLogado?.nome}! 👋 Eu sou a NEXUS IA, sua assistente virtual. Estou aqui para te ajudar com dúvidas sobre seus estudos, tirar questões sobre as matérias e muito mais! 
+
+Como posso te ajudar hoje? 🤖`,
+        createdAt: new Date().toISOString(),
+        isNexus: true
+      }]);
+    }
+  };
+
+  // Função para enviar mensagem para NEXUS IA
+  const enviarMensagemNexus = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!novaMensagem.trim() || !usuarioLogado) return;
+
+    const mensagemUsuario = {
+      id: Date.now(),
+      conteudo: novaMensagem,
+      createdAt: new Date().toISOString(),
+      isNexus: false,
+      remetente: usuarioLogado
+    };
+
+    const mensagemTexto = novaMensagem; // Salvar antes de limpar
+    setNexusMensagens(prev => [...prev, mensagemUsuario]);
+    setNovaMensagem('');
+    setNexusTyping(true);
+
+    try {
+      const response = await fetch('/api/nexus', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: mensagemTexto
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        const respostaNexus = {
+          id: Date.now() + 1,
+          conteudo: data.resposta,
+          createdAt: new Date().toISOString(),
+          isNexus: true
+        };
+
+        setNexusMensagens(prev => [...prev, respostaNexus]);
+      } else {
+        const erroMensagem = {
+          id: Date.now() + 1,
+          conteudo: data.error || "Ops! Parece que estou com alguns problemas técnicos. Tente novamente em alguns instantes! 🔧",
+          createdAt: new Date().toISOString(),
+          isNexus: true
+        };
+        setNexusMensagens(prev => [...prev, erroMensagem]);
+      }
+    } catch (error) {
+      console.error('Erro ao comunicar com NEXUS IA:', error);
+      const erroMensagem = {
+        id: Date.now() + 1,
+        conteudo: "Ops! Parece que estou com alguns problemas técnicos. Tente novamente em alguns instantes! 🔧",
+        createdAt: new Date().toISOString(),
+        isNexus: true
+      };
+      setNexusMensagens(prev => [...prev, erroMensagem]);
+    } finally {
+      setNexusTyping(false);
+    }
   };
 
   if (loading) {
@@ -267,15 +354,48 @@ export default function ConversasPage() {
 
               {/* Lista de conversas existentes */}
               <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                {conversas.length === 0 ? (
-                  <div className={`text-center p-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                    <div className="text-4xl mb-2">💬</div>
-                    <p className="text-sm">Nenhuma conversa ainda</p>
-                    <p className="text-xs">Clique em ➕ para começar</p>
+                <div className={`divide-y transition-colors duration-300 ${isDarkMode ? 'divide-gray-600' : 'divide-gray-100'}`}>
+                  {/* NEXUS IA - sempre aparece no topo */}
+                  <div 
+                    onClick={iniciarChatNexus}
+                    className={`p-4 cursor-pointer border-b transition-colors duration-300 ${
+                      isNexusChat 
+                        ? (isDarkMode ? 'bg-gray-700' : 'bg-red-50')
+                        : (isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50')
+                    } ${isDarkMode ? 'border-gray-600' : 'border-gray-100'}`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center flex-shrink-0 relative border-2 border-red-500 shadow-lg">
+                        <Image 
+                          src="/maca.png" 
+                          alt="NEXUS IA" 
+                          width={36} 
+                          height={36}
+                          className="w-12 h-12"
+                        />
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-semibold text-red-600 truncate">NEXUS IA</h3>
+                          <div className="w-2 h-2 bg-red-600 rounded-full flex-shrink-0 animate-pulse"></div>
+                        </div>
+                        <p className={`text-sm truncate transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                          🤖 Sua assistente virtual - Tire suas dúvidas aqui!
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                ) : (
-                  <div className={`divide-y transition-colors duration-300 ${isDarkMode ? 'divide-gray-600' : 'divide-gray-100'}`}>
-                    {conversas.map((conversa) => {
+
+                  {/* Conversas normais */}
+                  {conversas.length === 0 ? (
+                    <div className={`text-center p-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                      <div className="text-4xl mb-2">💬</div>
+                      <p className="text-sm">Nenhuma conversa ainda</p>
+                      <p className="text-xs">Clique em ➕ para começar ou converse com a NEXUS IA!</p>
+                    </div>
+                  ) : (
+                    conversas.map((conversa) => {
                     const outroUsuario = getOutroUsuario(conversa);
                     const ultimaMensagem = conversa.mensagens[0];
                     
@@ -311,15 +431,112 @@ export default function ConversasPage() {
                         </div>
                       </div>
                     );
-                  })}
-                  </div>
-                )}
+                  })
+                  )}
+                </div>
               </div>
             </div>
             
             {/* Área de Chat (lado direito) */}
             <div className="flex-1 flex flex-col">
-              {conversaSelecionada ? (
+              {isNexusChat ? (
+                <>
+                  {/* Header do chat NEXUS IA */}
+                  <div className={`p-4 border-b transition-colors duration-300 ${
+                    isDarkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-gradient-to-r from-red-50 to-red-100'
+                  }`}>
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0 relative border-2 border-red-500 shadow-lg">
+                        <Image 
+                          src="/maca.png" 
+                          alt="NEXUS IA" 
+                          width={32} 
+                          height={32}
+                          className="w-14 h-12"
+                        />
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-red-600">NEXUS IA</h3>
+                        <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          🤖 Assistente Virtual Online
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Mensagens NEXUS IA */}
+                  <div className="flex-1 overflow-hidden flex flex-col">
+                    <div className="flex-1 overflow-y-auto p-4 scroll-smooth">
+                      <div className="space-y-4 min-h-full flex flex-col justify-end">
+                        {nexusMensagens.map((mensagem) => (
+                          <div 
+                            key={mensagem.id} 
+                            className={`flex ${mensagem.isNexus ? 'justify-start' : 'justify-end'}`}
+                          >
+                            <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                              mensagem.isNexus 
+                                ? (isDarkMode ? 'bg-gradient-to-r from-red-600 to-red-700 text-white' : 'bg-gradient-to-r from-red-500 to-red-600 text-white')
+                                : 'bg-gray-600 text-white'
+                            }`}>
+                              <p className="text-sm break-words whitespace-pre-wrap">{mensagem.conteudo}</p>
+                              <p className={`text-xs mt-1 ${
+                                mensagem.isNexus ? 'text-red-200' : 'text-gray-200'
+                              }`}>
+                                {formatarHora(mensagem.createdAt)}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                        
+                        {/* Indicador de digitação */}
+                        {nexusTyping && (
+                          <div className="flex justify-start">
+                            <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                              isDarkMode ? 'bg-gradient-to-r from-red-600 to-red-700 text-white' : 'bg-gradient-to-r from-red-500 to-red-600 text-white'
+                            }`}>
+                              <div className="flex items-center space-x-2">
+                                <div className="flex space-x-1">
+                                  <div className="w-2 h-2 bg-red-200 rounded-full animate-bounce"></div>
+                                  <div className="w-2 h-2 bg-red-200 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                                  <div className="w-2 h-2 bg-red-200 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                                </div>
+                                <span className="text-xs text-red-200">NEXUS IA está digitando...</span>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <div ref={messagesEndRef} />
+                    </div>
+                  </div>
+                  
+                  {/* Input para NEXUS IA */}
+                  <div className={`p-4 border-t transition-colors duration-300 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
+                    <form onSubmit={enviarMensagemNexus} className="flex gap-2">
+                      <input
+                        type="text"
+                        value={novaMensagem}
+                        onChange={(e) => setNovaMensagem(e.target.value)}
+                        placeholder="Faça uma pergunta para a NEXUS IA..."
+                        className={`flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                          isDarkMode 
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
+                        disabled={nexusTyping}
+                      />
+                      <button
+                        type="submit"
+                        disabled={!novaMensagem.trim() || nexusTyping}
+                        className="bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-2 rounded-lg hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                      >
+                        {nexusTyping ? '⏳' : '🚀'}
+                      </button>
+                    </form>
+                  </div>
+                </>
+              ) : conversaSelecionada ? (
                 <>
                   {/* Header do chat */}
                   <div className={`p-4 border-b transition-colors duration-300 ${

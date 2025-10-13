@@ -19,6 +19,7 @@ model User {
   conversasUsuario2 Conversa[] @relation("ConversasUsuario2")
   mensagensEnviadas Mensagem[]
   curso             Curso?     @relation(fields: [cursoId], references: [id])
+  
 }
 
 model Curso {

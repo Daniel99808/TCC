@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/header_adm';
 import Footer from '../../components/footer';
-import Image from 'next/image';
 
 interface CalendarioEvento {
   id: number;
@@ -19,7 +18,6 @@ export default function CalendarioAdm() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [eventos, setEventos] = useState<CalendarioEvento[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Carregar eventos existentes
   useEffect(() => {
@@ -78,21 +76,16 @@ export default function CalendarioAdm() {
         setTitulo('');
         setDescricao('');
         setData('');
-        // Fechar modal após 1 segundo
-        setTimeout(() => {
-          setIsModalOpen(false);
-          setMessage('');
-        }, 1000);
         
-        // Recarregar eventos
-        fetchEventos();
+        // Atualizar lista de eventos
+        setEventos(prevEventos => [novoEvento, ...prevEventos]);
       } else {
         const errorData = await response.json();
-        setMessage(`Erro ao criar evento: ${errorData.message || 'Erro desconhecido'}`);
+        setMessage(`Erro ao criar evento: ${errorData.error}`);
       }
     } catch (error) {
-      console.error('Erro na requisição:', error);
-      setMessage('Erro ao conectar com o servidor. Tente novamente.');
+      console.error('Erro ao criar evento:', error);
+      setMessage('Erro de conexão com o servidor.');
     } finally {
       setLoading(false);
     }
@@ -103,16 +96,6 @@ export default function CalendarioAdm() {
     setDescricao('');
     setData('');
     setMessage('');
-  };
-
-  const openModal = () => {
-    setIsModalOpen(true);
-    setMessage('');
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    handleClear();
   };
 
   const formatarData = (dataString: string) => {
@@ -127,108 +110,24 @@ export default function CalendarioAdm() {
       <Header />
       
       <main className="flex-1 container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           {/* Cabeçalho da página */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <h1 className="text-3xl font-bold text-gray-800 mb-2">
               📅 Painel Administrativo - Calendário
             </h1>
             <p className="text-gray-600">
-              Gerencie eventos do calendário da comunidade
+              Crie e gerencie eventos do calendário da comunidade
             </p>
           </div>
 
-          {/* Lista de eventos */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              📋 Próximos Eventos
-            </h2>
-            
-            <div className="space-y-3">
-              {eventos.length === 0 ? (
-                <div className="text-center text-gray-500 py-8">
-                  <div className="text-4xl mb-2">📅</div>
-                  <p>Nenhum evento encontrado</p>
-                  <p className="text-sm">Clique no botão "+" para criar o primeiro evento!</p>
-                </div>
-              ) : (
-                eventos.slice(0, 8).map((evento) => (
-                  <div key={evento.id} className="border border-gray-200 rounded-md p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold text-gray-800 text-lg">
-                        {evento.titulo}
-                      </h3>
-                      <span className="text-sm text-gray-500 bg-white px-3 py-1 rounded-full">
-                        {formatarData(evento.data)}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-600 whitespace-pre-wrap">
-                      {evento.descricao}
-                    </p>
-                  </div>
-                ))
-              )}
-            </div>
-            
-            {eventos.length > 8 && (
-              <div className="text-center mt-4">
-                <a 
-                  href="/Users/calendario" 
-                  className="text-red-600 hover:text-red-700 text-sm font-medium"
-                >
-                  Ver todos os eventos →
-                </a>
-              </div>
-            )}
-          </div>
-
-          {/* Informações adicionais */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
-            <h3 className="text-sm font-medium text-blue-800 mb-2">💡 Dicas para criar eventos:</h3>
-            <ul className="text-sm text-blue-700 space-y-1">
-              <li>• Use títulos claros e descritivos</li>
-              <li>• Inclua informações importantes: horário, local, o que trazer</li>
-              <li>• Para eventos recorrentes, crie um evento para cada data</li>
-              <li>• Evite abreviações - seja claro e objetivo</li>
-            </ul>
-          </div>
-        </div>
-      </main>
-
-      {/* Botão flutuante para adicionar evento */}
-      <button
-        onClick={openModal}
-        className="fixed bottom-6 right-6 bg-red-600 hover:bg-red-700 text-white p-8 hover:cursor-pointer rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-200"
-        title="Adicionar novo evento"
-      >
-        <Image 
-          src="/lapis.png" 
-          alt="Adicionar evento" 
-          width={24} 
-          height={24}
-          className="w-9 h-9"
-        />
-      </button>
-
-      {/* Modal para adicionar evento */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[200vh] overflow-y-auto">
-            {/* Header da modal */}
-            <div className="flex justify-between items-center p-6 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800">
-                ➕ Adicionar Novo Evento
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Formulário de criação de evento */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">
+                ➕ Criar Novo Evento
               </h2>
-              <button
-                onClick={closeModal}
-                className="text-gray-400 hover:text-gray-600 text-2xl hover:cursor-pointer"
-              >
-                ×
-              </button>
-            </div>
-
-            {/* Conteúdo da modal */}
-            <div className="p-6">
+              
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="titulo" className="block text-sm font-medium text-gray-700 mb-1">
@@ -249,24 +148,6 @@ export default function CalendarioAdm() {
                 </div>
 
                 <div>
-                  <label htmlFor="descricao" className="block text-sm font-medium text-gray-700 mb-1">
-                    Descrição do Evento *
-                  </label>
-                  <textarea
-                    id="descricao"
-                    value={descricao}
-                    onChange={(e) => setDescricao(e.target.value)}
-                    rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
-                    placeholder="Descreva os detalhes do evento: horário, local, o que trazer..."
-                    maxLength={500}
-                  />
-                  <div className="text-xs text-gray-500 mt-1">
-                    {descricao.length}/500 caracteres
-                  </div>
-                </div>
-
-                <div>
                   <label htmlFor="data" className="block text-sm font-medium text-gray-700 mb-1">
                     Data do Evento *
                   </label>
@@ -276,9 +157,45 @@ export default function CalendarioAdm() {
                     value={data}
                     onChange={(e) => setData(e.target.value)}
                     min={dataMinima}
-                    className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   />
                 </div>
+
+                <div>
+                  <label htmlFor="descricao" className="block text-sm font-medium text-gray-700 mb-1">
+                    Descrição
+                  </label>
+                  <textarea
+                    id="descricao"
+                    value={descricao}
+                    onChange={(e) => setDescricao(e.target.value)}
+                    rows={4}
+                    className="w-full px-3 py-2 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-vertical"
+                    placeholder="Descreva detalhes do evento: horário, local, o que trazer, etc..."
+                    maxLength={500}
+                  />
+                  <div className="text-xs text-gray-500 mt-1">
+                    {descricao.length}/500 caracteres
+                  </div>
+                </div>
+
+                {/* Preview do evento */}
+                {(titulo || descricao || data) && (
+                  <div className="border border-gray-200 rounded-md p-3 bg-gray-50">
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">Preview do Evento:</h4>
+                    <div className="text-sm text-gray-600">
+                      <div className="font-semibold text-lg text-red-600">
+                        {titulo || '[Título do Evento]'}
+                      </div>
+                      <div className="text-gray-500 mb-2">
+                        📅 {data ? formatarData(data) : '[Data]'}
+                      </div>
+                      <div className="whitespace-pre-wrap">
+                        {descricao || '[Descrição do evento]'}
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Mensagem de feedback */}
                 {message && (
@@ -303,17 +220,75 @@ export default function CalendarioAdm() {
                   
                   <button
                     type="button"
-                    onClick={closeModal}
+                    onClick={handleClear}
                     className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
                   >
-                    Cancelar
+                    🗑️ Limpar
                   </button>
                 </div>
               </form>
             </div>
+
+            {/* Lista de eventos */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">
+                📋 Próximos Eventos
+              </h2>
+              
+              <div className="space-y-3 max-h-96 overflow-y-auto">
+                {eventos.length === 0 ? (
+                  <div className="text-center text-gray-500 py-8">
+                    <div className="text-4xl mb-2">📅</div>
+                    <p>Nenhum evento encontrado</p>
+                    <p className="text-sm">Crie o primeiro evento!</p>
+                  </div>
+                ) : (
+                  eventos.slice(0, 8).map((evento) => (
+                    <div key={evento.id} className="border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition-colors">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="font-semibold text-gray-800 text-sm">
+                          {evento.titulo}
+                        </h3>
+                        <span className="text-xs text-gray-500 bg-white px-2 py-1 rounded">
+                          {formatarData(evento.data)}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-600 whitespace-pre-wrap">
+                        {evento.descricao.length > 100 
+                          ? evento.descricao.substring(0, 100) + '...' 
+                          : evento.descricao
+                        }
+                      </p>
+                    </div>
+                  ))
+                )}
+              </div>
+              
+              {eventos.length > 8 && (
+                <div className="text-center mt-4">
+                  <a 
+                    href="/Users/calendario" 
+                    className="text-red-600 hover:text-red-700 text-sm font-medium"
+                  >
+                    Ver todos os eventos →
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Informações adicionais */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+            <h3 className="text-sm font-medium text-blue-800 mb-2">💡 Dicas para criar eventos:</h3>
+            <ul className="text-sm text-blue-700 space-y-1">
+              <li>• Use títulos claros e descritivos</li>
+              <li>• Inclua informações importantes: horário, local, o que trazer</li>
+              <li>• Para eventos recorrentes, crie um evento para cada data</li>
+              <li>• Evite abreviações - seja claro e objetivo</li>
+            </ul>
           </div>
         </div>
-      )}
+      </main>
 
       <Footer />
     </div>
