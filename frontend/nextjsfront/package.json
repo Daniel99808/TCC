@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@supabase/supabase-js": "^2.75.0",
     "bootstrap-icons": "^1.13.1",
     "cors": "^2.8.5",
