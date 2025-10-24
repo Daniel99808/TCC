@@ -82,7 +82,7 @@ export default function PerfilPage() {
         <Header />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <div className="text-red-600 text-6xl mb-4">⚠️</div>
+            <div className="text-red-600 text-6xl mb-4">!</div>
             <h2 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Erro ao carregar perfil</h2>
             <p className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{error || 'Usuário não encontrado'}</p>
             <button 

@@ -7,17 +7,17 @@ async function testConnection() {
   });
 
   try {
-    console.log('🔄 Tentando conectar ao Supabase...');
+    console.log('Tentando conectar ao Supabase...');
     console.log('URL:', process.env.DATABASE_URL);
     
     await client.connect();
-    console.log('✅ Conexão bem-sucedida!');
+    console.log('Conexão bem-sucedida!');
     
     const result = await client.query('SELECT NOW()');
-    console.log('📊 Teste de query:', result.rows[0]);
+    console.log('Teste de query:', result.rows[0]);
     
   } catch (error) {
-    console.error('❌ Erro de conexão:', error.message);
+    console.error('Erro de conexão:', error.message);
   } finally {
     await client.end();
   }

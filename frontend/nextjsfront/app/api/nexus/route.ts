@@ -60,7 +60,7 @@ Comportamento:
     
     return NextResponse.json(
       { 
-        error: "Ops! Parece que estou com alguns problemas técnicos. Tente novamente em alguns instantes! 🔧",
+        error: "Ops! Parece que estou com alguns problemas técnicos. Tente novamente em alguns instantes!",
         success: false 
       },
       { status: 500 }

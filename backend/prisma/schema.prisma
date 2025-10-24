@@ -8,11 +8,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  PROFESSOR
+  ESTUDANTE
+}
+
 model User {
   id                Int        @id @default(autoincrement())
   nome              String     @unique
   cpf               String     @unique
   password          String
+  role              Role       @default(ESTUDANTE)
+  hasAAPM           Boolean    @default(false) // Acesso ao benefício AAPM
+  turma             String?    // Turma do aluno (A, B, C, etc)
   createdAt         DateTime   @default(now())
   cursoId           Int?
   conversasUsuario1 Conversa[] @relation("ConversasUsuario1")
@@ -23,15 +32,20 @@ model User {
 }
 
 model Curso {
-  id     Int    @id @default(autoincrement())
-  nome   String @unique
-  alunos User[]
+  id      Int      @id @default(autoincrement())
+  nome    String   @unique
+  alunos  User[]
+  murais  Mural[]
 }
 
 model Mural {
-  id        Int      @id @default(autoincrement())
-  conteudo  String
-  createdAt DateTime @default(now())
+  id            Int      @id @default(autoincrement())
+  conteudo      String
+  tipoPublico   String   @default("TODOS") // TODOS, CURSO, TURMA
+  cursoId       Int?     // ID do curso específico (se tipoPublico = CURSO ou TURMA)
+  turma         String?  // Turma específica: A, B, C, etc (se tipoPublico = TURMA)
+  createdAt     DateTime @default(now())
+  curso         Curso?   @relation(fields: [cursoId], references: [id])
 }
 
 model Calendario {

@@ -59,12 +59,20 @@ app.get('/cursos', async (req, res) => {
 
 app.post('/cadastro', async (req, res) => {
   try {
-    const { nome, cpf, password, cursoId } = req.body;
+    const { nome, cpf, password, cursoId, role, hasAAPM, turma } = req.body;
 
-    if (!nome || !cpf || !password || !cursoId) {
+    if (!nome || !cpf || !password || !cursoId || !role) {
       return res.status(400).json({ 
         error: 'Missing required fields', 
-        message: 'Nome, CPF, senha e curso são obrigatórios' 
+        message: 'Nome, CPF, senha, curso e cargo são obrigatórios' 
+      });
+    }
+
+    // Validar turma para Professor e Estudante
+    if ((role === 'PROFESSOR' || role === 'ESTUDANTE') && !turma) {
+      return res.status(400).json({ 
+        error: 'Missing turma', 
+        message: 'Turma é obrigatória para Professor e Estudante' 
       });
     }
 
@@ -101,12 +109,23 @@ app.post('/cadastro', async (req, res) => {
       });
     }
 
+    // Validar role
+    if (!['ADMIN', 'PROFESSOR', 'ESTUDANTE'].includes(role)) {
+      return res.status(400).json({ 
+        error: 'Invalid role', 
+        message: 'Cargo deve ser ADMIN, PROFESSOR ou ESTUDANTE' 
+      });
+    }
+
     const newUser = await prisma.user.create({
       data: {
         nome,
         cpf,
         password: hashedPassword,
         cursoId: parseInt(cursoId),
+        role: role, // Salva o cargo escolhido
+        hasAAPM: hasAAPM || false, // Salva status AAPM (padrão false)
+        turma: role !== 'ADMIN' ? turma : null, // Salva turma (null para ADMIN)
       },
       include: {
         curso: true
@@ -166,7 +185,10 @@ app.post('/login', async (req, res) => {
 
     res.json({
       message: 'Login realizado com sucesso',
-      user: userResponse
+      user: {
+        ...userResponse,
+        role: user.role // ADMIN, PROFESSOR ou ESTUDANTE
+      }
     });
   } catch (error) {
     console.error('Error during login:', error);
@@ -383,6 +405,9 @@ app.get('/usuarios', async (req, res) => {
       select: {
         id: true,
         nome: true,
+        cpf: true,
+        hasAAPM: true,
+        turma: true,
         curso: {
           select: {
             nome: true
@@ -399,16 +424,94 @@ app.get('/usuarios', async (req, res) => {
   }
 });
 
+// Rota para atualizar AAPM de um usuário
+app.patch('/usuarios/:id/aapm', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { hasAAPM } = req.body;
+
+    if (typeof hasAAPM !== 'boolean') {
+      return res.status(400).json({ 
+        error: 'Invalid data', 
+        message: 'hasAAPM deve ser um valor booleano' 
+      });
+    }
+
+    const usuario = await prisma.user.update({
+      where: { id: parseInt(id) },
+      data: { hasAAPM },
+      select: {
+        id: true,
+        nome: true,
+        hasAAPM: true,
+      }
+    });
+
+    res.json({
+      message: 'Status AAPM atualizado com sucesso',
+      usuario
+    });
+  } catch (error) {
+    console.error('Error updating AAPM:', error);
+    res.status(500).json({ error: 'Failed to update AAPM status' });
+  }
+});
+
 // Rotas do Mural
 app.get('/mural', async (req, res) => {
   try {
+    const { cursoId, turma } = req.query;
+    
+    // Construir filtro dinâmico
+    const where: any = {};
+    
+    // Se não tiver filtros, buscar apenas mensagens para TODOS
+    // Se tiver cursoId ou turma, buscar mensagens específicas + TODOS
+    if (cursoId || turma) {
+      where.OR = [
+        { tipoPublico: 'TODOS' }
+      ];
+      
+      if (cursoId && !turma) {
+        // Buscar mensagens para TODOS + mensagens do CURSO específico
+        where.OR.push(
+          { tipoPublico: 'CURSO', cursoId: parseInt(cursoId as string) }
+        );
+      }
+      
+      if (cursoId && turma) {
+        // Buscar mensagens para TODOS + mensagens do CURSO + mensagens da TURMA específica
+        where.OR.push(
+          { tipoPublico: 'CURSO', cursoId: parseInt(cursoId as string) },
+          { tipoPublico: 'TURMA', cursoId: parseInt(cursoId as string), turma: turma as string }
+        );
+      }
+    } else {
+      // Sem filtros, buscar todas as mensagens
+      // (não filtrar por tipoPublico para mostrar tudo no admin)
+    }
+    
     const mural = await prisma.mural.findMany({
+      where: Object.keys(where).length > 0 ? where : undefined,
       select: {
         id: true,
         conteudo: true,
-        createdAt: true
+        tipoPublico: true,
+        cursoId: true,
+        turma: true,
+        createdAt: true,
+        curso: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
       }
     });
+    
     res.json(mural);
   } catch (error) {
     console.error('Erro detalhado:', error);
@@ -421,24 +524,47 @@ app.get('/mural', async (req, res) => {
 
 app.post('/mural', async (req, res) => {
   try {
-    const { conteudo } = req.body;
+    console.log('POST /mural recebido');
+    console.log('Body:', req.body);
+    
+    const { conteudo, tipoPublico, cursoId, turma } = req.body;
     
     if (!conteudo) {
+      console.log('Erro: conteudo não fornecido');
       return res.status(400).json({ error: 'Missing required field: conteudo' });
     }
 
+    console.log('Criando mensagem com:', { conteudo, tipoPublico, cursoId, turma });
+    
+    // Criar mensagem com os novos campos
     const newMessage = await prisma.mural.create({
       data: {
         conteudo,
+        tipoPublico: tipoPublico || 'TODOS',
+        cursoId: cursoId ? parseInt(cursoId) : null,
+        turma: turma || null,
       },
+      include: {
+        curso: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
     });
+    
+    console.log('Mensagem criada:', newMessage);
 
+    console.log('Emitindo via socket.io:', newMessage);
     io.emit('novaMensagem', newMessage);
 
+    console.log('Retornando resposta 201');
     res.status(201).json(newMessage);
   } catch (error) {
     console.error('Error creating message:', error);
-    res.status(500).json({ error: 'Failed to create message' });
+    console.error('Error details:', error instanceof Error ? error.message : 'Unknown error');
+    res.status(500).json({ error: 'Failed to create message', details: error instanceof Error ? error.message : 'Unknown error' });
   }
 });
 

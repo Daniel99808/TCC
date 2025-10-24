@@ -3,294 +3,339 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/header_adm';
 import Footer from '../../components/footer';
+import ProtectedRoute from '../../components/ProtectedRoute';
 
-interface CalendarioEvento {
+interface Usuario {
   id: number;
-  titulo: string;
-  descricao: string;
-  data: string;
+  nome: string;
+  cpf: string;
+  hasAAPM: boolean;
+  curso: {
+    nome: string;
+  } | null;
+  turma: string | null;
 }
 
-export default function CalendarioAdm() {
-  const [titulo, setTitulo] = useState('');
-  const [descricao, setDescricao] = useState('');
-  const [data, setData] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
-  const [eventos, setEventos] = useState<CalendarioEvento[]>([]);
+export default function AAPMPage() {
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [filteredUsuarios, setFilteredUsuarios] = useState<Usuario[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filtroTurma, setFiltroTurma] = useState('Geral');
+  const [filtroCurso, setFiltroCurso] = useState('');
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [totalAssinantes, setTotalAssinantes] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
 
-  // Carregar eventos existentes
+  const turmas = ['Geral', 'A', 'B'];
+  const cursos = ['Téc. Plástico', 'Téc. Logística', 'Téc. Mecânica Industrial', 'Téc. Análise e Desenvolvimento de Sistemas', 'Téc. Eletroeletrônica'];
+
   useEffect(() => {
-    fetchEventos();
+    fetchUsuarios();
   }, []);
 
-  const fetchEventos = async () => {
-    try {
-      // Buscar eventos dos próximos 30 dias
-      const hoje = new Date();
-      const futuro = new Date();
-      futuro.setDate(hoje.getDate() + 30);
+  useEffect(() => {
+    aplicarFiltros();
+  }, [usuarios, searchTerm, filtroTurma, filtroCurso]);
 
-      const response = await fetch(`http://localhost:3000/calendario?inicio=${hoje.toISOString()}&fim=${futuro.toISOString()}`);
+  const fetchUsuarios = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/usuarios');
       if (response.ok) {
         const data = await response.json();
-        setEventos(data);
-      }
-    } catch (error) {
-      console.error('Erro ao buscar eventos:', error);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!titulo.trim() || !descricao.trim() || !data) {
-      setMessage('Por favor, preencha todos os campos.');
-      return;
-    }
-
-    setLoading(true);
-    setMessage('');
-
-    try {
-      // Converter a data para o formato correto, mantendo o fuso horário local
-      // O input date retorna YYYY-MM-DD, precisamos criar a data corretamente
-      const [ano, mes, dia] = data.split('-').map(Number);
-      const dataEvento = new Date(ano, mes - 1, dia, 12, 0, 0); // Meio-dia para evitar problemas de fuso horário
-
-      const response = await fetch('http://localhost:3000/calendario', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          titulo,
-          descricao,
-          data: dataEvento.toISOString(),
-        }),
-      });
-
-      if (response.ok) {
-        const novoEvento = await response.json();
-        setMessage('Evento criado com sucesso!');
-        setTitulo('');
-        setDescricao('');
-        setData('');
+        setUsuarios(data);
         
-        // Atualizar lista de eventos
-        setEventos(prevEventos => [novoEvento, ...prevEventos]);
+        // Calcular total de assinantes
+        const total = data.filter((u: Usuario) => u.hasAAPM).length;
+        setTotalAssinantes(total);
       } else {
-        const errorData = await response.json();
-        setMessage(`Erro ao criar evento: ${errorData.error}`);
+        setMessage({ type: 'error', text: 'Erro ao carregar usuários' });
       }
     } catch (error) {
-      console.error('Erro ao criar evento:', error);
-      setMessage('Erro de conexão com o servidor.');
+      console.error('Erro ao buscar usuários:', error);
+      setMessage({ type: 'error', text: 'Erro de conexão com o servidor' });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleClear = () => {
-    setTitulo('');
-    setDescricao('');
-    setData('');
-    setMessage('');
+  const aplicarFiltros = () => {
+    let filtered = [...usuarios];
+
+    // Filtro de busca por nome
+    if (searchTerm) {
+      filtered = filtered.filter(u => 
+        u.nome.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Filtro por turma
+    if (filtroTurma !== 'Geral') {
+      filtered = filtered.filter(u => u.turma === filtroTurma);
+    }
+
+    // Filtro por curso
+    if (filtroCurso) {
+      filtered = filtered.filter(u => u.curso?.nome === filtroCurso);
+    }
+
+    setFilteredUsuarios(filtered);
   };
 
-  const formatarData = (dataString: string) => {
-    return new Date(dataString).toLocaleDateString('pt-BR');
+  const toggleAAPM = async (usuarioId: number, currentStatus: boolean) => {
+    try {
+      const response = await fetch(`http://localhost:3000/usuarios/${usuarioId}/aapm`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          hasAAPM: !currentStatus
+        }),
+      });
+
+      if (response.ok) {
+        // Atualizar localmente
+        setUsuarios(prev => prev.map(u => 
+          u.id === usuarioId ? { ...u, hasAAPM: !currentStatus } : u
+        ));
+        
+        // Atualizar contador
+        setTotalAssinantes(prev => currentStatus ? prev - 1 : prev + 1);
+        
+        setMessage({ 
+          type: 'success', 
+          text: `AAPM ${!currentStatus ? 'ativado' : 'desativado'} com sucesso!` 
+        });
+        
+        setTimeout(() => setMessage(null), 3000);
+      } else {
+        setMessage({ type: 'error', text: 'Erro ao atualizar status AAPM' });
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar AAPM:', error);
+      setMessage({ type: 'error', text: 'Erro de conexão com o servidor' });
+    }
   };
 
-  // Data mínima é hoje
-  const dataMinima = new Date().toISOString().split('T')[0];
+  const limparFiltros = () => {
+    setSearchTerm('');
+    setFiltroTurma('Geral');
+    setFiltroCurso('');
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      <Header />
-      
-      <main className="flex-1 container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto">
-          {/* Cabeçalho da página */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">
-              📅 Painel Administrativo - Calendário
-            </h1>
-            <p className="text-gray-600">
-              Crie e gerencie eventos do calendário da comunidade
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Formulário de criação de evento */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                ➕ Criar Novo Evento
-              </h2>
-              
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label htmlFor="titulo" className="block text-sm font-medium text-gray-700 mb-1">
-                    Título do Evento *
-                  </label>
-                  <input
-                    type="text"
-                    id="titulo"
-                    value={titulo}
-                    onChange={(e) => setTitulo(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                    placeholder="Ex: Reunião de Condomínio, Festa Junina..."
-                    maxLength={100}
-                  />
-                  <div className="text-xs text-gray-500 mt-1">
-                    {titulo.length}/100 caracteres
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="data" className="block text-sm font-medium text-gray-700 mb-1">
-                    Data do Evento *
-                  </label>
-                  <input
-                    type="date"
-                    id="data"
-                    value={data}
-                    onChange={(e) => setData(e.target.value)}
-                    min={dataMinima}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="descricao" className="block text-sm font-medium text-gray-700 mb-1">
-                    Descrição
-                  </label>
-                  <textarea
-                    id="descricao"
-                    value={descricao}
-                    onChange={(e) => setDescricao(e.target.value)}
-                    rows={4}
-                    className="w-full px-3 py-2 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-vertical"
-                    placeholder="Descreva detalhes do evento: horário, local, o que trazer, etc..."
-                    maxLength={500}
-                  />
-                  <div className="text-xs text-gray-500 mt-1">
-                    {descricao.length}/500 caracteres
-                  </div>
-                </div>
-
-                {/* Preview do evento */}
-                {(titulo || descricao || data) && (
-                  <div className="border border-gray-200 rounded-md p-3 bg-gray-50">
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">Preview do Evento:</h4>
-                    <div className="text-sm text-gray-600">
-                      <div className="font-semibold text-lg text-red-600">
-                        {titulo || '[Título do Evento]'}
-                      </div>
-                      <div className="text-gray-500 mb-2">
-                        📅 {data ? formatarData(data) : '[Data]'}
-                      </div>
-                      <div className="whitespace-pre-wrap">
-                        {descricao || '[Descrição do evento]'}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Mensagem de feedback */}
-                {message && (
-                  <div className={`p-3 rounded-md text-sm ${
-                    message.includes('sucesso') 
-                      ? 'bg-green-100 text-green-700 border border-green-200' 
-                      : 'bg-red-100 text-red-700 border border-red-200'
-                  }`}>
-                    {message}
-                  </div>
-                )}
-
-                {/* Botões */}
-                <div className="flex space-x-3 pt-2">
-                  <button
-                    type="submit"
-                    disabled={loading || !titulo.trim() || !descricao.trim() || !data}
-                    className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
-                    {loading ? '📅 Criando...' : '📅 Criar Evento'}
-                  </button>
-                  
-                  <button
-                    type="button"
-                    onClick={handleClear}
-                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
-                  >
-                    🗑️ Limpar
-                  </button>
-                </div>
-              </form>
+    <ProtectedRoute allowedRoles={['ADMIN']}>
+      <div className="min-h-screen bg-gray-100 flex flex-col">
+        <Header />
+        
+        <main className="flex-1 p-6">
+          <div className="max-w-7xl mx-auto">
+            {/* Cabeçalho */}
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold text-gray-800 mb-2">AAPM</h1>
+              <div className="w-24 h-1 bg-red-600 mx-auto mb-4"></div>
             </div>
 
-            {/* Lista de eventos */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                📋 Próximos Eventos
-              </h2>
+            {/* Card de Total de Assinantes */}
+            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+              <p className="text-red-500 text-3xl font-semibold">
+                Total de assinantes: <span className="text-3xl font-bold ml-2">{totalAssinantes}</span>
+              </p>
+            </div>
+
+            {/* Mensagem de Feedback */}
+            {message && (
+              <div className={`mb-4 p-4 rounded-lg ${
+                message.type === 'success' 
+                  ? 'bg-green-100 text-green-700 border border-green-200' 
+                  : 'bg-red-100 text-red-700 border border-red-200'
+              }`}>
+                {message.text}
+              </div>
+            )}
+
+            {/* Filtros */}
+            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+              <h2 className="text-xl font-bold text-gray-800 mb-4">Filtro</h2>
               
-              <div className="space-y-3 max-h-96 overflow-y-auto">
-                {eventos.length === 0 ? (
-                  <div className="text-center text-gray-500 py-8">
-                    <div className="text-4xl mb-2">📅</div>
-                    <p>Nenhum evento encontrado</p>
-                    <p className="text-sm">Crie o primeiro evento!</p>
-                  </div>
-                ) : (
-                  eventos.slice(0, 8).map((evento) => (
-                    <div key={evento.id} className="border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition-colors">
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-semibold text-gray-800 text-sm">
-                          {evento.titulo}
-                        </h3>
-                        <span className="text-xs text-gray-500 bg-white px-2 py-1 rounded">
-                          {formatarData(evento.data)}
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-600 whitespace-pre-wrap">
-                        {evento.descricao.length > 100 
-                          ? evento.descricao.substring(0, 100) + '...' 
-                          : evento.descricao
-                        }
-                      </p>
-                    </div>
-                  ))
+              <div className="flex flex-wrap gap-3 mb-4">
+                <button
+                  onClick={() => setFiltroTurma('Geral')}
+                  className={`px-6 py-2 rounded-full font-medium transition-colors ${
+                    filtroTurma === 'Geral'
+                      ? 'bg-red-600 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  Total
+                </button>
+                
+                {turmas.slice(1).map(turma => (
+                  <button
+                    key={turma}
+                    onClick={() => setFiltroTurma(turma)}
+                    className={`px-6 py-2 rounded-full font-medium transition-colors ${
+                      filtroTurma === turma
+                        ? 'bg-red-600 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    {turma}
+                  </button>
+                ))}
+
+                {/* Botões de Filtro por Curso */}
+                {cursos.map(curso => (
+                  <button
+                    key={curso}
+                    onClick={() => setFiltroCurso(filtroCurso === curso ? '' : curso)}
+                    className={`px-6 py-2 rounded-full font-medium transition-colors ${
+                      filtroCurso === curso
+                        ? 'bg-red-600 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    {curso.replace('Téc. ', '')}
+                  </button>
+                ))}
+              </div>
+
+              {/* Busca */}
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Pesquisar algum aluno"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full px-4 py-2 pr-10 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    ✕
+                  </button>
                 )}
               </div>
-              
-              {eventos.length > 8 && (
-                <div className="text-center mt-4">
-                  <a 
-                    href="/Users/calendario" 
-                    className="text-red-600 hover:text-red-700 text-sm font-medium"
-                  >
-                    Ver todos os eventos →
-                  </a>
+
+              {/* Botão Limpar Filtros */}
+              {(filtroTurma !== 'Geral' || filtroCurso || searchTerm) && (
+                <button
+                  onClick={limparFiltros}
+                  className="text-red-600 hover:text-red-700 font-medium text-sm"
+                >
+                  Limpar todos os filtros
+                </button>
+              )}
+            </div>
+
+            {/* Tabela de Usuários */}
+            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+              {loading ? (
+                <div className="flex items-center justify-center p-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+                </div>
+              ) : filteredUsuarios.length === 0 ? (
+                <div className="text-center p-12">
+                  <div className="text-6xl mb-4">&#x1F50D;</div>
+                  <p className="text-gray-600 text-lg">Nenhum usuário encontrado</p>
+                  <p className="text-gray-400 text-sm mt-2">Tente ajustar os filtros de busca</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 border-b border-gray-200">
+                      <tr>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                          Nome completo
+                        </th>
+                        <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">
+                          Curso
+                        </th>
+                        <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">
+                          Turma
+                        </th>
+                        <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">
+                          AAPM 
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {filteredUsuarios
+                        .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+                        .map((usuario) => (
+                        <tr key={usuario.id} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-6 py-4 text-sm text-gray-800">
+                            {usuario.nome}
+                          </td>
+                          <td className="px-6 py-4 text-center text-sm text-gray-600">
+                            {usuario.curso?.nome || '-'}
+                          </td>
+                          <td className="px-6 py-4 text-center text-sm text-gray-600">
+                            {usuario.turma || '-'}
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <button
+                              onClick={() => toggleAAPM(usuario.id, usuario.hasAAPM)}
+                              className={`px-4 py-2 rounded-lg font-medium transition-all transform hover:scale-105 ${
+                                usuario.hasAAPM
+                                  ? 'bg-green-100 text-green-700 border border-green-300 hover:bg-green-200 hover:cursor-pointer'
+                                  : 'bg-gray-100 text-gray-500 border border-gray-300 hover:bg-gray-200 hover:cursor-pointer'
+                              }`}
+                            >
+                              {usuario.hasAAPM ? '✓ Ativo' : '✗ Inativo'}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </div>
-          </div>
 
-          {/* Informações adicionais */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
-            <h3 className="text-sm font-medium text-blue-800 mb-2">💡 Dicas para criar eventos:</h3>
-            <ul className="text-sm text-blue-700 space-y-1">
-              <li>• Use títulos claros e descritivos</li>
-              <li>• Inclua informações importantes: horário, local, o que trazer</li>
-              <li>• Para eventos recorrentes, crie um evento para cada data</li>
-              <li>• Evite abreviações - seja claro e objetivo</li>
-            </ul>
-          </div>
-        </div>
-      </main>
+            {/* Paginação */}
+            {filteredUsuarios.length > itemsPerPage && (
+              <div className="mt-6 flex items-center justify-between bg-white rounded-lg shadow-md p-4">
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
+                >
+                  ←
+                </button>
+                
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">
+                    Página {currentPage} de {Math.ceil(filteredUsuarios.length / itemsPerPage)}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    ({((currentPage - 1) * itemsPerPage) + 1} - {Math.min(currentPage * itemsPerPage, filteredUsuarios.length)} de {filteredUsuarios.length})
+                  </span>
+                </div>
 
-      <Footer />
-    </div>
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredUsuarios.length / itemsPerPage)))}
+                  disabled={currentPage >= Math.ceil(filteredUsuarios.length / itemsPerPage)}
+                  className="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
+                >
+                  →
+                </button>
+              </div>
+            )}
+
+            {/* Footer com informações */}
+            <div className="mt-6 text-center text-sm text-gray-500">
+              <p>Mostrando {Math.min(filteredUsuarios.length, itemsPerPage)} de {filteredUsuarios.length} usuários filtrados (Total: {usuarios.length})</p>
+            </div>
+          </div>
+        </main>
+
+        <Footer />
+      </div>
+    </ProtectedRoute>
   );
 }

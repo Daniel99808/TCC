@@ -1,13 +1,13 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation'; // ✅ Importa o hook de navegação do Next.js
+import { useRouter } from 'next/navigation';
 
 export default function AuthForm() {
   const [cpf, setCpf] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const router = useRouter(); // ✅ Inicializa o router
+  const router = useRouter();
 
   const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, '');
@@ -46,9 +46,19 @@ export default function AuthForm() {
         // Salvar dados do usuário no localStorage
         localStorage.setItem('usuarioLogado', JSON.stringify(data.user));
         
-        // ✅ Redireciona após 1 segundo (ou direto, se preferir)
+        // Redireciona baseado no ROLE do usuário
         setTimeout(() => {
-          router.push('/Users/mural'); // Redireciona para o mural na nova estrutura
+          const userRole = data.user.role;
+          
+          if (userRole === 'ADMIN') {
+            router.push('/administrador/mural_adm'); // Admin vai para painel administrativo
+          } else if (userRole === 'PROFESSOR') {
+            router.push('/Users/mural'); // Professor vai para área de usuários (temporário)
+          } else if (userRole === 'ESTUDANTE') {
+            router.push('/Users/mural'); // Estudante vai para área de usuários
+          } else {
+            router.push('/Users/mural'); // Fallback padrão
+          }
         }, 1000);
 
       } else {

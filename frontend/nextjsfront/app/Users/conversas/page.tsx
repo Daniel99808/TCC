@@ -326,8 +326,8 @@ export default function ConversasPage() {
     if (nexusMensagens.length === 0) {
       setNexusMensagens([{
         id: 1,
-        conteudo: `Olá ${usuarioLogado?.nome}! 👋 Eu sou a NEXUS IA, sua assistente virtual. Estou aqui para te ajudar com dúvidas sobre seus estudos, tirar questões sobre as matérias e muito mais! 
-Como posso te ajudar hoje? 🤖`,
+        conteudo: `Olá ${usuarioLogado?.nome}! Eu sou a NEXUS IA, sua assistente virtual. Estou aqui para te ajudar com dúvidas sobre seus estudos, tirar questões sobre as matérias e muito mais! 
+Como posso te ajudar hoje?`,
         createdAt: new Date().toISOString(),
         isNexus: true
       }]);
@@ -371,7 +371,7 @@ Como posso te ajudar hoje? 🤖`,
       } else {
         const erroMensagem = {
           id: Date.now() + 1,
-          conteudo: data.error || "Ops! Parece que estou com alguns problemas técnicos. Tente novamente em alguns instantes! 🔧",
+          conteudo: data.error || "Ops! Parece que estou com alguns problemas técnicos. Tente novamente em alguns instantes!",
           createdAt: new Date().toISOString(),
           isNexus: true
         };
@@ -381,7 +381,7 @@ Como posso te ajudar hoje? 🤖`,
       console.error('Erro ao comunicar com NEXUS IA:', error);
       const erroMensagem = {
         id: Date.now() + 1,
-        conteudo: "Ops! Parece que estou com alguns problemas técnicos. Tente novamente em alguns instantes! 🔧",
+        conteudo: "Ops! Parece que estou com alguns problemas técnicos. Tente novamente em alguns instantes!",
         createdAt: new Date().toISOString(),
         isNexus: true
       };
@@ -401,7 +401,7 @@ Como posso te ajudar hoje? 🤖`,
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
                 ) : (
                     <div className="text-center">
-                        <div className="text-red-600 text-6xl mb-4">🔒</div>
+                        <div className="text-red-600 text-6xl mb-4">&#x1F512;</div>
                         <h2 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Login necessário</h2>
                         <p className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Faça login para acessar suas conversas</p>
                         <button 
@@ -473,7 +473,7 @@ Como posso te ajudar hoje? 🤖`,
                         }`}>
                             <button 
                                 onClick={fecharChat} 
-                                className="mr-4 text-red-600 hover:text-red-800 transition-colors text-2xl"
+                                className="mr-4 text-red-600 hover:cursor-pointer hover:text-red-800 transition-colors text-2xl"
                                 title="Voltar para conversas"
                             >
                                 ←
@@ -525,7 +525,7 @@ Como posso te ajudar hoje? 🤖`,
                                 <div className="flex-1 overflow-y-auto p-4 scroll-smooth">
                                     {mensagensConversa.length === 0 ? (
                                         <div className={`text-center mt-20 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                            <div className="text-4xl mb-4">👋</div>
+                                            <div className="text-4xl mb-4">&#x1F44B;</div>
                                             <p>Comece uma conversa!</p>
                                         </div>
                                     ) : (
@@ -608,7 +608,7 @@ Como posso te ajudar hoje? 🤖`,
                   {/* DEBUG: Mostra a contagem de usuários carregados */}
                   {usuarios.length === 0 && !loading && (
                       <div className={`text-center p-4 transition-colors duration-300 ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>
-                          <p className="text-sm font-semibold">⚠️ Não foi possível carregar outros usuários. Verifique a API.</p>
+                          <p className="text-sm font-semibold">Não foi possível carregar outros usuários. Verifique a API.</p>
                       </div>
                   )}
 
@@ -633,7 +633,7 @@ Como posso te ajudar hoje? 🤖`,
                             <div className="flex-1 min-w-0">
                               <h3 className="font-semibold text-red-600 truncate">NEXUS IA</h3>
                               <p className={`text-sm truncate ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                                🤖 Sua assistente virtual
+                                Sua assistente virtual
                               </p>
                             </div>
                           </div>

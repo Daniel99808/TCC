@@ -131,7 +131,7 @@ export default function CalendarioAdm() {
           {/* Cabeçalho da página */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <h1 className="text-3xl font-bold text-gray-800 mb-2">
-              📅 Painel Administrativo - Calendário
+              Painel Administrativo - Calendário
             </h1>
             <p className="text-gray-600">
               Gerencie eventos do calendário da comunidade
@@ -141,13 +141,13 @@ export default function CalendarioAdm() {
           {/* Lista de eventos */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              📋 Próximos Eventos
+              Próximos Eventos
             </h2>
             
             <div className="space-y-3">
               {eventos.length === 0 ? (
                 <div className="text-center text-gray-500 py-8">
-                  <div className="text-4xl mb-2">📅</div>
+                  <div className="text-4xl mb-2">&#x1F4C5;</div>
                   <p>Nenhum evento encontrado</p>
                   <p className="text-sm">Clique no botão "+" para criar o primeiro evento!</p>
                 </div>
@@ -184,7 +184,7 @@ export default function CalendarioAdm() {
 
           {/* Informações adicionais */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
-            <h3 className="text-sm font-medium text-blue-800 mb-2">💡 Dicas para criar eventos:</h3>
+            <h3 className="text-sm font-medium text-blue-800 mb-2">Dicas para criar eventos:</h3>
             <ul className="text-sm text-blue-700 space-y-1">
               <li>• Use títulos claros e descritivos</li>
               <li>• Inclua informações importantes: horário, local, o que trazer</li>
@@ -198,7 +198,7 @@ export default function CalendarioAdm() {
       {/* Botão flutuante para adicionar evento */}
       <button
         onClick={openModal}
-        className="fixed bottom-6 right-6 bg-red-600 hover:bg-red-700 text-white p-8 hover:cursor-pointer rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-200"
+        className="fixed bottom-5 right-5 bg-red-600 hover:bg-red-700 text-white p-8 hover:cursor-pointer rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-200"
         title="Adicionar novo evento"
       >
         <Image 
@@ -298,7 +298,7 @@ export default function CalendarioAdm() {
                     disabled={loading || !titulo.trim() || !descricao.trim() || !data}
                     className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
-                    {loading ? '📅 Criando...' : '📅 Criar Evento'}
+                    {loading ? 'Criando...' : 'Criar Evento'}
                   </button>
                   
                   <button
