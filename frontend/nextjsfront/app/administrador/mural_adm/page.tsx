@@ -298,7 +298,6 @@ export default function MuralAdm() {
                     <option value="">Selecione uma turma</option>
                     <option value="A">Turma A</option>
                     <option value="B">Turma B</option>
-                    <option value="C">Turma C</option>
                   </select>
                 </div>
               )}
