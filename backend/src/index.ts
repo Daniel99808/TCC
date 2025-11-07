@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 const app = express();
 const server = http.createServer(app);
 
-// Configurar Socket.IO
+// Configurarrr Socket.IO
 const io = new Server(server, {
   cors: {
     origin: "*"
