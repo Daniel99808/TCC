@@ -91,7 +91,7 @@ export default function AuthForm() {
         setTimeout(() => {
           const userRole = (data.user && data.user.role) || 'USER'; // Garante um fallback
           if (userRole === 'ADMIN') window.location.href = '/administrador/mural_adm';
-          else window.location.href = '/Users/mural';
+          else window.location.href = '/mural';
         }, TOAST_DURATION);
         
       } else {

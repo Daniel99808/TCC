@@ -2,8 +2,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Header from '../../components/header';
-import { useDarkMode } from '../../contexts/DarkModeContext';
+import Header from '../components/header';
+import { useDarkMode } from '../contexts/DarkModeContext';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 // Tipagem para os eventos, para garantir que os dados da API estejam corretos
 interface Evento {
@@ -123,9 +124,10 @@ const CalendarioPage = () => {
   };
 
   return (
-    <div className={`flex flex-col h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-      <Header />
-      <main className="flex-1 p-8 overflow-auto">
+    <ProtectedRoute allowedRoles={['ESTUDANTE', 'PROFESSOR', 'ADMIN']}>
+      <div className={`flex flex-col h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+        <Header />
+        <main className="flex-1 p-8 overflow-auto">
         {erro && (
           <div className="max-w-4xl mx-auto mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
             {erro}
@@ -206,7 +208,8 @@ const CalendarioPage = () => {
           </div>
         </div>
       </main>
-    </div>
+      </div>
+    </ProtectedRoute>
   );
 };
 

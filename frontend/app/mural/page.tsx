@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
-import Header from '../../components/header';
-import { useDarkMode } from '../../contexts/DarkModeContext';
+import Header from '../components/header';
+import { useDarkMode } from '../contexts/DarkModeContext';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 const socket = io('http://localhost:3000');
 
@@ -97,11 +98,12 @@ export default function MuralDeAvisos() {
   };
 
   return (
-    // Container principal com flexbox para ocupar a altura da tela
-    <div className={`flex flex-col h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-      <Header />
-      {/* Main agora usa 'overflow-auto' para gerenciar o scroll de todo o conteúdo */}
-      <main className="flex-1 p-8 flex flex-col items-center overflow-auto">
+    <ProtectedRoute allowedRoles={['ESTUDANTE', 'PROFESSOR', 'ADMIN']}>
+      {/* Container principal com flexbox para ocupar a altura da tela */}
+      <div className={`flex flex-col h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+        <Header />
+        {/* Main agora usa 'overflow-auto' para gerenciar o scroll de todo o conteúdo */}
+        <main className="flex-1 p-8 flex flex-col items-center overflow-auto">
         {/* Bem-vindo section */}
         <div className="text-center mb-6">
           <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Bem-vindo {usuarioLogado?.nome}</p>
@@ -138,5 +140,6 @@ export default function MuralDeAvisos() {
         </div>
       </main>
     </div>
+    </ProtectedRoute>
   );
 }

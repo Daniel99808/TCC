@@ -173,7 +173,7 @@ export default function CalendarioAdm() {
             {eventos.length > 8 && (
               <div className="text-center mt-4">
                 <a 
-                  href="/Users/calendario" 
+                  href="/calendario" 
                   className="text-red-600 hover:text-red-700 text-sm font-medium"
                 >
                   Ver todos os eventos →

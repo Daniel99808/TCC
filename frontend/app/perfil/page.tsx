@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Header from '../../components/header';
-import { useDarkMode } from '../../contexts/DarkModeContext';
+import Header from '../components/header';
+import { useDarkMode } from '../contexts/DarkModeContext';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 interface Usuario {
   id: number;
@@ -59,56 +60,50 @@ export default function PerfilPage() {
   const handleLogout = () => {
     // Implementar logout
     localStorage.removeItem('token');
-    window.location.href = '/Users/login';
+    window.location.href = '/login';
   };
 
-  if (loading) {
-    return (
-      <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-        <Header />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto"></div>
-            <p className={`mt-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Carregando perfil...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !usuario) {
-    return (
-      <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-        <Header />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <div className="text-red-600 text-6xl mb-4">!</div>
-            <h2 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Erro ao carregar perfil</h2>
-            <p className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{error || 'Usuário não encontrado'}</p>
-            <button 
-              onClick={() => window.location.href = '/Users/login'}
-              className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
-            >
-              Fazer Login
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className={`flex flex-col h-full transition-colors duration-300 ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-100'}`}>
-      <Header />
-      
-      <main className="flex-1 p-21.5">
-        <div className="max-w-6xl mx-auto">
-          {/* Título */}
-          <h1 className={`text-3xl font-bold text-center mb-8 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Perfil</h1>
+    <ProtectedRoute allowedRoles={['ESTUDANTE', 'PROFESSOR', 'ADMIN']}>
+      {loading ? (
+        <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+          <Header />
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto"></div>
+              <p className={`mt-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Carregando perfil...</p>
+            </div>
+          </div>
+        </div>
+      ) : error || !usuario ? (
+        <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+          <Header />
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-red-600 text-6xl mb-4">!</div>
+              <h2 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Erro ao carregar perfil</h2>
+              <p className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{error || 'Usuário não encontrado'}</p>
+              <button 
+                onClick={() => window.location.href = '/login'}
+                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Fazer Login
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className={`flex flex-col h-full transition-colors duration-300 ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-100'}`}>
+          <Header />
           
-          {/* Card Principal */}
-          <div className={`rounded-lg shadow-xl p-8 mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            <div className="flex flex-col md:flex-row items-start gap-8">
+          <main className="flex-1 p-21.5">
+            <div className="max-w-6xl mx-auto">
+              {/* Título */}
+              <h1 className={`text-3xl font-bold text-center mb-8 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Perfil</h1>
+          
+              {/* Card Principal */}
+              <div className={`rounded-lg shadow-xl p-8 mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+                <div className="flex flex-col md:flex-row items-start gap-8">
               
               {/* Foto de Perfil */}
               <div className="flex flex-col items-center">
@@ -190,8 +185,10 @@ export default function PerfilPage() {
               </button>
             </div>
           </div>
+            </div>
+          </main>
         </div>
-      </main>
-    </div>
+      )}
+    </ProtectedRoute>
   );
 }

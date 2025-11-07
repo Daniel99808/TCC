@@ -19,7 +19,7 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
       
       if (!usuarioData) {
         // Não está logado
-        router.push('/Users/login');
+        router.push('/login');
         return;
       }
 
@@ -35,7 +35,7 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
           if (userRole === 'ADMIN') {
             router.push('/administrador/mural_adm');
           } else {
-            router.push('/Users/mural');
+            router.push('/mural');
           }
           return;
         }
@@ -44,7 +44,7 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
         setIsAuthorized(true);
       } catch (error) {
         console.error('Erro ao verificar autenticação:', error);
-        router.push('/Users/login');
+        router.push('/login');
       } finally {
         setIsLoading(false);
       }

@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import Header from '../../components/header';
+import Header from '../components/header';
 import { io } from 'socket.io-client';
-import { useDarkMode } from '../../contexts/DarkModeContext';
+import { useDarkMode } from '../contexts/DarkModeContext';
 import Image from 'next/image';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 const socket = io('http://localhost:3000');
 
@@ -405,7 +406,7 @@ Como posso te ajudar hoje?`,
                         <h2 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Login necessário</h2>
                         <p className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Faça login para acessar suas conversas</p>
                         <button 
-                            onClick={() => window.location.href = '/Users/login'}
+                            onClick={() => window.location.href = '/login'}
                             className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
                         >
                             Fazer Login
@@ -593,10 +594,11 @@ Como posso te ajudar hoje?`,
   // 2. Renderização do Layout da Lista (Tela Cheia)
   // ===============================================
   return (
-    <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-      <Header />
-      
-      <main className="flex-1 p-4">
+    <ProtectedRoute allowedRoles={['ESTUDANTE', 'PROFESSOR', 'ADMIN']}>
+      <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+        <Header />
+        
+        <main className="flex-1 p-4">
         <div className="max-w-xl mx-auto h-full">
           <h1 className={`text-3xl font-bold text-center mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Conversas</h1>
           
@@ -735,6 +737,7 @@ Como posso te ajudar hoje?`,
             </div>
           </div>
       </main>
-    </div>
+      </div>
+    </ProtectedRoute>
   );
 }
