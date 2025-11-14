@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '../../components/header_adm';
 import Footer from '../../components/footer';
+import { useDarkMode } from '../../contexts/DarkModeContext';
 
 interface CadastroData {
   nome: string;
@@ -48,6 +49,7 @@ export default function CadastroAdmPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const router = useRouter();
+  const { isDarkMode } = useDarkMode();
 
   // Buscar cursos disponíveis
   useEffect(() => {
@@ -169,15 +171,15 @@ export default function CadastroAdmPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col pt-16 lg:pt-0">
+    <div className={`min-h-screen flex flex-col pt-16 lg:pt-0 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
       <Header />
       
-      <main className="lg:ml-80 flex-1 flex items-center justify-center p-4 sm:p-6">
-        <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+      <main className="lg:ml-80 flex-1 flex items-center justify-center p-4 sm:p-6 animate-fade-in">
+        <div className={`p-8 rounded-lg shadow-xl w-full max-w-md transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
           {/* Cabeçalho */}
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-800">Cadastro de Usuário</h1>
-            <p className="text-gray-600 mt-2">Painel Administrativo</p>
+            <h1 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Cadastro de Usuário</h1>
+            <p className={`mt-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Painel Administrativo</p>
             <div className="w-16 h-1 bg-orange-600 mx-auto mt-3 rounded"></div>
           </div>
 
@@ -205,7 +207,7 @@ export default function CadastroAdmPage() {
                 value={formData.nome}
                 onChange={handleInputChange}
                 placeholder="Digite o nome completo do usuário"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-white"
                 disabled={isLoading}
               />
             </div>
@@ -223,7 +225,7 @@ export default function CadastroAdmPage() {
                 onChange={handleInputChange}
                 placeholder="000.000.000-00"
                 maxLength={14}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-white"
                 disabled={isLoading}
               />
             </div>
@@ -238,7 +240,7 @@ export default function CadastroAdmPage() {
                 name="cursoId"
                 value={formData.cursoId}
                 onChange={(e) => setFormData(prev => ({ ...prev, cursoId: e.target.value }))}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-white"
                 disabled={isLoading}
               >
                 <option value="">Selecione o curso</option>
@@ -260,7 +262,7 @@ export default function CadastroAdmPage() {
                 name="role"
                 value={formData.role}
                 onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-white"
                 disabled={isLoading}
               >
                 <option value="ESTUDANTE">Estudante</option>
@@ -283,7 +285,7 @@ export default function CadastroAdmPage() {
                   name="turma"
                   value={formData.turma}
                   onChange={(e) => setFormData(prev => ({ ...prev, turma: e.target.value }))}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-white"
                   disabled={isLoading}
                 >
                   <option value="">Selecione a turma</option>
@@ -345,7 +347,7 @@ export default function CadastroAdmPage() {
                 value={formData.password}
                 onChange={handleInputChange}
                 placeholder="Digite a senha inicial"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-white"
                 disabled={isLoading}
               />
             </div>
@@ -362,7 +364,7 @@ export default function CadastroAdmPage() {
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 placeholder="Confirme a senha"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-white"
                 disabled={isLoading}
               />
             </div>

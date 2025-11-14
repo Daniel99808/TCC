@@ -133,25 +133,25 @@ export default function InicioPage() {
       <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <DynamicHeader />
         
-        <main className="lg:ml-80 p-4 sm:p-6 lg:p-8">
+        <main className="lg:ml-80 p-3 sm:p-4 md:p-6 lg:p-8 animate-fade-in">
           {/* Cabeçalho de Boas-vindas */}
-          <div className="mb-6 sm:mb-8">
-            <h1 className={`text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+          <div className="mb-4 sm:mb-6 md:mb-8 px-1">
+            <h1 className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
               Bem-vindo, {usuarioLogado.nome.split(' ')[0]}! 👋
             </h1>
-            <p className={`text-sm sm:text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            <p className={`text-xs sm:text-sm md:text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               Aqui está um resumo das suas atividades acadêmicas
             </p>
           </div>
 
           {/* Cards de Estatísticas */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8">
             {/* Avisos Novos */}
-            <div className={`rounded-xl p-4 sm:p-6 transition-all duration-300 hover:scale-105 cursor-pointer ${
+            <div className={`rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer ${
               isDarkMode ? 'bg-gray-800' : 'bg-white'
             } shadow-lg`}>
-              <div className="flex items-center justify-between mb-3">
-                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center ${
+              <div className="flex items-center justify-between mb-2 sm:mb-3">
+                <div className={`w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-lg flex items-center justify-center ${
                   isDarkMode ? 'bg-red-600/20' : 'bg-red-100'
                 }`}>
                   <svg className="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -159,7 +159,7 @@ export default function InicioPage() {
                   </svg>
                 </div>
               </div>
-              <h3 className={`text-2xl sm:text-3xl font-bold mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+              <h3 className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                 {avisosNovos}
               </h3>
               <p className={`text-xs sm:text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -168,11 +168,11 @@ export default function InicioPage() {
             </div>
 
             {/* Eventos Esta Semana */}
-            <div className={`rounded-xl p-4 sm:p-6 transition-all duration-300 hover:scale-105 cursor-pointer ${
+            <div className={`rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer ${
               isDarkMode ? 'bg-gray-800' : 'bg-white'
             } shadow-lg`}>
-              <div className="flex items-center justify-between mb-3">
-                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center ${
+              <div className="flex items-center justify-between mb-2 sm:mb-3">
+                <div className={`w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-lg flex items-center justify-center ${
                   isDarkMode ? 'bg-blue-600/20' : 'bg-blue-100'
                 }`}>
                   <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -180,7 +180,7 @@ export default function InicioPage() {
                   </svg>
                 </div>
               </div>
-              <h3 className={`text-2xl sm:text-3xl font-bold mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+              <h3 className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                 {eventosProximos}
               </h3>
               <p className={`text-xs sm:text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -189,11 +189,11 @@ export default function InicioPage() {
             </div>
 
             {/* Mensagens */}
-            <div className={`rounded-xl p-4 sm:p-6 transition-all duration-300 hover:scale-105 cursor-pointer ${
+            <div className={`rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer ${
               isDarkMode ? 'bg-gray-800' : 'bg-white'
             } shadow-lg`}>
-              <div className="flex items-center justify-between mb-3">
-                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center ${
+              <div className="flex items-center justify-between mb-2 sm:mb-3">
+                <div className={`w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-lg flex items-center justify-center ${
                   isDarkMode ? 'bg-purple-600/20' : 'bg-purple-100'
                 }`}>
                   <svg className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -201,7 +201,7 @@ export default function InicioPage() {
                   </svg>
                 </div>
               </div>
-              <h3 className={`text-2xl sm:text-3xl font-bold mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+              <h3 className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                 {mensagensNaoLidas}
               </h3>
               <p className={`text-xs sm:text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -213,26 +213,26 @@ export default function InicioPage() {
           </div>
 
           {/* Acesso Rápido */}
-          <div className="mb-8">
-            <h2 className={`text-xl sm:text-2xl font-bold mb-4 sm:mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+          <div className="mb-6 sm:mb-8">
+            <h2 className={`text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 md:mb-6 px-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
               Acesso Rápido
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
               {/* Mural de Avisos */}
               <a
                 href="/mural"
-                className={`rounded-xl p-4 sm:p-6 transition-all duration-300 hover:scale-105 ${
+                className={`rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 transition-all duration-300 hover:scale-105 active:scale-95 ${
                   isDarkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:shadow-xl'
                 } shadow-lg cursor-pointer`}
               >
-                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center mb-3 sm:mb-4 ${
+                <div className={`w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-lg flex items-center justify-center mb-3 sm:mb-4 ${
                   isDarkMode ? 'bg-red-600/20' : 'bg-red-100'
                 }`}>
                   <svg className="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
-                <h3 className={`text-base sm:text-lg font-semibold mb-1 sm:mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                <h3 className={`text-sm sm:text-base md:text-lg font-semibold mb-1 sm:mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                   Mural de Avisos
                 </h3>
                 <p className={`text-xs sm:text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -243,18 +243,18 @@ export default function InicioPage() {
               {/* Calendário */}
               <a
                 href="/calendario"
-                className={`rounded-xl p-4 sm:p-6 transition-all duration-300 hover:scale-105 ${
+                className={`rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 transition-all duration-300 hover:scale-105 active:scale-95 ${
                   isDarkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:shadow-xl'
                 } shadow-lg cursor-pointer`}
               >
-                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center mb-3 sm:mb-4 ${
+                <div className={`w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-lg flex items-center justify-center mb-3 sm:mb-4 ${
                   isDarkMode ? 'bg-blue-600/20' : 'bg-blue-100'
                 }`}>
                   <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <h3 className={`text-base sm:text-lg font-semibold mb-1 sm:mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                <h3 className={`text-sm sm:text-base md:text-lg font-semibold mb-1 sm:mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                   Calendário
                 </h3>
                 <p className={`text-xs sm:text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -265,18 +265,18 @@ export default function InicioPage() {
               {/* Conversas */}
               <a
                 href="/conversas"
-                className={`rounded-xl p-4 sm:p-6 transition-all duration-300 hover:scale-105 ${
+                className={`rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 transition-all duration-300 hover:scale-105 active:scale-95 ${
                   isDarkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:shadow-xl'
                 } shadow-lg cursor-pointer`}
               >
-                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center mb-3 sm:mb-4 ${
+                <div className={`w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-lg flex items-center justify-center mb-3 sm:mb-4 ${
                   isDarkMode ? 'bg-purple-600/20' : 'bg-purple-100'
                 }`}>
                   <svg className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                 </div>
-                <h3 className={`text-base sm:text-lg font-semibold mb-1 sm:mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                <h3 className={`text-sm sm:text-base md:text-lg font-semibold mb-1 sm:mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                   Conversas
                 </h3>
                 <p className={`text-xs sm:text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -288,23 +288,23 @@ export default function InicioPage() {
 
           {/* Atividades Recentes */}
           <div>
-            <h2 className={`text-xl sm:text-2xl font-bold mb-4 sm:mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+            <h2 className={`text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 md:mb-6 px-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
               Atividades Recentes
             </h2>
-            <div className={`rounded-xl overflow-hidden ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-lg`}>
+            <div className={`rounded-lg sm:rounded-xl overflow-hidden ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-lg`}>
               {ultimasAtividades.length > 0 ? (
                 <div className="divide-y divide-gray-700">
                   {ultimasAtividades.map((atividade, index) => (
-                    <div key={index} className="p-4 sm:p-6 hover:bg-gray-700/30 transition-colors cursor-pointer">
-                      <div className="flex items-start gap-3 sm:gap-4">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-white font-bold text-sm sm:text-base">A</span>
+                    <div key={index} className="p-3 sm:p-4 md:p-6 hover:bg-gray-700/30 transition-colors cursor-pointer">
+                      <div className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                        <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-white font-bold text-xs sm:text-sm md:text-base">A</span>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className={`font-semibold mb-1 text-sm sm:text-base transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                          <h3 className={`font-semibold mb-0.5 sm:mb-1 text-xs sm:text-sm md:text-base transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                             {atividade.titulo}
                           </h3>
-                          <p className={`text-xs sm:text-sm mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} line-clamp-2`}>
+                          <p className={`text-xs sm:text-sm mb-0.5 sm:mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} line-clamp-2`}>
                             {atividade.descricao}
                           </p>
                           <p className="text-xs text-gray-500">{atividade.tempo}</p>
@@ -314,9 +314,9 @@ export default function InicioPage() {
                   ))}
                 </div>
               ) : (
-                <div className="p-8 sm:p-12 text-center">
-                  <div className="text-4xl sm:text-5xl mb-3 sm:mb-4">📋</div>
-                  <p className={`text-sm sm:text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <div className="p-6 sm:p-8 md:p-12 text-center">
+                  <div className="text-3xl sm:text-4xl md:text-5xl mb-2 sm:mb-3 md:mb-4">📋</div>
+                  <p className={`text-xs sm:text-sm md:text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     Nenhuma atividade recente
                   </p>
                 </div>

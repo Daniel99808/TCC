@@ -4,6 +4,7 @@ import { supabase } from '../../../lib/supabase';
 import HeaderProfessor from '../../components/header_professor';
 import Footer from '../../components/footer';
 import ProtectedRoute from '../../components/ProtectedRoute';
+import { useDarkMode } from '../../contexts/DarkModeContext';
 
 interface Curso {
   id: number;
@@ -30,6 +31,7 @@ export default function MuralProfessor() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const { isDarkMode } = useDarkMode();
 
   useEffect(() => {
     fetchMessages();
@@ -163,25 +165,25 @@ export default function MuralProfessor() {
   return (
     <ProtectedRoute allowedRoles={['PROFESSOR']}>
       {/* Container principal com flexbox para ocupar a altura da tela */}
-      <div className="flex flex-col min-h-screen bg-gray-100 font-sans pt-16 lg:pt-0">
+      <div className={`flex flex-col min-h-screen font-sans pt-16 lg:pt-0 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <HeaderProfessor />
       
       {/* Main agora usa 'overflow-auto' para gerenciar o scroll de todo o conteúdo */}
-      <main className="lg:ml-80 flex-1 p-4 sm:p-6 lg:p-8 flex flex-col items-center overflow-auto">
+      <main className="lg:ml-80 flex-1 p-4 sm:p-6 lg:p-8 flex flex-col items-center overflow-auto animate-fade-in">
         {/* Bem-vindo section */}
         <div className="text-center mb-6">
           <p className="text-sm text-red-600">Painel do Professor</p>
-          <h2 className="text-3xl font-bold text-gray-800">Meu Mural</h2>
-          <p className="text-gray-600 mt-2">Publique avisos para seus alunos</p>
+          <h2 className={`text-2xl sm:text-3xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Meu Mural</h2>
+          <p className={`text-sm sm:text-base mt-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Publique avisos para seus alunos</p>
         </div>
 
         {/* Botão para adicionar nova mensagem */}
         <div className="w-full max-w-2xl mb-4">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="w-full bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors font-semibold"
+            className="w-full bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-3 px-6 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
           >
-            Adicionar Nova Mensagem
+            📝 Adicionar Nova Mensagem
           </button>
         </div>
 
@@ -197,26 +199,26 @@ export default function MuralProfessor() {
         )}
 
         {/* Mural Card com altura máxima controlada */}
-        <div className="w-full max-w-2xl bg-white rounded-lg shadow-xl p-6 flex flex-col h-full">
+        <div className={`w-full max-w-2xl rounded-xl shadow-xl p-4 sm:p-6 flex flex-col h-full transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
           {/* A div interna é o painel de scroll */}
           <div className="flex-1 overflow-y-auto space-y-6">
             {messages.length === 0 ? (
-              <div className="text-center text-gray-500">
+              <div className={`text-center transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                 <p>Nenhum aviso no momento.</p>
                 <p className="text-sm">Clique no botão acima para adicionar o primeiro aviso!</p>
               </div>
             ) : (
               messages.map((message) => (
-                <div key={message.id} className="border-b border-gray-200 pb-4 last:border-b-0 last:pb-0">
+                <div key={message.id} className={`border-b pb-4 last:border-b-0 last:pb-0 transition-colors duration-300 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
                   <div className="flex items-center mb-2">
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-white">
                       <i className="bi bi-person-circle text-4xl text-red-600"></i> 
                     </div>
                     <div className="ml-3">
-                      <h3 className="font-bold text-gray-800">Professor</h3>
+                      <h3 className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Professor</h3>
                     </div>
                   </div>
-                  <p className="text-gray-700 whitespace-pre-line">{message.conteudo}</p>
+                  <p className={`text-sm sm:text-base whitespace-pre-line transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{message.conteudo}</p>
                   <div className="flex items-center justify-between mt-2">
                     <span className="text-xs text-gray-500">
                       {new Date(message.createdAt).toLocaleString('pt-BR')}
@@ -234,14 +236,16 @@ export default function MuralProfessor() {
 
       {/* Modal para adicionar mensagem */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Adicionar Nova Mensagem</h3>
+        <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className={`rounded-2xl shadow-2xl w-full max-w-md p-6 max-h-[90vh] overflow-y-auto transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <h3 className={`text-xl font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Adicionar Nova Mensagem</h3>
             
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Tipo de Público */}
               <div>
-                <label htmlFor="tipoPublico" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="tipoPublico" className={`block text-sm font-medium mb-1 transition-colors duration-300 ${
+                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                }`}>
                   Publicar para *
                 </label>
                 <select
@@ -251,7 +255,11 @@ export default function MuralProfessor() {
                     setTipoPublico(e.target.value as 'CURSO' | 'TURMA');
                     setTurmaSelecionada('');
                   }}
-                  className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-300 ${
+                    isDarkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white' 
+                      : 'bg-white border-gray-300 text-gray-900'
+                  }`}
                 >
                   <option value="CURSO">Curso específico</option>
                   <option value="TURMA">Turma específica</option>
@@ -260,14 +268,20 @@ export default function MuralProfessor() {
 
               {/* Seleção de Curso */}
               <div>
-                <label htmlFor="curso" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="curso" className={`block text-sm font-medium mb-1 transition-colors duration-300 ${
+                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                }`}>
                   Curso *
                 </label>
                 <select
                   id="curso"
                   value={cursoSelecionado}
                   onChange={(e) => setCursoSelecionado(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-300 ${
+                    isDarkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white' 
+                      : 'bg-white border-gray-300 text-gray-900'
+                  }`}
                   required
                 >
                   <option value="">Selecione um curso</option>
@@ -282,14 +296,20 @@ export default function MuralProfessor() {
               {/* Seleção de Turma */}
               {tipoPublico === 'TURMA' && (
                 <div>
-                  <label htmlFor="turma" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="turma" className={`block text-sm font-medium mb-1 transition-colors duration-300 ${
+                    isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
                     Turma *
                   </label>
                   <select
                     id="turma"
                     value={turmaSelecionada}
                     onChange={(e) => setTurmaSelecionada(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-300 ${
+                      isDarkMode 
+                        ? 'bg-gray-700 border-gray-600 text-white' 
+                        : 'bg-white border-gray-300 text-gray-900'
+                    }`}
                     required
                   >
                     <option value="">Selecione uma turma</option>
@@ -300,7 +320,9 @@ export default function MuralProfessor() {
               )}
               
               <div>
-                <label htmlFor="mensagem" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="mensagem" className={`block text-sm font-medium mb-1 transition-colors duration-300 ${
+                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                }`}>
                   Mensagem *
                 </label>
                 <textarea
@@ -308,23 +330,33 @@ export default function MuralProfessor() {
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-vertical"
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-vertical transition-colors duration-300 ${
+                    isDarkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                  }`}
                   placeholder="Digite a mensagem para o mural..."
                   maxLength={500}
                 />
-                <div className="text-xs text-gray-500 mt-1">
+                <div className={`text-xs mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                   {newMessage.length}/500 caracteres
                 </div>
               </div>
 
               {/* Preview da mensagem */}
               {newMessage && (
-                <div className="border border-gray-200 rounded-md p-3 bg-gray-50">
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Preview:</h4>
-                  <div className="text-sm text-gray-600 whitespace-pre-line">
+                <div className={`border rounded-lg p-3 transition-colors duration-300 ${
+                  isDarkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-gray-50'
+                }`}>
+                  <h4 className={`text-sm font-medium mb-2 transition-colors duration-300 ${
+                    isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}>Preview:</h4>
+                  <div className={`text-sm whitespace-pre-line transition-colors duration-300 ${
+                    isDarkMode ? 'text-gray-300' : 'text-gray-600'
+                  }`}>
                     {newMessage}
                   </div>
-                  <div className="text-xs text-red-600 mt-2">
+                  <div className="text-xs text-red-500 mt-2 font-medium">
                     Será publicado para: {
                       tipoPublico === 'CURSO' && cursoSelecionado ? 
                         cursos.find(c => c.id.toString() === cursoSelecionado)?.nome || 'Curso' :
@@ -341,9 +373,21 @@ export default function MuralProfessor() {
                 <button
                   type="submit"
                   disabled={loading || !newMessage.trim()}
-                  className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="flex-1 bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-2.5 px-4 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-md hover:shadow-lg"
                 >
                   {loading ? 'Publicando...' : 'Publicar'}
+                </button>
+                
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className={`px-4 py-2.5 border rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-300 ${
+                    isDarkMode 
+                      ? 'border-gray-600 text-gray-300 hover:bg-gray-700 focus:ring-gray-500' 
+                      : 'border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500'
+                  }`}
+                >
+                  Cancelar
                 </button>
                 
                 <button

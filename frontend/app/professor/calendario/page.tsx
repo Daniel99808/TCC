@@ -5,6 +5,7 @@ import HeaderProfessor from '../../components/header_professor';
 import Footer from '../../components/footer';
 import Image from 'next/image';
 import ProtectedRoute from '../../components/ProtectedRoute';
+import { useDarkMode } from '../../contexts/DarkModeContext';
 
 interface CalendarioEvento {
   id: number;
@@ -21,6 +22,7 @@ export default function CalendarioProfessor() {
   const [message, setMessage] = useState('');
   const [eventos, setEventos] = useState<CalendarioEvento[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isDarkMode } = useDarkMode();
 
   // Carregar eventos existentes
   useEffect(() => {
@@ -124,24 +126,24 @@ export default function CalendarioProfessor() {
 
   return (
     <ProtectedRoute allowedRoles={['PROFESSOR']}>
-      <div className="min-h-screen bg-gray-100 flex flex-col pt-16 lg:pt-0">
+      <div className={`min-h-screen flex flex-col pt-16 lg:pt-0 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <HeaderProfessor />
         
-        <main className="lg:ml-80 flex-1 container mx-auto px-4 py-8">
+        <main className="lg:ml-80 flex-1 container mx-auto px-4 sm:px-6 py-4 sm:py-8 animate-fade-in">
         <div className="max-w-4xl mx-auto">
           {/* Cabeçalho da página */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          <div className={`rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <h1 className={`text-2xl sm:text-3xl font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
               Painel do Professor - Calendário
             </h1>
-            <p className="text-gray-600">
+            <p className={`text-sm sm:text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               Publique eventos no calendário da comunidade
             </p>
           </div>
 
           {/* Lista de eventos */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          <div className={`rounded-xl shadow-lg p-4 sm:p-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <h2 className={`text-lg sm:text-xl font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
               Próximos Eventos
             </h2>
             
@@ -198,32 +200,35 @@ export default function CalendarioProfessor() {
       {/* Botão flutuante para adicionar evento */}
       <button
         onClick={openModal}
-        className="fixed bottom-5 right-5 bg-red-600 hover:bg-red-700 text-white p-8 hover:cursor-pointer rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-200"
+        className="fixed bottom-6 right-6 bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl hover:shadow-red-500/50 transition-all duration-300 z-50 flex items-center justify-center hover:scale-110 active:scale-95 group"
         title="Adicionar novo evento"
       >
-        <Image 
-          src="/lapis.png" 
-          alt="Adicionar evento" 
-          width={24} 
-          height={24}
-          className="w-9 h-9"
-        />
+        <svg className="w-6 h-6 sm:w-7 sm:h-7 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+        </svg>
       </button>
 
       {/* Modal para adicionar evento */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[200vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className={`rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
             {/* Header da modal */}
-            <div className="flex justify-between items-center p-6 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800">
-                Adicionar Novo Evento
-              </h2>
+            <div className={`flex justify-between items-center p-6 border-b transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+              <div>
+                <h2 className={`text-xl sm:text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                  Novo Evento
+                </h2>
+                <p className={`text-xs sm:text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Preencha os detalhes do evento</p>
+              </div>
               <button
                 onClick={closeModal}
-                className="text-gray-400 hover:text-gray-600 text-2xl hover:cursor-pointer"
+                className={`p-2 rounded-full transition-colors ${
+                  isDarkMode ? 'text-gray-400 hover:bg-gray-700' : 'text-gray-400 hover:bg-gray-100'
+                }`}
               >
-                ×
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
 
@@ -231,7 +236,9 @@ export default function CalendarioProfessor() {
             <div className="p-6">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="titulo" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="titulo" className={`block text-sm font-medium mb-1 transition-colors duration-300 ${
+                    isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
                     Título do Evento *
                   </label>
                   <input
@@ -239,17 +246,23 @@ export default function CalendarioProfessor() {
                     id="titulo"
                     value={titulo}
                     onChange={(e) => setTitulo(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors duration-300 ${
+                      isDarkMode 
+                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                    }`}
                     placeholder="Ex: Reunião de Pais, Prova de Matemática..."
                     maxLength={100}
                   />
-                  <div className="text-xs text-gray-500 mt-1">
+                  <div className={`text-xs mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                     {titulo.length}/100 caracteres
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="descricao" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="descricao" className={`block text-sm font-medium mb-1 transition-colors duration-300 ${
+                    isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
                     Descrição do Evento *
                   </label>
                   <textarea
@@ -257,17 +270,23 @@ export default function CalendarioProfessor() {
                     value={descricao}
                     onChange={(e) => setDescricao(e.target.value)}
                     rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none transition-colors duration-300 ${
+                      isDarkMode 
+                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                    }`}
                     placeholder="Descreva os detalhes do evento: horário, local, o que trazer..."
                     maxLength={500}
                   />
-                  <div className="text-xs text-gray-500 mt-1">
+                  <div className={`text-xs mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                     {descricao.length}/500 caracteres
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="data" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="data" className={`block text-sm font-medium mb-1 transition-colors duration-300 ${
+                    isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
                     Data do Evento *
                   </label>
                   <input
@@ -276,7 +295,11 @@ export default function CalendarioProfessor() {
                     value={data}
                     onChange={(e) => setData(e.target.value)}
                     min={dataMinima}
-                    className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors duration-300 ${
+                      isDarkMode 
+                        ? 'bg-gray-700 border-gray-600 text-white [color-scheme:dark]' 
+                        : 'bg-white border-gray-300 text-gray-900'
+                    }`}
                   />
                 </div>
 
@@ -296,7 +319,7 @@ export default function CalendarioProfessor() {
                   <button
                     type="submit"
                     disabled={loading || !titulo.trim() || !descricao.trim() || !data}
-                    className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="flex-1 bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-2.5 px-4 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-md hover:shadow-lg"
                   >
                     {loading ? 'Criando...' : 'Criar Evento'}
                   </button>
@@ -304,7 +327,11 @@ export default function CalendarioProfessor() {
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                    className={`px-4 py-2.5 border rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-300 ${
+                      isDarkMode 
+                        ? 'border-gray-600 text-gray-300 hover:bg-gray-700 focus:ring-gray-500' 
+                        : 'border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500'
+                    }`}
                   >
                     Cancelar
                   </button>

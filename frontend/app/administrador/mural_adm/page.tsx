@@ -4,6 +4,7 @@ import { supabase } from '../../../lib/supabase';
 import Header from '../../components/header_adm';
 import Footer from '../../components/footer';
 import ProtectedRoute from '../../components/ProtectedRoute';
+import { useDarkMode } from '../../contexts/DarkModeContext';
 
 interface Curso {
   id: number;
@@ -30,6 +31,7 @@ export default function MuralAdm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const { isDarkMode } = useDarkMode();
 
   useEffect(() => {
     fetchMessages();
@@ -161,16 +163,16 @@ export default function MuralAdm() {
   return (
     <ProtectedRoute allowedRoles={['ADMIN']}>
       {/* Container principal com flexbox para ocupar a altura da tela */}
-      <div className="flex flex-col min-h-screen bg-gray-100 font-sans pt-16 lg:pt-0">
+      <div className={`flex flex-col min-h-screen font-sans pt-16 lg:pt-0 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <Header />
       
       {/* Main agora usa 'overflow-auto' para gerenciar o scroll de todo o conteúdo */}
-      <main className="lg:ml-80 flex-1 p-4 sm:p-6 lg:p-8 flex flex-col items-center overflow-auto">
+      <main className="lg:ml-80 flex-1 p-4 sm:p-6 lg:p-8 flex flex-col items-center overflow-auto animate-fade-in">
         {/* Bem-vindo section */}
         <div className="text-center mb-6">
           <p className="text-sm text-red-600">Painel Administrativo</p>
-          <h2 className="text-3xl font-bold text-gray-800">Mural de Avisos</h2>
-          <p className="text-gray-600 mt-2">Gerencie os avisos da comunidade</p>
+          <h2 className={`text-3xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Mural de Avisos</h2>
+          <p className={`mt-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Gerencie os avisos da comunidade</p>
         </div>
 
         {/* Botão para adicionar nova mensagem */}
@@ -195,27 +197,27 @@ export default function MuralAdm() {
         )}
 
         {/* Mural Card com altura máxima controlada */}
-        <div className="w-full max-w-2xl bg-white rounded-lg shadow-xl p-6 flex flex-col h-full">
+        <div className={`w-full max-w-2xl rounded-lg shadow-xl p-6 flex flex-col h-full transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
           {/* A div interna é o painel de scroll */}
           <div className="flex-1 overflow-y-auto space-y-6">
             {messages.length === 0 ? (
-              <div className="text-center text-gray-500">
-                <div className="text-4xl mb-2">&#x1F4ED;</div>
+              <div className={`text-center transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                <div className="text-4xl mb-2">📭</div>
                 <p>Nenhum aviso no momento.</p>
                 <p className="text-sm">Clique no botão acima para adicionar o primeiro aviso!</p>
               </div>
             ) : (
               messages.map((message) => (
-                <div key={message.id} className="border-b border-gray-200 pb-4 last:border-b-0 last:pb-0">
+                <div key={message.id} className={`border-b pb-4 last:border-b-0 last:pb-0 transition-colors duration-300 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
                   <div className="flex items-center mb-2">
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-white">
                       <i className="bi bi-person-circle text-4xl text-red-600"></i> 
                     </div>
                     <div className="ml-3">
-                      <h3 className="font-bold text-gray-800">Administração</h3>
+                      <h3 className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Administração</h3>
                     </div>
                   </div>
-                  <p className="text-gray-700 whitespace-pre-line">{message.conteudo}</p>
+                  <p className={`whitespace-pre-line transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{message.conteudo}</p>
                   <div className="flex items-center justify-between mt-2">
                     <span className="text-xs text-gray-500">
                       {new Date(message.createdAt).toLocaleString('pt-BR')}
@@ -234,8 +236,8 @@ export default function MuralAdm() {
       {/* Modal para adicionar mensagem */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Adicionar Nova Mensagem</h3>
+          <div className={`rounded-lg w-full max-w-md p-6 max-h-[90vh] overflow-y-auto transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <h3 className={`text-xl font-semibold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Adicionar Nova Mensagem</h3>
             
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Tipo de Público */}

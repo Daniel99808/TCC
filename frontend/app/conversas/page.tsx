@@ -469,17 +469,17 @@ Como posso te ajudar hoje?`,
         <div className={`flex flex-col min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
             <DynamicHeader />
             
-            <main className="lg:ml-80 flex-1 p-2 sm:p-4">
+            <main className="lg:ml-80 flex-1 p-2 sm:p-4 relative z-0 animate-fade-in">
                 <div className="max-w-4xl mx-auto h-full"> 
                     <div className={`rounded-lg shadow-xl flex flex-col transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`} style={{ height: 'calc(100vh - 80px)' }}>
                         
                         {/* Header do Chat (com botão de voltar) */}
-                        <div className={`p-3 sm:p-4 border-b flex items-center transition-colors duration-300 ${
+                        <div className={`p-3 sm:p-4 border-b flex items-center transition-colors duration-300 relative z-10 ${
                             isDarkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-red-50'
                         }`}>
                             <button 
                                 onClick={fecharChat} 
-                                className="mr-4 text-red-600 hover:cursor-pointer hover:text-red-800 transition-colors text-2xl"
+                                className="mr-4 text-red-600 hover:cursor-pointer hover:text-red-800 transition-colors text-2xl relative z-10"
                                 title="Voltar para conversas"
                             >
                                 ←
@@ -611,7 +611,7 @@ Como posso te ajudar hoje?`,
       <div className={`flex flex-col min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <DynamicHeader />
         
-        <main className="lg:ml-80 flex-1 p-4 sm:p-6">
+        <main className="lg:ml-80 flex-1 p-4 sm:p-6 relative z-0 animate-fade-in">
         <div className="max-w-2xl mx-auto h-full">
           <h1 className={`text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Conversas</h1>
           

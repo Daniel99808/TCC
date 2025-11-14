@@ -5,6 +5,7 @@ import Header from '../../components/header_adm';
 import Footer from '../../components/footer';
 import Image from 'next/image';
 import ProtectedRoute from '../../components/ProtectedRoute';
+import { useDarkMode } from '../../contexts/DarkModeContext';
 
 interface CalendarioEvento {
   id: number;
@@ -21,6 +22,7 @@ export default function CalendarioAdm() {
   const [message, setMessage] = useState('');
   const [eventos, setEventos] = useState<CalendarioEvento[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isDarkMode } = useDarkMode();
 
   // Carregar eventos existentes
   useEffect(() => {
@@ -125,24 +127,24 @@ export default function CalendarioAdm() {
 
   return (
     <ProtectedRoute allowedRoles={['ADMIN']}>
-      <div className="min-h-screen bg-gray-100 flex flex-col pt-16 lg:pt-0">
+      <div className={`min-h-screen flex flex-col pt-16 lg:pt-0 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <Header />
         
-        <main className="lg:ml-80 flex-1 container mx-auto px-4 py-8">
+        <main className="lg:ml-80 flex-1 container mx-auto px-4 py-8 animate-fade-in">
         <div className="max-w-4xl mx-auto">
           {/* Cabeçalho da página */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          <div className={`rounded-lg shadow-md p-6 mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <h1 className={`text-3xl font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
               Painel Administrativo - Calendário
             </h1>
-            <p className="text-gray-600">
+            <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               Gerencie eventos do calendário da comunidade
             </p>
           </div>
 
           {/* Lista de eventos */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          <div className={`rounded-lg shadow-md p-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <h2 className={`text-xl font-semibold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
               Próximos Eventos
             </h2>
             

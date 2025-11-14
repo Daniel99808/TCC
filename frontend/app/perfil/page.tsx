@@ -96,95 +96,146 @@ export default function PerfilPage() {
         <div className={`flex flex-col min-h-screen transition-colors duration-300 ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-100'}`}>
           <DynamicHeader />
           
-          <main className="lg:ml-80 flex-1 p-4 sm:p-6 lg:p-8">
-            <div className="max-w-6xl mx-auto">
+          <main className="lg:ml-80 flex-1 p-4 sm:p-6 lg:p-8 animate-fade-in">
+            <div className="max-w-4xl mx-auto">
               {/* Título */}
-              <h1 className={`text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Perfil</h1>
+              <h1 className={`text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                Meu Perfil
+              </h1>
           
               {/* Card Principal */}
-              <div className={`rounded-lg shadow-xl p-4 sm:p-6 lg:p-8 mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                <div className="flex flex-col md:flex-row items-start gap-6 sm:gap-8">
-              
-              {/* Foto de Perfil */}
-              <div className="flex flex-col items-center">
-                <div className="w-32 h-32 bg-red-600 rounded-full flex items-center justify-center mb-4">
-                  <svg className="w-20 h-20 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                  </svg>
-                </div>
-              </div>
-              
-              {/* Informações do Usuário */}
-              <div className="flex-1">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h2 className={`text-lg font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      <span className="text-red-600">Nome:</span> {usuario?.nome}
-                    </h2>
-                    <h2 className={`text-lg font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      <span className="text-red-600">Curso:</span> {usuario?.curso?.nome || 'Não informado'}
-                    </h2>
-                    <h2 className={`text-lg font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      <span className="text-red-600">Turma:</span> B
-                    </h2>
+              <div className={`rounded-xl shadow-lg p-6 sm:p-8 mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                  
+                  {/* Foto de Perfil */}
+                  <div className="flex-shrink-0">
+                    <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center shadow-lg">
+                      <svg className="w-14 h-14 sm:w-20 sm:h-20 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                      </svg>
+                    </div>
                   </div>
                   
-                  {/* Botões Laterais */}
-                  <div className="space-y-4">
+                  {/* Informações do Usuário */}
+                  <div className="flex-1 w-full">
+                    <div className="space-y-4">
+                      {/* Nome */}
+                      <div className={`p-4 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                        <p className={`text-xs sm:text-sm font-medium mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                          Nome
+                        </p>
+                        <p className={`text-base sm:text-lg font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {usuario?.nome}
+                        </p>
+                      </div>
+
+                      {/* Curso */}
+                      <div className={`p-4 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                        <p className={`text-xs sm:text-sm font-medium mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                          Curso
+                        </p>
+                        <p className={`text-base sm:text-lg font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {usuario?.curso?.nome || 'Não informado'}
+                        </p>
+                      </div>
+
+                      {/* Turma */}
+                      <div className={`p-4 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                        <p className={`text-xs sm:text-sm font-medium mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                          Turma
+                        </p>
+                        <p className={`text-base sm:text-lg font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          B
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Botões de Ações */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 pt-6 border-t transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}">
+                  <button 
+                    onClick={() => window.open('https://docs.google.com/spreadsheets/d/1w-pSrGjvFTxZJDJDvYruBM1dTcorfh6zw1Bl2VdNX74/edit', '_blank')}
+                    className="flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 active:scale-95 transition-all font-semibold shadow-md"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Frequência
+                  </button>
+                  
+                  <button 
+                    onClick={() => alert('Funcionalidade de notas em breve!')}
+                    className="flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 active:scale-95 transition-all font-semibold shadow-md"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                    Notas
+                  </button>
+                </div>
+              </div>
+          
+              {/* Seção de Configurações */}
+              <div className={`rounded-xl shadow-lg p-6 sm:p-8 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+                <h2 className={`text-xl font-bold mb-6 flex items-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                  <svg className="w-6 h-6 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  Configurações
+                </h2>
+
+                <div className="space-y-3">
+                  {/* Alterar Senha */}
+                  <button className={`w-full text-left p-4 rounded-lg border transition-all duration-300 hover:shadow-md ${isDarkMode ? 'hover:bg-gray-700 border-gray-600 bg-gray-750' : 'hover:bg-gray-50 border-gray-200 bg-white'}`}>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        <span className={`font-medium transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                          Alterar senha
+                        </span>
+                      </div>
+                      <svg className={`w-5 h-5 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </button>
+
+                  {/* Modo Escuro */}
+                  <div className={`flex items-center justify-between p-4 border rounded-lg transition-colors duration-300 ${isDarkMode ? 'border-gray-600 bg-gray-750' : 'border-gray-200 bg-white'}`}>
+                    <div className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                      </svg>
+                      <span className={`font-medium transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                        Modo Escuro
+                      </span>
+                    </div>
                     <button 
-                      onClick={() => window.open('https://docs.google.com/spreadsheets/d/1w-pSrGjvFTxZJDJDvYruBM1dTcorfh6zw1Bl2VdNX74/edit', '_blank')}
-                      className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors font-semibold shadow-md"
+                      onClick={toggleDarkMode}
+                      className={`relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 ${isDarkMode ? 'bg-red-600' : 'bg-gray-300'}`}
                     >
-                      Frequência
-                    </button>
-                    
-                    <button 
-                      onClick={() => alert('Funcionalidade de notas em breve!')}
-                      className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors font-semibold shadow-md"
-                    >
-                      Notas
+                      <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow-md ${isDarkMode ? 'translate-x-6' : 'translate-x-1'}`} />
                     </button>
                   </div>
                 </div>
+                
+                {/* Botão Sair */}
+                <div className={`mt-6 pt-6 border-t transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                  <button 
+                    onClick={handleLogout}
+                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 active:scale-95 transition-all font-semibold shadow-md"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Sair da Conta
+                  </button>
+                </div>
               </div>
-            </div>
-          </div>
-          
-          {/* Seção de Configurações */}
-          <div className={`rounded-lg shadow-xl p-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            <h2 className="text-xl font-semibold text-red-600 mb-6 flex items-center">
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-              Configurações
-            </h2>
-
-            <div className="space-y-4">
-              <button className={`w-full text-left p-3 rounded-lg border transition-colors duration-300 ${isDarkMode ? 'hover:bg-gray-700 border-gray-600' : 'hover:bg-gray-50 border-gray-200'}`}>
-                <span className="text-red-600 font-medium hover:cursor-pointer">Alterar senha</span>
-              </button>
-
-              <div className={`flex items-center justify-between p-3 border rounded-lg transition-colors duration-300 ${isDarkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-white'}`}>
-                <span className="text-red-600 font-medium hover:cursor-pointer">Modo:</span>
-                <button 
-                  onClick={toggleDarkMode}
-                  className={`relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 ${isDarkMode ? 'bg-red-600' : 'bg-gray-200'}`}
-                >
-                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isDarkMode ? 'translate-x-6' : 'translate-x-1'}`} />
-                </button>
-              </div>
-            </div>
-            
-            {/* Botão Sair */}
-            <div className={`mt-8 pt-6 border-t transition-colors duration-300 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
-              <button 
-                onClick={handleLogout}
-                className="bg-red-600 cursor-pointer text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-semibold"
-              >
-                Sair
-              </button>
-            </div>
-          </div>
             </div>
           </main>
         </div>
