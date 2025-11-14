@@ -109,61 +109,56 @@ export default function AuthForm() {
 
   return (
     <div
-      className="flex min-h-screen items-center justify-center bg-cover bg-center font-sans"
-      style={{ backgroundImage: "url('/Fundo do login.png')" }}
+      className="flex min-h-screen items-center justify-center bg-black bg-cover bg-center font-sans relative"
+      style={{ backgroundImage: "url('/4d-ultra-hd-red-gradient-blobs-lq4203zqlhouj1ix 1.png')" }}
     >
-      {/* Container Principal do Formulário */}
-      <div className="w-full max-w-md bg-black/0 backdrop-blur-lg border border-white/20 shadow-2xl rounded-2xl p-8 mx-4">
-        <div className="flex flex-col items-center space-y-3 mb-8">
-          {/* Logo Aumentada - Substituído <Image> por <img> */}
-          <img 
-            src="/logo.png" 
-            alt="Logo Nexus" 
-            width={180} 
-            height={180} 
-            className="mx-auto" 
-          />
-          <h1 className="text-3xl font-semibold text-white text-center">
-            Bem-vindo de volta
-          </h1>
-          <p className="text-sm text-gray-300 text-center">
-            Faça login para acessar o sistema
-          </p>
-        </div>
+      {/* Texto de Boas-vindas à esquerda */}
+      <div className="hidden lg:flex flex-col justify-center text-white px-12 max-w-md">
+        <h1 className="text-5xl font-bold mb-2">
+          Olá, seja<br />bem-vindo à<br /><span className="font-extrabold">Nexus Senai!</span>
+        </h1>
+        <p className="text-sm text-gray-300 mt-4">
+          Por favor, preencha o formulário à direita.
+        </p>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+      {/* Container do Formulário de Login */}
+      <div className="w-full max-w-md bg-black/40 backdrop-blur-md border border-white/10 shadow-2xl rounded-3xl p-8 mx-4">
+        <h2 className="text-4xl font-bold text-white mb-8">Login</h2>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Campo CPF */}
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1.5">CPF</label>
+            <label className="block text-sm font-medium text-white mb-2">CPF</label>
             <input
               type="text"
-              placeholder="000.000.000-00"
+              placeholder=""
               value={cpf}
               onChange={handleCpfChange}
               required
               inputMode="numeric"
               maxLength={14}
-              className="w-full rounded-lg border border-gray-600/50 bg-black/30 px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent focus:bg-black/50 transition duration-200"
+              className="w-full rounded-lg border border-white/30 bg-transparent px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200"
             />
           </div>
 
           {/* Campo Senha */}
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1.5">Senha</label>
+            <label className="block text-sm font-medium text-white mb-2">Senha</label>
             <input
               type="password"
-              placeholder="••••••••"
+              placeholder=""
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full rounded-lg border border-gray-600/50 bg-black/30 px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent focus:bg-black/50 transition duration-200"
+              className="w-full rounded-lg border border-white/30 bg-transparent px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200"
             />
-            <div className="mt-2 text-right">
+            <div className="mt-3 text-right">
               <a
                 href="#"
-                className="text-sm font-medium text-red-500 hover:text-red-400 hover:underline transition"
+                className="text-sm font-medium text-red-400 hover:text-red-300 hover:underline transition italic"
               >
-                Esqueci minha senha
+                Esqueci a senha
               </a>
             </div>
           </div>
@@ -172,16 +167,11 @@ export default function AuthForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full mt-2 bg-red-600 text-white font-medium py-2.5 rounded-lg shadow-md transition duration-200 ease-in-out hover:bg-red-700 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-red-600 disabled:opacity-60 cursor-pointer disabled:cursor-not-allowed"
+            className="w-full mt-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-3 rounded-lg shadow-lg transition duration-200 ease-in-out hover:from-red-700 hover:to-red-800 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-red-600 disabled:opacity-60 cursor-pointer disabled:cursor-not-allowed"
           >
             {isLoading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
-
-        {/* Texto de Copyright */}
-        <p className="mt-8 text-center text-xs text-gray-400">
-          &copy; 2025 Nexus. Todos os direitos reservados.
-        </p>
       </div>
 
       {/* COMPONENTE: TOAST NOTIFICATION (Modal) */}
