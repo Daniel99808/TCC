@@ -39,7 +39,7 @@ export default function InicioPage() {
   const [avisosNovos, setAvisosNovos] = useState(0);
   const [eventosProximos, setEventosProximos] = useState(0);
   const [mensagensNaoLidas, setMensagensNaoLidas] = useState(0);
-  const [disciplinas, setDisciplinas] = useState(0);
+
   const [ultimasAtividades, setUltimasAtividades] = useState<any[]>([]);
   const { isDarkMode } = useDarkMode();
 
@@ -101,8 +101,7 @@ export default function InicioPage() {
         setMensagensNaoLidas(naoLidas);
       }
 
-      // Disciplinas (valor fixo ou buscar da API)
-      setDisciplinas(8);
+
 
     } catch (error) {
       console.error('Erro ao carregar dashboard:', error);
@@ -146,7 +145,7 @@ export default function InicioPage() {
           </div>
 
           {/* Cards de Estatísticas */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
             {/* Avisos Novos */}
             <div className={`rounded-xl p-4 sm:p-6 transition-all duration-300 hover:scale-105 cursor-pointer ${
               isDarkMode ? 'bg-gray-800' : 'bg-white'
@@ -210,26 +209,7 @@ export default function InicioPage() {
               </p>
             </div>
 
-            {/* Disciplinas */}
-            <div className={`rounded-xl p-4 sm:p-6 transition-all duration-300 hover:scale-105 cursor-pointer ${
-              isDarkMode ? 'bg-gray-800' : 'bg-white'
-            } shadow-lg`}>
-              <div className="flex items-center justify-between mb-3">
-                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center ${
-                  isDarkMode ? 'bg-green-600/20' : 'bg-green-100'
-                }`}>
-                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                </div>
-              </div>
-              <h3 className={`text-2xl sm:text-3xl font-bold mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                {disciplinas}
-              </h3>
-              <p className={`text-xs sm:text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Disciplinas
-              </p>
-            </div>
+
           </div>
 
           {/* Acesso Rápido */}
