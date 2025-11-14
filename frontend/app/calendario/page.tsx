@@ -125,17 +125,17 @@ const CalendarioPage = () => {
 
   return (
     <ProtectedRoute allowedRoles={['ESTUDANTE', 'PROFESSOR', 'ADMIN']}>
-      <div className={`flex flex-col h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+      <div className={`flex flex-col min-h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <DynamicHeader />
-        <main className="flex-1 p-8 overflow-auto">
+        <main className="lg:ml-80 flex-1 p-4 sm:p-6 lg:p-8 overflow-auto">
         {erro && (
-          <div className="max-w-4xl mx-auto mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+          <div className="max-w-4xl mx-auto mb-4 p-3 sm:p-4 bg-red-100 border border-red-400 text-red-700 rounded text-sm sm:text-base">
             {erro}
           </div>
         )}
         
-        <div className={`max-w-4xl mx-auto p-4 rounded-xl shadow-2xl transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          <div className="flex justify-between items-center mb-6">
+        <div className={`max-w-4xl mx-auto p-4 sm:p-6 rounded-xl shadow-2xl transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          <div className="flex justify-between items-center mb-4 sm:mb-6">
             <button 
               onClick={() => setDataAtual(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
               className={`p-2 text-xl font-bold rounded-full transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${

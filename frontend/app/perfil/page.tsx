@@ -66,17 +66,17 @@ export default function PerfilPage() {
   return (
     <ProtectedRoute allowedRoles={['ESTUDANTE', 'PROFESSOR', 'ADMIN']}>
       {loading ? (
-        <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+        <div className={`flex flex-col min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
           <DynamicHeader />
-          <div className="flex-1 flex items-center justify-center">
+          <div className="lg:ml-80 flex-1 flex items-center justify-center p-4">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto"></div>
-              <p className={`mt-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Carregando perfil...</p>
+              <p className={`mt-2 text-sm sm:text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Carregando perfil...</p>
             </div>
           </div>
         </div>
       ) : error || !usuario ? (
-        <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+        <div className={`flex flex-col min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
           <DynamicHeader />
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
@@ -93,17 +93,17 @@ export default function PerfilPage() {
           </div>
         </div>
       ) : (
-        <div className={`flex flex-col h-full transition-colors duration-300 ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-100'}`}>
+        <div className={`flex flex-col min-h-screen transition-colors duration-300 ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-100'}`}>
           <DynamicHeader />
           
-          <main className="flex-1 p-21.5">
+          <main className="lg:ml-80 flex-1 p-4 sm:p-6 lg:p-8">
             <div className="max-w-6xl mx-auto">
               {/* Título */}
-              <h1 className={`text-3xl font-bold text-center mb-8 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Perfil</h1>
+              <h1 className={`text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Perfil</h1>
           
               {/* Card Principal */}
-              <div className={`rounded-lg shadow-xl p-8 mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                <div className="flex flex-col md:flex-row items-start gap-8">
+              <div className={`rounded-lg shadow-xl p-4 sm:p-6 lg:p-8 mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+                <div className="flex flex-col md:flex-row items-start gap-6 sm:gap-8">
               
               {/* Foto de Perfil */}
               <div className="flex flex-col items-center">

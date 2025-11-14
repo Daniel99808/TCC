@@ -127,10 +127,10 @@ export default function AAPMPage() {
 
   return (
     <ProtectedRoute allowedRoles={['ADMIN']}>
-      <div className="min-h-screen bg-gray-100 flex flex-col">
+      <div className="min-h-screen bg-gray-100 flex flex-col pt-16 lg:pt-0">
         <Header />
         
-        <main className="flex-1 p-6">
+        <main className="lg:ml-80 flex-1 p-4 sm:p-6">
           <div className="max-w-7xl mx-auto">
             {/* Cabeçalho */}
             <div className="text-center mb-8">

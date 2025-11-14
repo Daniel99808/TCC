@@ -62,16 +62,30 @@ export default function ConversasPage() {
   const [nexusMensagens, setNexusMensagens] = useState<any[]>([]);
   const [nexusTyping, setNexusTyping] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [mostrarModalNovaConversa, setMostrarModalNovaConversa] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const { isDarkMode } = useDarkMode();
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToBottom = (smooth = true) => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ 
+        behavior: smooth ? "smooth" : "auto",
+        block: "end"
+      });
+    }
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [mensagensConversa, nexusMensagens]);
+
+  useEffect(() => {
+    // Scroll imediato ao trocar de conversa
+    if (conversaSelecionada || isNexusChat) {
+      scrollToBottom(false);
+    }
+  }, [conversaSelecionada, isNexusChat]);
 
   // Função para buscar conversas (estabilizada com useCallback)
   const buscarConversas = useCallback(async (userId: number) => {
@@ -396,7 +410,7 @@ Como posso te ajudar hoje?`,
     // Renderização de loading/login
     return (
         <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-            <Header />
+            <DynamicHeader />
             <div className="flex-1 flex items-center justify-center">
                 {loading ? (
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
@@ -421,35 +435,26 @@ Como posso te ajudar hoje?`,
   // ===========================================
   // LÓGICA DA LISTA UNIFICADA (ANTES DA RENDERIZAÇÃO)
   // ===========================================
-  const usuariosDecorados: ItemLista[] = usuarios.map(usuario => {
-    const conversaAtiva = conversas.find(c => 
-      (c.usuario1.id === usuario.id && c.usuario2.id === usuarioLogado.id) || 
-      (c.usuario1.id === usuarioLogado.id && c.usuario2.id === usuario.id)
-    );
-    
+  // Cria uma lista apenas com usuários que TÊM conversas ativas
+  const conversasComUsuarios: ItemLista[] = conversas.map(conversa => {
+    const outroUsuario = getOutroUsuario(conversa);
     return {
-      ...usuario,
-      conversaAtiva: conversaAtiva,
+      ...outroUsuario,
+      conversaAtiva: conversa,
     };
   });
 
-  usuariosDecorados.sort((a, b) => {
-      const aIsActive = !!a.conversaAtiva;
-      const bIsActive = !!b.conversaAtiva;
-
-      if (aIsActive && !bIsActive) return -1;
-      if (!aIsActive && bIsActive) return 1;
-
-      if (aIsActive && bIsActive) {
-          return new Date(b.conversaAtiva!.updatedAt).getTime() - new Date(a.conversaAtiva!.updatedAt).getTime();
-      }
-
-      return a.nome.localeCompare(b.nome);
+  // Ordena por data da última mensagem (mais recente primeiro)
+  conversasComUsuarios.sort((a, b) => {
+    if ('conversaAtiva' in a && 'conversaAtiva' in b && a.conversaAtiva && b.conversaAtiva) {
+      return new Date(b.conversaAtiva.updatedAt).getTime() - new Date(a.conversaAtiva.updatedAt).getTime();
+    }
+    return 0;
   });
   
   const listaUnificada: ItemLista[] = [
       { id: 'nexus', nome: 'NEXUS IA', isNexus: true },
-      ...usuariosDecorados
+      ...conversasComUsuarios
   ];
 
 
@@ -461,15 +466,15 @@ Como posso te ajudar hoje?`,
     const destinatario = isNormalChat ? getOutroUsuario(conversaSelecionada!) : { nome: 'NEXUS IA' };
 
     return (
-        <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+        <div className={`flex flex-col min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
             <DynamicHeader />
             
-            <main className="flex-1 p-4">
+            <main className="lg:ml-80 flex-1 p-2 sm:p-4">
                 <div className="max-w-4xl mx-auto h-full"> 
-                    <div className={`rounded-lg shadow-xl flex flex-col transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`} style={{ height: 'calc(100vh - 100px)' }}>
+                    <div className={`rounded-lg shadow-xl flex flex-col transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`} style={{ height: 'calc(100vh - 80px)' }}>
                         
                         {/* Header do Chat (com botão de voltar) */}
-                        <div className={`p-4 border-b flex items-center transition-colors duration-300 ${
+                        <div className={`p-3 sm:p-4 border-b flex items-center transition-colors duration-300 ${
                             isDarkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-red-50'
                         }`}>
                             <button 
@@ -494,7 +499,11 @@ Como posso te ajudar hoje?`,
                             {/* Renderização das Mensagens (Lógica mantida) */}
                             {isNexusChat ? (
                                 // Mensagens NEXUS IA
-                                <div className="flex-1 overflow-y-auto p-4 scroll-smooth">
+                                <div 
+                                    ref={messagesContainerRef}
+                                    className="flex-1 overflow-y-auto p-4 scroll-smooth scrollbar-thin scrollbar-thumb-red-500 scrollbar-track-gray-200 dark:scrollbar-track-gray-700"
+                                    style={{ scrollbarWidth: 'thin' }}
+                                >
                                     <div className="space-y-4 min-h-full flex flex-col justify-end">
                                         {nexusMensagens.map((mensagem) => (
                                           <div key={mensagem.id} className={`flex ${mensagem.isNexus ? 'justify-start' : 'justify-end'}`}>
@@ -523,7 +532,11 @@ Como posso te ajudar hoje?`,
                                 </div>
                             ) : (
                                 // Mensagens da Conversa Normal
-                                <div className="flex-1 overflow-y-auto p-4 scroll-smooth">
+                                <div 
+                                    ref={messagesContainerRef}
+                                    className="flex-1 overflow-y-auto p-4 scroll-smooth scrollbar-thin scrollbar-thumb-red-500 scrollbar-track-gray-200 dark:scrollbar-track-gray-700"
+                                    style={{ scrollbarWidth: 'thin' }}
+                                >
                                     {mensagensConversa.length === 0 ? (
                                         <div className={`text-center mt-20 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                                             <div className="text-4xl mb-4">&#x1F44B;</div>
@@ -595,24 +608,17 @@ Como posso te ajudar hoje?`,
   // ===============================================
   return (
     <ProtectedRoute allowedRoles={['ESTUDANTE', 'PROFESSOR', 'ADMIN']}>
-      <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+      <div className={`flex flex-col min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <DynamicHeader />
         
-        <main className="flex-1 p-4">
-        <div className="max-w-xl mx-auto h-full">
-          <h1 className={`text-3xl font-bold text-center mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Conversas</h1>
+        <main className="lg:ml-80 flex-1 p-4 sm:p-6">
+        <div className="max-w-2xl mx-auto h-full">
+          <h1 className={`text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Conversas</h1>
           
           <div className={`rounded-lg shadow-xl flex flex-col transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`} style={{ minHeight: 'calc(100vh - 200px)' }}>
               
               <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
                 <div className={`divide-y transition-colors duration-300 ${isDarkMode ? 'divide-gray-200' : 'divide-gray-200'}`}>
-                  
-                  {/* DEBUG: Mostra a contagem de usuários carregados */}
-                  {usuarios.length === 0 && !loading && (
-                      <div className={`text-center p-4 transition-colors duration-300 ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>
-                          <p className="text-sm font-semibold">Não foi possível carregar outros usuários. Verifique a API.</p>
-                      </div>
-                  )}
 
                   {listaUnificada.map((item) => {
                     
@@ -653,7 +659,7 @@ Como posso te ajudar hoje?`,
                     const onClickAction = isConversaAtiva ? () => selecionarConversa(conversa!) : () => iniciarConversa(usuarioItem as Usuario);
                     
                     // Lógica para status/notificação da conversa ativa
-                    const ultimaMensagem = conversa?.mensagens.length > 0 ? conversa.mensagens[0] : null;
+                    const ultimaMensagem = conversa?.mensagens && conversa.mensagens.length > 0 ? conversa.mensagens[0] : null;
                     const isMinhaMensagem = usuarioLogado && ultimaMensagem?.remetente.id === usuarioLogado.id;
                     const naoLidaDoOutro = ultimaMensagem && !isMinhaMensagem && !ultimaMensagem.lida;
 
@@ -725,10 +731,12 @@ Como posso te ajudar hoje?`,
                     );
                   })}
                   
-                  {/* Se a lista de usuários estiver vazia (além da NEXUS IA) */}
-                  {listaUnificada.length === 1 && usuarios.length > 0 && ( 
+                  {/* Mensagem quando não há conversas ainda */}
+                  {listaUnificada.length === 1 && ( 
                     <div className={`text-center p-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                      <p className="text-sm">Nenhum usuário disponível para chat, exceto a NEXUS IA.</p>
+                      <div className="text-4xl mb-4">💬</div>
+                      <p className="text-sm">Nenhuma conversa iniciada ainda.</p>
+                      <p className="text-xs mt-2">Converse com a NEXUS IA ou aguarde mensagens de outros usuários!</p>
                     </div>
                   )}
 
@@ -737,6 +745,83 @@ Como posso te ajudar hoje?`,
             </div>
           </div>
       </main>
+
+      {/* Botão Flutuante para Nova Conversa */}
+      <button
+        onClick={() => setMostrarModalNovaConversa(true)}
+        className="fixed bottom-8 right-8 w-16 h-16 bg-red-600 text-white rounded-full shadow-2xl hover:bg-red-700 transition-all duration-300 flex items-center justify-center text-3xl font-light hover:scale-110 z-50"
+        title="Nova conversa"
+      >
+        +
+      </button>
+
+      {/* Modal de Nova Conversa */}
+      {mostrarModalNovaConversa && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className={`rounded-lg shadow-2xl max-w-md w-full max-h-[80vh] flex flex-col transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            {/* Header do Modal */}
+            <div className={`p-4 border-b flex items-center justify-between transition-colors duration-300 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
+              <h2 className={`text-xl font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Nova Conversa</h2>
+              <button
+                onClick={() => setMostrarModalNovaConversa(false)}
+                className={`text-2xl transition-colors duration-300 ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-800'}`}
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Lista de Usuários */}
+            <div className="flex-1 overflow-y-auto p-4">
+              {usuarios.length === 0 ? (
+                <div className={`text-center py-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                  <p>Nenhum usuário disponível</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {usuarios.map((usuario) => {
+                    const jaTemConversa = conversas.some(c => 
+                      (c.usuario1.id === usuario.id && c.usuario2.id === usuarioLogado?.id) || 
+                      (c.usuario1.id === usuarioLogado?.id && c.usuario2.id === usuario.id)
+                    );
+
+                    return (
+                      <div
+                        key={usuario.id}
+                        onClick={() => {
+                          iniciarConversa(usuario);
+                          setMostrarModalNovaConversa(false);
+                        }}
+                        className={`p-3 rounded-lg cursor-pointer transition-colors duration-300 flex items-center gap-3 ${
+                          isDarkMode 
+                            ? 'hover:bg-gray-700' 
+                            : 'hover:bg-gray-100'
+                        }`}
+                      >
+                        <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-white font-semibold text-lg">
+                            {usuario.nome.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className={`font-semibold truncate transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                            {usuario.nome}
+                          </h3>
+                          <p className={`text-sm truncate transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            {usuario.curso?.nome || 'Sem curso'}
+                          </p>
+                        </div>
+                        {jaTemConversa && (
+                          <span className="text-xs text-red-600 font-semibold">Ativa</span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       </div>
     </ProtectedRoute>
   );

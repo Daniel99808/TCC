@@ -169,10 +169,10 @@ export default function CadastroAdmPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
+    <div className="min-h-screen bg-gray-100 flex flex-col pt-16 lg:pt-0">
       <Header />
       
-      <main className="flex-1 flex items-center justify-center p-6">
+      <main className="lg:ml-80 flex-1 flex items-center justify-center p-4 sm:p-6">
         <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
           {/* Cabeçalho */}
           <div className="text-center mb-6">

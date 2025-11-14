@@ -161,11 +161,11 @@ export default function MuralAdm() {
   return (
     <ProtectedRoute allowedRoles={['ADMIN']}>
       {/* Container principal com flexbox para ocupar a altura da tela */}
-      <div className="flex flex-col h-screen bg-gray-100 font-sans">
+      <div className="flex flex-col min-h-screen bg-gray-100 font-sans pt-16 lg:pt-0">
         <Header />
       
       {/* Main agora usa 'overflow-auto' para gerenciar o scroll de todo o conteúdo */}
-      <main className="flex-1 p-8 flex flex-col items-center overflow-auto">
+      <main className="lg:ml-80 flex-1 p-4 sm:p-6 lg:p-8 flex flex-col items-center overflow-auto">
         {/* Bem-vindo section */}
         <div className="text-center mb-6">
           <p className="text-sm text-red-600">Painel Administrativo</p>

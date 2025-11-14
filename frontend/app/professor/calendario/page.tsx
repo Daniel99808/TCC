@@ -124,10 +124,10 @@ export default function CalendarioProfessor() {
 
   return (
     <ProtectedRoute allowedRoles={['PROFESSOR']}>
-      <div className="min-h-screen bg-gray-100 flex flex-col">
+      <div className="min-h-screen bg-gray-100 flex flex-col pt-16 lg:pt-0">
         <HeaderProfessor />
         
-        <main className="flex-1 container mx-auto px-4 py-8">
+        <main className="lg:ml-80 flex-1 container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Cabeçalho da página */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
