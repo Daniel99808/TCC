@@ -219,7 +219,7 @@ export default function CalendarioAdm() {
             {/* Header da modal */}
             <div className="flex justify-between items-center p-6 border-b border-gray-200">
               <h2 className="text-xl font-semibold text-gray-800">
-                ➕ Adicionar Novo Evento
+                Adicionar Novo Evento
               </h2>
               <button
                 onClick={closeModal}

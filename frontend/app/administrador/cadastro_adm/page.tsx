@@ -327,7 +327,7 @@ export default function CadastroAdmPage() {
                       ? 'bg-green-100 text-green-700 border border-green-300' 
                       : 'bg-gray-200 text-gray-600 border border-gray-300 '
                   }`}>
-                    {formData.hasAAPM ? '✓ Com AAPM' : '✗ Sem AAPM'}
+                    {formData.hasAAPM ? 'Com AAPM' : 'Sem AAPM'}
                   </span>
                 </div>
               </div>
@@ -383,7 +383,7 @@ export default function CadastroAdmPage() {
                     <div><strong>Turma:</strong> {formData.turma}</div>
                   )}
                   {formData.role === 'ESTUDANTE' && (
-                    <div><strong>AAPM:</strong> {formData.hasAAPM ? '✓ Sim' : '✗ Não'}</div>
+                    <div><strong>AAPM:</strong> {formData.hasAAPM ? 'Sim' : 'Não'}</div>
                   )}
                 </div>
               </div>

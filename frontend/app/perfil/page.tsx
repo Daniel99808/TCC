@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Header from '../components/header';
+import DynamicHeader from '../components/DynamicHeader';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import ProtectedRoute from '../components/ProtectedRoute';
 
@@ -67,7 +67,7 @@ export default function PerfilPage() {
     <ProtectedRoute allowedRoles={['ESTUDANTE', 'PROFESSOR', 'ADMIN']}>
       {loading ? (
         <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-          <Header />
+          <DynamicHeader />
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto"></div>
@@ -77,7 +77,7 @@ export default function PerfilPage() {
         </div>
       ) : error || !usuario ? (
         <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-          <Header />
+          <DynamicHeader />
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
               <div className="text-red-600 text-6xl mb-4">!</div>
@@ -94,7 +94,7 @@ export default function PerfilPage() {
         </div>
       ) : (
         <div className={`flex flex-col h-full transition-colors duration-300 ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-100'}`}>
-          <Header />
+          <DynamicHeader />
           
           <main className="flex-1 p-21.5">
             <div className="max-w-6xl mx-auto">

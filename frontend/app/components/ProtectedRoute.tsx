@@ -34,6 +34,8 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
           // Redireciona baseado no role
           if (userRole === 'ADMIN') {
             router.push('/administrador/mural_adm');
+          } else if (userRole === 'PROFESSOR') {
+            router.push('/professor/mural');
           } else {
             router.push('/mural');
           }

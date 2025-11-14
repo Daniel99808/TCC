@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Header from '../../components/header_adm';
+import HeaderProfessor from '../../components/header_professor';
 import Footer from '../../components/footer';
 import Image from 'next/image';
+import ProtectedRoute from '../../components/ProtectedRoute';
 
 interface CalendarioEvento {
   id: number;
@@ -12,7 +13,7 @@ interface CalendarioEvento {
   data: string;
 }
 
-export default function CalendarioAdm() {
+export default function CalendarioProfessor() {
   const [titulo, setTitulo] = useState('');
   const [descricao, setDescricao] = useState('');
   const [data, setData] = useState('');
@@ -56,9 +57,8 @@ export default function CalendarioAdm() {
 
     try {
       // Converter a data para o formato correto, mantendo o fuso horário local
-      // O input date retorna YYYY-MM-DD, precisamos criar a data corretamente
       const [ano, mes, dia] = data.split('-').map(Number);
-      const dataEvento = new Date(ano, mes - 1, dia, 12, 0, 0); // Meio-dia para evitar problemas de fuso horário
+      const dataEvento = new Date(ano, mes - 1, dia, 12, 0, 0);
 
       const response = await fetch('http://localhost:3000/calendario', {
         method: 'POST',
@@ -123,18 +123,19 @@ export default function CalendarioAdm() {
   const dataMinima = new Date().toISOString().split('T')[0];
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      <Header />
-      
-      <main className="flex-1 container mx-auto px-4 py-8">
+    <ProtectedRoute allowedRoles={['PROFESSOR']}>
+      <div className="min-h-screen bg-gray-100 flex flex-col">
+        <HeaderProfessor />
+        
+        <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Cabeçalho da página */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <h1 className="text-3xl font-bold text-gray-800 mb-2">
-              Painel Administrativo - Calendário
+              Painel do Professor - Calendário
             </h1>
             <p className="text-gray-600">
-              Gerencie eventos do calendário da comunidade
+              Publique eventos no calendário da comunidade
             </p>
           </div>
 
@@ -147,7 +148,6 @@ export default function CalendarioAdm() {
             <div className="space-y-3">
               {eventos.length === 0 ? (
                 <div className="text-center text-gray-500 py-8">
-                  <div className="text-4xl mb-2">&#x1F4C5;</div>
                   <p>Nenhum evento encontrado</p>
                   <p className="text-sm">Clique no botão "+" para criar o primeiro evento!</p>
                 </div>
@@ -183,9 +183,9 @@ export default function CalendarioAdm() {
           </div>
 
           {/* Informações adicionais */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
-            <h3 className="text-sm font-medium text-blue-800 mb-2">Dicas para criar eventos:</h3>
-            <ul className="text-sm text-blue-700 space-y-1">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mt-6">
+            <h3 className="text-sm font-medium text-red-800 mb-2">Dicas para criar eventos:</h3>
+            <ul className="text-sm text-red-700 space-y-1">
               <li>• Use títulos claros e descritivos</li>
               <li>• Inclua informações importantes: horário, local, o que trazer</li>
               <li>• Para eventos recorrentes, crie um evento para cada data</li>
@@ -240,7 +240,7 @@ export default function CalendarioAdm() {
                     value={titulo}
                     onChange={(e) => setTitulo(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                    placeholder="Ex: Reunião de Condomínio, Festa Junina..."
+                    placeholder="Ex: Reunião de Pais, Prova de Matemática..."
                     maxLength={100}
                   />
                   <div className="text-xs text-gray-500 mt-1">
@@ -316,6 +316,7 @@ export default function CalendarioAdm() {
       )}
 
       <Footer />
-    </div>
+      </div>
+    </ProtectedRoute>
   );
 }

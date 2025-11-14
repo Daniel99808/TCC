@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import Header from '../components/header';
+import DynamicHeader from '../components/DynamicHeader';
 import { io } from 'socket.io-client';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import Image from 'next/image';
@@ -462,7 +462,7 @@ Como posso te ajudar hoje?`,
 
     return (
         <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-            <Header />
+            <DynamicHeader />
             
             <main className="flex-1 p-4">
                 <div className="max-w-4xl mx-auto h-full"> 
@@ -548,7 +548,7 @@ Como posso te ajudar hoje?`,
                                                                     <span className={`ml-1 text-sm ${
                                                                         mensagem.lida ? 'text-blue-400' : 'text-gray-400'
                                                                     }`}>
-                                                                        ✓✓
+                                                                        
                                                                     </span>
                                                                 )}
                                                             </div>
@@ -579,7 +579,7 @@ Como posso te ajudar hoje?`,
                                     disabled={!novaMensagem.trim() || isSending || nexusTyping}
                                     className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                 >
-                                    {isSending || nexusTyping ? '...' : '➤'}
+                                    {isSending || nexusTyping ? '...' : '>'}
                                 </button>
                             </form>
                         </div>
@@ -596,7 +596,7 @@ Como posso te ajudar hoje?`,
   return (
     <ProtectedRoute allowedRoles={['ESTUDANTE', 'PROFESSOR', 'ADMIN']}>
       <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-        <Header />
+        <DynamicHeader />
         
         <main className="flex-1 p-4">
         <div className="max-w-xl mx-auto h-full">
@@ -711,10 +711,10 @@ Como posso te ajudar hoje?`,
                                         </div>
                                     ) : isMinhaMensagem && ultimaMensagem.lida ? (
                                         // SUA MENSAGEM LIDA PELO DESTINATÁRIO (AZUL)
-                                        <span className="text-blue-500 ml-2 mt-1">✓✓</span>
+                                        <span className="text-blue-500 ml-2 mt-1"></span>
                                     ) : isMinhaMensagem ? (
                                         // SUA MENSAGEM NÃO LIDA PELO DESTINATÁRIO (CINZA)
-                                        <span className="text-gray-400 ml-2 mt-1">✓✓</span>
+                                        <span className="text-gray-400 ml-2 mt-1"></span>
                                     ) : (
                                       // Default para mensagens lidas do outro
                                       null

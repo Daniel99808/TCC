@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Header from '../components/header';
+import DynamicHeader from '../components/DynamicHeader';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import ProtectedRoute from '../components/ProtectedRoute';
 
@@ -126,7 +126,7 @@ const CalendarioPage = () => {
   return (
     <ProtectedRoute allowedRoles={['ESTUDANTE', 'PROFESSOR', 'ADMIN']}>
       <div className={`flex flex-col h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-        <Header />
+        <DynamicHeader />
         <main className="flex-1 p-8 overflow-auto">
         {erro && (
           <div className="max-w-4xl mx-auto mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">

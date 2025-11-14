@@ -216,7 +216,7 @@ export default function AAPMPage() {
                     onClick={() => setSearchTerm('')}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
-                    ✕
+                    ×
                   </button>
                 )}
               </div>
@@ -286,7 +286,7 @@ export default function AAPMPage() {
                                   : 'bg-gray-100 text-gray-500 border border-gray-300 hover:bg-gray-200 hover:cursor-pointer'
                               }`}
                             >
-                              {usuario.hasAAPM ? '✓ Ativo' : '✗ Inativo'}
+                              {usuario.hasAAPM ? 'Ativo' : 'Inativo'}
                             </button>
                           </td>
                         </tr>

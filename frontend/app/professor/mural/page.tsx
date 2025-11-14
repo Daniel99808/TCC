@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { supabase } from '../../../lib/supabase';
-import Header from '../../components/header_adm';
+import HeaderProfessor from '../../components/header_professor';
 import Footer from '../../components/footer';
 import ProtectedRoute from '../../components/ProtectedRoute';
 
@@ -20,10 +20,10 @@ interface Message {
   curso?: Curso;
 }
 
-export default function MuralAdm() {
+export default function MuralProfessor() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
-  const [tipoPublico, setTipoPublico] = useState<'TODOS' | 'CURSO' | 'TURMA'>('TODOS');
+  const [tipoPublico, setTipoPublico] = useState<'CURSO' | 'TURMA'>('CURSO');
   const [cursoSelecionado, setCursoSelecionado] = useState('');
   const [turmaSelecionada, setTurmaSelecionada] = useState('');
   const [cursos, setCursos] = useState<Curso[]>([]);
@@ -87,19 +87,25 @@ export default function MuralAdm() {
       return;
     }
 
+    if (!cursoSelecionado) {
+      setMessage('Por favor, selecione um curso.');
+      return;
+    }
+
+    if (tipoPublico === 'TURMA' && !turmaSelecionada) {
+      setMessage('Por favor, selecione uma turma.');
+      return;
+    }
+
     setLoading(true);
     setMessage('');
 
     try {
-      // Enviar com todos os campos de segmentação
       const payload: any = {
         conteudo: newMessage,
-        tipoPublico
+        tipoPublico,
+        cursoId: cursoSelecionado
       };
-      
-      if (tipoPublico === 'CURSO' || tipoPublico === 'TURMA') {
-        payload.cursoId = cursoSelecionado;
-      }
       
       if (tipoPublico === 'TURMA') {
         payload.turma = turmaSelecionada;
@@ -115,15 +121,12 @@ export default function MuralAdm() {
         body: JSON.stringify(payload),
       });
 
-      console.log('Response status:', response.status);
-      console.log('Response ok:', response.ok);
-
       if (response.ok) {
         const data = await response.json();
         console.log('Mensagem criada:', data);
         setMessage('Mensagem publicada com sucesso!');
         setNewMessage('');
-        setTipoPublico('TODOS');
+        setTipoPublico('CURSO');
         setCursoSelecionado('');
         setTurmaSelecionada('');
         setIsModalOpen(false);
@@ -144,7 +147,6 @@ export default function MuralAdm() {
       }
     } catch (error) {
       console.error('Erro ao publicar mensagem:', error);
-      console.error('Erro ao publicar mensagem:', error);
       setMessage('Erro de conexão com o servidor.');
     } finally {
       setLoading(false);
@@ -159,18 +161,18 @@ export default function MuralAdm() {
   };
 
   return (
-    <ProtectedRoute allowedRoles={['ADMIN']}>
+    <ProtectedRoute allowedRoles={['PROFESSOR']}>
       {/* Container principal com flexbox para ocupar a altura da tela */}
       <div className="flex flex-col h-screen bg-gray-100 font-sans">
-        <Header />
+        <HeaderProfessor />
       
       {/* Main agora usa 'overflow-auto' para gerenciar o scroll de todo o conteúdo */}
       <main className="flex-1 p-8 flex flex-col items-center overflow-auto">
         {/* Bem-vindo section */}
         <div className="text-center mb-6">
-          <p className="text-sm text-red-600">Painel Administrativo</p>
-          <h2 className="text-3xl font-bold text-gray-800">Mural de Avisos</h2>
-          <p className="text-gray-600 mt-2">Gerencie os avisos da comunidade</p>
+          <p className="text-sm text-red-600">Painel do Professor</p>
+          <h2 className="text-3xl font-bold text-gray-800">Meu Mural</h2>
+          <p className="text-gray-600 mt-2">Publique avisos para seus alunos</p>
         </div>
 
         {/* Botão para adicionar nova mensagem */}
@@ -200,7 +202,6 @@ export default function MuralAdm() {
           <div className="flex-1 overflow-y-auto space-y-6">
             {messages.length === 0 ? (
               <div className="text-center text-gray-500">
-                <div className="text-4xl mb-2">&#x1F4ED;</div>
                 <p>Nenhum aviso no momento.</p>
                 <p className="text-sm">Clique no botão acima para adicionar o primeiro aviso!</p>
               </div>
@@ -212,7 +213,7 @@ export default function MuralAdm() {
                       <i className="bi bi-person-circle text-4xl text-red-600"></i> 
                     </div>
                     <div className="ml-3">
-                      <h3 className="font-bold text-gray-800">Administração</h3>
+                      <h3 className="font-bold text-gray-800">Professor</h3>
                     </div>
                   </div>
                   <p className="text-gray-700 whitespace-pre-line">{message.conteudo}</p>
@@ -220,7 +221,7 @@ export default function MuralAdm() {
                     <span className="text-xs text-gray-500">
                       {new Date(message.createdAt).toLocaleString('pt-BR')}
                     </span>
-                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                    <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">
                       {getTipoPublicoLabel(message)}
                     </span>
                   </div>
@@ -247,40 +248,36 @@ export default function MuralAdm() {
                   id="tipoPublico"
                   value={tipoPublico}
                   onChange={(e) => {
-                    setTipoPublico(e.target.value as 'TODOS' | 'CURSO' | 'TURMA');
-                    setCursoSelecionado('');
+                    setTipoPublico(e.target.value as 'CURSO' | 'TURMA');
                     setTurmaSelecionada('');
                   }}
                   className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                 >
-                  <option value="TODOS">Todos os usuários</option>
                   <option value="CURSO">Curso específico</option>
                   <option value="TURMA">Turma específica</option>
                 </select>
               </div>
 
               {/* Seleção de Curso */}
-              {(tipoPublico === 'CURSO' || tipoPublico === 'TURMA') && (
-                <div>
-                  <label htmlFor="curso" className="block text-sm font-medium text-gray-700 mb-1">
-                    Curso *
-                  </label>
-                  <select
-                    id="curso"
-                    value={cursoSelecionado}
-                    onChange={(e) => setCursoSelecionado(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                    required
-                  >
-                    <option value="">Selecione um curso</option>
-                    {cursos.map((curso) => (
-                      <option key={curso.id} value={curso.id}>
-                        {curso.nome}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+              <div>
+                <label htmlFor="curso" className="block text-sm font-medium text-gray-700 mb-1">
+                  Curso *
+                </label>
+                <select
+                  id="curso"
+                  value={cursoSelecionado}
+                  onChange={(e) => setCursoSelecionado(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                  required
+                >
+                  <option value="">Selecione um curso</option>
+                  {cursos.map((curso) => (
+                    <option key={curso.id} value={curso.id}>
+                      {curso.nome}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
               {/* Seleção de Turma */}
               {tipoPublico === 'TURMA' && (
@@ -327,9 +324,8 @@ export default function MuralAdm() {
                   <div className="text-sm text-gray-600 whitespace-pre-line">
                     {newMessage}
                   </div>
-                  <div className="text-xs text-blue-600 mt-2">
+                  <div className="text-xs text-red-600 mt-2">
                     Será publicado para: {
-                      tipoPublico === 'TODOS' ? 'Todos' :
                       tipoPublico === 'CURSO' && cursoSelecionado ? 
                         cursos.find(c => c.id.toString() === cursoSelecionado)?.nome || 'Curso' :
                       tipoPublico === 'TURMA' && cursoSelecionado && turmaSelecionada ?
@@ -355,7 +351,7 @@ export default function MuralAdm() {
                   onClick={() => {
                     setIsModalOpen(false);
                     setNewMessage('');
-                    setTipoPublico('TODOS');
+                    setTipoPublico('CURSO');
                     setCursoSelecionado('');
                     setTurmaSelecionada('');
                     setMessage('');

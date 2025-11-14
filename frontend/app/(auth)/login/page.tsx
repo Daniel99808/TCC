@@ -57,7 +57,7 @@ export default function AuthForm() {
     const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/login`;
     const cleanedCpf = cpf.replace(/\D/g, '');
     
-    // 💡 DEBUG 1: Imprime o URL e os dados enviados (CPF sem formatação)
+    // DEBUG 1: Imprime o URL e os dados enviados (CPF sem formatação)
     console.log("Tentando login na URL:", url);
     console.log("Dados enviados (sem pontos/traços):", { cpf: cleanedCpf, password: '***' });
 
@@ -69,7 +69,7 @@ export default function AuthForm() {
         body: JSON.stringify({ cpf: cleanedCpf, password }),
       });
 
-      // 💡 DEBUG 2: Imprime o status da resposta HTTP
+      // DEBUG 2: Imprime o status da resposta HTTP
       console.log("Status da Resposta:", response.status);
 
       // Tenta ler o JSON, mas verifica primeiro se a resposta não está vazia
@@ -95,7 +95,7 @@ export default function AuthForm() {
         }, TOAST_DURATION);
         
       } else {
-        // 💡 DEBUG 3: Imprime o erro que veio do backend (Status 4xx ou 5xx)
+        // DEBUG 3: Imprime o erro que veio do backend (Status 4xx ou 5xx)
         console.error("Erro do Backend (resposta não OK):", data);
         showToast(data.error || 'CPF ou senha inválidos.', 'error');
         setIsLoading(false); 
@@ -184,7 +184,7 @@ export default function AuthForm() {
         </p>
       </div>
 
-      {/* 🛑 COMPONENTE: TOAST NOTIFICATION (Modal) 🛑 */}
+      {/* COMPONENTE: TOAST NOTIFICATION (Modal) */}
       {toast.visible && (
         <div
           className={`fixed bottom-4 right-4 z-50 w-80 p-4 rounded-lg shadow-2xl transition-all duration-300 ease-in-out transform ${

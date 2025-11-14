@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
-import Header from '../components/header';
+import DynamicHeader from '../components/DynamicHeader';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import ProtectedRoute from '../components/ProtectedRoute';
 
@@ -101,7 +101,7 @@ export default function MuralDeAvisos() {
     <ProtectedRoute allowedRoles={['ESTUDANTE', 'PROFESSOR', 'ADMIN']}>
       {/* Container principal com flexbox para ocupar a altura da tela */}
       <div className={`flex flex-col h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-        <Header />
+        <DynamicHeader />
         {/* Main agora usa 'overflow-auto' para gerenciar o scroll de todo o conteúdo */}
         <main className="flex-1 p-8 flex flex-col items-center overflow-auto">
         {/* Bem-vindo section */}
