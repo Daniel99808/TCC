@@ -108,7 +108,7 @@ export default function PerfilPage() {
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                   
                   {/* Foto de Perfil */}
-                  <div className="flex-shrink-0">
+                  <div className="flex-shrink-0 w-full sm:w-auto flex justify-center sm:justify-start">
                     <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center shadow-lg">
                       <svg className="w-14 h-14 sm:w-20 sm:h-20 text-white" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
@@ -153,7 +153,7 @@ export default function PerfilPage() {
                 </div>
 
                 {/* Botões de Ações */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 pt-6 border-t transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}">
+                <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 pt-6 border-t transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
                   <button 
                     onClick={() => window.open('https://docs.google.com/spreadsheets/d/1w-pSrGjvFTxZJDJDvYruBM1dTcorfh6zw1Bl2VdNX74/edit', '_blank')}
                     className="flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 active:scale-95 transition-all font-semibold shadow-md"
