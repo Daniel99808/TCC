@@ -142,7 +142,7 @@ const CalendarioPage = () => {
           </div>
         )}
         
-        <div className={`max-w-4xl mx-auto p-3 sm:p-4 md:p-6 rounded-lg sm:rounded-xl shadow-2xl transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+        <div className={`max-w-7xl mx-auto p-3 sm:p-4 md:p-6 lg:p-8 rounded-lg sm:rounded-xl shadow-2xl transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
           <div className="flex justify-between items-center mb-3 sm:mb-4 md:mb-6 gap-2">
             <button 
               onClick={() => setDataAtual(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
