@@ -114,7 +114,7 @@ const CalendarioPage = () => {
     }
 
     // Dias do próximo mês
-    const diasRestantes = 42 - dias.length; // 6 semanas * 7 dias
+    const diasRestantes = 42 - dias.length;
     for (let i = 1; i <= diasRestantes; i++) {
       dias.push(
           <div key={`proximo-${i}`} className={`p-1.5 sm:p-2 text-center cursor-pointer transition-colors duration-300 text-xs sm:text-sm md:text-base min-h-[36px] sm:min-h-[44px] flex items-center justify-center ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>
@@ -131,8 +131,13 @@ const CalendarioPage = () => {
       <div className={`flex flex-col min-h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <DynamicHeader />
         <main className="lg:ml-80 flex-1 p-2 sm:p-4 md:p-6 lg:p-8 overflow-auto relative z-0 animate-fade-in">
+        {/* Título Principal - Visível apenas no mobile */}
+        <h1 className={`lg:hidden text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center m-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+          Calendário
+        </h1>
+
         {erro && (
-          <div className="max-w-4xl mx-auto mb-2 sm:mb-4 p-2 sm:p-3 md:p-4 bg-red-100 border border-red-400 text-red-700 rounded text-xs sm:text-sm md:text-base">
+          <div className="max-w-6xl mx-auto mb-2 sm:mb-4 p-2 sm:p-3 md:p-4 bg-red-100 border border-red-400 text-red-700 rounded text-xs sm:text-sm md:text-base">
             {erro}
           </div>
         )}
