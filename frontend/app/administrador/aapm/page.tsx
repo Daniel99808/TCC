@@ -129,13 +129,23 @@ export default function AAPMPage() {
 
   return (
     <ProtectedRoute allowedRoles={['ADMIN']}>
-      <div className={`min-h-screen pt-16 lg:pt-0 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+      <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <Header />
         
-        <main className="lg:ml-80 flex-1 p-4 sm:p-6 lg:p-8 animate-fade-in">
+        {/* Título Mobile - Visível apenas no mobile */}
+        <div className="lg:hidden pt-16 pb-4 px-4">
+          <h1 className={`text-2xl font-bold text-center mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+            Gerenciamento AAPM
+          </h1>
+          <p className={`text-center text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            Controle de assinaturas
+          </p>
+        </div>
+        
+        <main className="lg:ml-80 flex-1 p-3 sm:p-4 lg:p-8 animate-fade-in">
           <div className="max-w-7xl mx-auto">
-            {/* Cabeçalho Melhorado */}
-            <div className="mb-6 sm:mb-8">
+            {/* Cabeçalho Melhorado - Oculto no mobile */}
+            <div className="mb-6 sm:mb-8 hidden lg:block">
               <h1 className={`text-3xl sm:text-4xl font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                 Gerenciamento AAPM
               </h1>

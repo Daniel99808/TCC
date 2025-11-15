@@ -130,9 +130,17 @@ const CalendarioPage = () => {
     <ProtectedRoute allowedRoles={['ESTUDANTE', 'PROFESSOR', 'ADMIN']}>
       <div className={`flex flex-col min-h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <DynamicHeader />
+        
+        {/* Título Mobile - Visível apenas no mobile */}
+        <div className="lg:hidden pt-16 pb-3">
+          <h1 className={`text-2xl font-bold text-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+            Calendário
+          </h1>
+        </div>
+        
         <main className="lg:ml-80 flex-1 p-2 sm:p-4 md:p-6 lg:p-8 overflow-auto relative z-0 animate-fade-in">
-        {/* Título Principal - Visível apenas no mobile */}
-        <h1 className={`lg:hidden text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center m-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+        {/* Título Principal - Oculto no mobile */}
+        <h1 className={`hidden lg:block text-3xl sm:text-5xl font-bold mb-4 sm:mb-6 text-center m-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
           Calendário
         </h1>
 

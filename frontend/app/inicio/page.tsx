@@ -133,9 +133,19 @@ export default function InicioPage() {
       <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <DynamicHeader />
         
+        {/* Título Mobile - Visível apenas no mobile */}
+        <div className="lg:hidden pt-16 pb-3 px-4">
+          <h1 className={`text-xl font-bold text-center mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+            Bem-vindo, {usuarioLogado.nome.split(' ')[0]}! 👋
+          </h1>
+          <p className={`text-center text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            Resumo das suas atividades
+          </p>
+        </div>
+        
         <main className="lg:ml-80 p-3 sm:p-4 md:p-6 lg:p-8 animate-fade-in">
-          {/* Cabeçalho de Boas-vindas */}
-          <div className="mb-4 sm:mb-6 md:mb-8 px-1">
+          {/* Cabeçalho de Boas-vindas - Oculto no mobile */}
+          <div className="mb-4 sm:mb-6 md:mb-8 px-1 hidden lg:block">
             <h1 className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
               Bem-vindo, {usuarioLogado.nome.split(' ')[0]}! 👋
             </h1>

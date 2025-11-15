@@ -127,13 +127,23 @@ export default function CalendarioAdm() {
 
   return (
     <ProtectedRoute allowedRoles={['ADMIN']}>
-      <div className={`min-h-screen flex flex-col pt-16 lg:pt-0 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+      <div className={`min-h-screen flex flex-col transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <Header />
         
-        <main className="lg:ml-80 flex-1 container mx-auto px-4 py-8 animate-fade-in">
+        {/* Título Mobile - Visível apenas no mobile */}
+        <div className="lg:hidden pt-16 pb-4 px-4">
+          <h1 className={`text-2xl font-bold text-center mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+            Calendário ADM
+          </h1>
+          <p className={`text-center text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            Gerencie eventos do calendário
+          </p>
+        </div>
+        
+        <main className="lg:ml-80 flex-1 container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8 animate-fade-in">
         <div className="max-w-4xl mx-auto">
-          {/* Cabeçalho da página */}
-          <div className={`rounded-lg shadow-md p-6 mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          {/* Cabeçalho da página - Oculto no mobile */}
+          <div className={`hidden lg:block rounded-lg shadow-md p-6 mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
             <h1 className={`text-3xl font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
               Painel Administrativo - Calendário
             </h1>

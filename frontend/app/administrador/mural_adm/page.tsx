@@ -163,13 +163,24 @@ export default function MuralAdm() {
   return (
     <ProtectedRoute allowedRoles={['ADMIN']}>
       {/* Container principal com flexbox para ocupar a altura da tela */}
-      <div className={`flex flex-col min-h-screen font-sans pt-16 lg:pt-0 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+      <div className={`flex flex-col min-h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <Header />
       
+      {/* Título Mobile - Visível apenas no mobile */}
+      <div className="lg:hidden pt-16 pb-4 px-4">
+        <p className="text-sm text-red-600 text-center mb-1">Painel Administrativo</p>
+        <h2 className={`text-2xl font-bold text-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+          Mural de Avisos
+        </h2>
+        <p className={`text-center text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+          Gerencie os avisos da comunidade
+        </p>
+      </div>
+      
       {/* Main agora usa 'overflow-auto' para gerenciar o scroll de todo o conteúdo */}
-      <main className="lg:ml-80 flex-1 p-4 sm:p-6 lg:p-8 flex flex-col items-center overflow-auto animate-fade-in">
-        {/* Bem-vindo section */}
-        <div className="text-center mb-6">
+      <main className="lg:ml-80 flex-1 p-3 sm:p-4 lg:p-8 flex flex-col items-center overflow-auto animate-fade-in">
+        {/* Bem-vindo section - Oculto no mobile */}
+        <div className="text-center mb-6 hidden lg:block">
           <p className="text-sm text-red-600">Painel Administrativo</p>
           <h2 className={`text-3xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Mural de Avisos</h2>
           <p className={`mt-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Gerencie os avisos da comunidade</p>

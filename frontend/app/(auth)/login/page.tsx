@@ -73,7 +73,7 @@ export default function AuthForm() {
       console.log("Status da Resposta:", response.status);
 
       // Tenta ler o JSON, mas verifica primeiro se a resposta não está vazia
-      let data = {};
+      let data: any = {};
       try {
         // Clonar a resposta antes de tentar ler o JSON, caso o backend não retorne corpo
         const responseClone = response.clone();
@@ -109,54 +109,62 @@ export default function AuthForm() {
 
   return (
     <div
-      className="flex min-h-screen items-center justify-center bg-black bg-cover bg-center font-sans relative"
+      className="flex min-h-screen items-center justify-center bg-black bg-cover bg-center font-sans relative p-4"
       style={{ backgroundImage: "url('/4d-ultra-hd-red-gradient-blobs-lq4203zqlhouj1ix 1.png')" }}
     >
       {/* Texto de Boas-vindas à esquerda */}
-      <div className="hidden lg:flex flex-col justify-center text-white px-12 max-w-md">
-        <h1 className="text-5xl font-bold mb-2">
-          Olá, seja<br />bem-vindo à<br /><span className="font-extrabold">Nexus Senai!</span>
+      <div className="hidden lg:flex flex-col justify-center text-white px-12 max-w-xl">
+        <h1 className="text-6xl font-bold mb-4 leading-tight">
+          Olá, seja<br />bem-vindo à<br /><span className="font-extrabold text-red-500">Nexus Senai!</span>
         </h1>
-        <p className="text-sm text-gray-300 mt-4">
-          Por favor, preencha o formulário à direita.
+        <p className="text-lg text-gray-300 mt-6">
+          Por favor, preencha o formulário ao lado para acessar o sistema.
         </p>
       </div>
 
       {/* Container do Formulário de Login */}
-      <div className="w-full max-w-md bg-black/40 backdrop-blur-md border border-white/10 shadow-2xl rounded-3xl p-8 mx-4">
-        <h2 className="text-4xl font-bold text-white mb-8">Login</h2>
+      <div className="w-full max-w-lg lg:max-w-xl bg-black/50 backdrop-blur-md border border-white/20 shadow-2xl rounded-3xl p-8 sm:p-10 lg:p-12">
+        {/* Título e Logo no Mobile */}
+        <div className="text-center mb-8 lg:hidden">
+          <h1 className="text-3xl font-bold text-white mb-2">
+            Nexus <span className="text-red-500">Senai</span>
+          </h1>
+          <p className="text-sm text-gray-300">Bem-vindo de volta!</p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <h2 className="text-4xl lg:text-5xl font-bold text-white mb-8 lg:mb-10">Login</h2>
+
+        <form onSubmit={handleSubmit} className="space-y-6 lg:space-y-8">
           {/* Campo CPF */}
           <div>
-            <label className="block text-sm font-medium text-white mb-2">CPF</label>
+            <label className="block text-base lg:text-lg font-medium text-white mb-3">CPF</label>
             <input
               type="text"
-              placeholder=""
+              placeholder="000.000.000-00"
               value={cpf}
               onChange={handleCpfChange}
               required
               inputMode="numeric"
               maxLength={14}
-              className="w-full rounded-lg border border-white/30 bg-transparent px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200"
+              className="w-full rounded-xl border-2 border-white/30 bg-white/5 px-5 py-4 text-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200"
             />
           </div>
 
           {/* Campo Senha */}
           <div>
-            <label className="block text-sm font-medium text-white mb-2">Senha</label>
+            <label className="block text-base lg:text-lg font-medium text-white mb-3">Senha</label>
             <input
               type="password"
-              placeholder=""
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full rounded-lg border border-white/30 bg-transparent px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200"
+              className="w-full rounded-xl border-2 border-white/30 bg-white/5 px-5 py-4 text-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200"
             />
-            <div className="mt-3 text-right">
+            <div className="mt-4 text-right">
               <a
                 href="#"
-                className="text-sm font-medium text-red-400 hover:text-red-300 hover:underline transition italic"
+                className="text-sm lg:text-base font-medium text-red-400 hover:text-red-300 hover:underline transition italic"
               >
                 Esqueci a senha
               </a>
@@ -167,7 +175,7 @@ export default function AuthForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full mt-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-3 rounded-lg shadow-lg transition duration-200 ease-in-out hover:from-red-700 hover:to-red-800 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-red-600 disabled:opacity-60 cursor-pointer disabled:cursor-not-allowed"
+            className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-4 lg:py-5 text-lg lg:text-xl rounded-xl shadow-lg transition duration-200 ease-in-out hover:from-red-700 hover:to-red-800 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-offset-black focus:ring-red-600 disabled:opacity-60 cursor-pointer disabled:cursor-not-allowed active:scale-95"
           >
             {isLoading ? 'Entrando...' : 'Entrar'}
           </button>

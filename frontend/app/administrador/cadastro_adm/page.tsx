@@ -171,13 +171,23 @@ export default function CadastroAdmPage() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col pt-16 lg:pt-0 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+    <div className={`min-h-screen flex flex-col transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
       <Header />
       
-      <main className="lg:ml-80 flex-1 flex items-center justify-center p-4 sm:p-6 animate-fade-in">
-        <div className={`p-8 rounded-lg shadow-xl w-full max-w-md transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          {/* Cabeçalho */}
-          <div className="text-center mb-6">
+      {/* Título Mobile - Visível apenas no mobile */}
+      <div className="lg:hidden pt-16 pb-4 px-4">
+        <h1 className={`text-2xl font-bold text-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+          Cadastro de Usuário
+        </h1>
+        <p className={`text-center mt-1 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+          Painel Administrativo
+        </p>
+      </div>
+      
+      <main className="lg:ml-80 flex-1 flex items-center justify-center p-4 sm:p-6 lg:py-8 animate-fade-in">
+        <div className={`p-6 sm:p-8 rounded-lg shadow-xl w-full max-w-md transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          {/* Cabeçalho - Oculto no mobile */}
+          <div className="text-center mb-6 hidden lg:block">
             <h1 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Cadastro de Usuário</h1>
             <p className={`mt-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Painel Administrativo</p>
             <div className="w-16 h-1 bg-orange-600 mx-auto mt-3 rounded"></div>

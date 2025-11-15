@@ -33,11 +33,12 @@ export default function HeaderProfessor() {
       {/* Botão Menu Mobile */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className={`fixed top-4 left-4 z-50 lg:hidden p-2 rounded-lg ${
+        className={`fixed top-3 left-3 z-50 lg:hidden p-2.5 rounded-lg ${
           isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'
         } shadow-lg`}
+        aria-label="Menu"
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           {isMobileMenuOpen ? (
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           ) : (
@@ -55,7 +56,7 @@ export default function HeaderProfessor() {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed left-0 top-0 h-full w-64 sm:w-72 lg:w-80 shadow-2xl transition-all duration-300 z-40 overflow-y-auto ${
+      <aside className={`fixed left-0 top-0 h-full w-[280px] sm:w-[300px] md:w-[320px] lg:w-80 shadow-2xl transition-all duration-300 z-40 overflow-y-auto ${
         isDarkMode ? 'bg-gray-900' : 'bg-white'
       } ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
         

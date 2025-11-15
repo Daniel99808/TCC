@@ -102,10 +102,21 @@ export default function MuralDeAvisos() {
       {/* Container principal com flexbox para ocupar a altura da tela */}
       <div className={`flex flex-col min-h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <DynamicHeader />
+        
+        {/* Título Mobile - Visível apenas no mobile */}
+        <div className="lg:hidden pt-16 pb-3 px-4">
+          <p className={`text-center text-sm mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            Bem-vindo {usuarioLogado?.nome}
+          </p>
+          <h2 className={`text-2xl font-bold text-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+            Avisos Recentes
+          </h2>
+        </div>
+        
         {/* Main agora usa 'overflow-auto' para gerenciar o scroll de todo o conteúdo */}
         <main className="lg:ml-80 flex-1 p-2 sm:p-4 md:p-6 lg:p-8 flex flex-col items-center overflow-auto animate-fade-in">
-        {/* Bem-vindo section */}
-        <div className="text-center mb-3 sm:mb-4 md:mb-6 px-2">
+        {/* Bem-vindo section - Oculto no mobile */}
+        <div className="text-center mb-3 sm:mb-4 md:mb-6 px-2 hidden lg:block">
           <p className={`text-xs sm:text-sm md:text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Bem-vindo {usuarioLogado?.nome}</p>
           <h2 className={`text-xl sm:text-2xl md:text-3xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Avisos recentes</h2>
         </div>

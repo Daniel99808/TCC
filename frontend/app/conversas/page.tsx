@@ -469,15 +469,24 @@ Como posso te ajudar hoje?`,
       <div className={`flex flex-col min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <DynamicHeader />
         
-        <main className="lg:ml-80 flex-1 relative z-0 animate-fade-in overflow-hidden">
-          <div className="h-full flex">
+        {/* Título Mobile - Visível apenas no mobile quando não há chat selecionado */}
+        {!conversaSelecionada && !isNexusChat && (
+          <div className="lg:hidden pt-16 pb-3 px-4">
+            <h1 className={`text-2xl font-bold text-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+              Conversas
+            </h1>
+          </div>
+        )}
+        
+        <main className="lg:ml-80 flex-1 relative z-0 animate-fade-in overflow-hidden p-3 sm:p-4 lg:p-6">
+          <div className="h-full flex rounded-lg overflow-hidden shadow-xl" style={{ minHeight: 'calc(100vh - 120px)' }}>
             
             {/* SIDEBAR DE CONVERSAS - Oculta no mobile quando há chat selecionado */}
-            <div className={`${(conversaSelecionada || isNexusChat) ? 'hidden lg:flex' : 'flex'} flex-col w-full lg:w-96 border-r transition-colors duration-300 ${isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-300 bg-white'}`}>
+            <div className={`${(conversaSelecionada || isNexusChat) ? 'hidden lg:flex' : 'flex'} flex-col w-full lg:w-[380px] xl:w-[420px] border-r transition-colors duration-300 ${isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-300 bg-white'}`}>
               
-              {/* Header da Sidebar */}
-              <div className={`p-4 border-b transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
-                <h1 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Conversas</h1>
+              {/* Header da Sidebar - Oculto no mobile */}
+              <div className={`hidden lg:block p-5 border-b transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                <h1 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Conversas</h1>
               </div>
               
               {/* Lista de Conversas */}
@@ -490,22 +499,22 @@ Como posso te ajudar hoje?`,
                       <div 
                         key={item.id}
                         onClick={iniciarChatNexus}
-                        className={`p-4 cursor-pointer transition-colors duration-300 flex items-center gap-4 border-b ${
+                        className={`p-5 cursor-pointer transition-colors duration-300 flex items-center gap-4 border-b ${
                           isNexusChat 
                             ? (isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-red-50 border-gray-200')
                             : (isDarkMode ? 'hover:bg-gray-700 border-gray-700' : 'hover:bg-gray-50 border-gray-200')
                         }`}
                       >
-                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0 relative border-2 border-red-500 shadow-lg">
-                          <Image src="/maca.png" alt="NEXUS IA" width={28} height={28} unoptimized />
+                        <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center flex-shrink-0 relative border-2 border-red-500 shadow-lg">
+                          <Image src="/maca.png" alt="NEXUS IA" width={32} height={32} unoptimized />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-red-600 text-base">NEXUS IA</h3>
+                          <h3 className="font-semibold text-red-600 text-lg mb-1">NEXUS IA</h3>
                           <p className={`text-sm truncate transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                             Sua assistente virtual
                           </p>
                         </div>
-                        <div className="w-2 h-2 bg-red-600 rounded-full flex-shrink-0 animate-pulse"></div>
+                        <div className="w-2.5 h-2.5 bg-red-600 rounded-full flex-shrink-0 animate-pulse"></div>
                       </div>
                     );
                   }
@@ -525,21 +534,21 @@ Como posso te ajudar hoje?`,
                     <div 
                       key={keyId}
                       onClick={onClickAction}
-                      className={`p-4 cursor-pointer transition-colors duration-300 flex items-center gap-4 border-b ${
+                      className={`p-5 cursor-pointer transition-colors duration-300 flex items-center gap-4 border-b ${
                         isSelected
                           ? (isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-red-50 border-gray-200')
                           : (isDarkMode ? 'hover:bg-gray-700 border-gray-700' : 'hover:bg-gray-50 border-gray-200')
                       }`}
                     >
-                      <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-white font-semibold text-lg">
+                      <div className="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-white font-semibold text-xl">
                           {usuarioItem.nome.charAt(0).toUpperCase()}
                         </span>
                       </div>
                       
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1">
-                          <h3 className={`font-semibold text-base truncate transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          <h3 className={`font-semibold text-lg truncate transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                             {usuarioItem.nome}
                           </h3>
                           {isConversaAtiva && ultimaMensagem && (
@@ -556,13 +565,13 @@ Como posso te ajudar hoje?`,
                               {ultimaMensagem.conteudo}
                             </p>
                           ) : (
-                            <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>
+                            <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>
                               {usuarioItem.curso?.nome || 'Sem curso'}
                             </p>
                           )}
                           
                           {naoLidaDoOutro && (
-                            <div className="w-5 h-5 bg-red-600 rounded-full flex items-center justify-center ml-2 flex-shrink-0">
+                            <div className="w-6 h-6 bg-red-600 rounded-full flex items-center justify-center ml-2 flex-shrink-0">
                               <span className="text-white text-xs font-bold">1</span>
                             </div>
                           )}
@@ -581,12 +590,12 @@ Como posso te ajudar hoje?`,
               </div>
               
               {/* Botão Nova Conversa na Sidebar */}
-              <div className={`p-4 border-t transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+              <div className={`p-5 border-t transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
                 <button
                   onClick={() => setMostrarModalNovaConversa(true)}
-                  className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition-colors font-semibold flex items-center justify-center gap-2"
+                  className="w-full bg-red-600 text-white py-4 rounded-lg hover:bg-red-700 transition-colors font-semibold flex items-center justify-center gap-2 text-base"
                 >
-                  <span className="text-xl">+</span> Nova Conversa
+                  <span className="text-2xl">+</span> Nova Conversa
                 </button>
               </div>
             </div>
@@ -597,34 +606,34 @@ Como posso te ajudar hoje?`,
               {(conversaSelecionada || isNexusChat) ? (
                 <>
                   {/* Header do Chat */}
-                  <div className={`p-4 border-b flex items-center gap-4 transition-colors duration-300 ${
+                  <div className={`p-5 border-b flex items-center gap-4 transition-colors duration-300 ${
                     isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
                   }`}>
                     <button 
                       onClick={fecharChat} 
-                      className="lg:hidden text-red-600 hover:text-red-800 transition-colors text-2xl"
+                      className="lg:hidden text-red-600 hover:text-red-800 transition-colors text-3xl font-bold"
                     >
                       ←
                     </button>
                     
                     {isNexusChat ? (
                       <>
-                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-red-500">
-                          <Image src="/maca.png" alt="NEXUS IA" width={24} height={24} unoptimized />
+                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center border-2 border-red-500">
+                          <Image src="/maca.png" alt="NEXUS IA" width={28} height={28} unoptimized />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-red-600">NEXUS IA</h3>
-                          <span className="text-xs text-gray-500">Assistente Virtual</span>
+                          <h3 className="font-semibold text-red-600 text-lg">NEXUS IA</h3>
+                          <span className="text-sm text-gray-500">Assistente Virtual</span>
                         </div>
                       </>
                     ) : (
                       <>
-                        <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
-                          <span className="text-white font-semibold text-lg">
+                        <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">
+                          <span className="text-white font-semibold text-xl">
                             {destinatario.nome.charAt(0).toUpperCase()}
                           </span>
                         </div>
-                        <h3 className={`font-semibold text-lg transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        <h3 className={`font-semibold text-xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                           {destinatario.nome}
                         </h3>
                       </>
