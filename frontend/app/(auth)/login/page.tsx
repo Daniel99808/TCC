@@ -82,13 +82,21 @@ export default function AuthForm() {
       console.log("Status da Resposta:", response.status);
 
       // Tenta ler o JSON, mas verifica primeiro se a resposta não está vazia
-      let data: any = {};
+      interface LoginResponse {
+        user?: {
+          role?: string;
+          [key: string]: unknown;
+        };
+        error?: string;
+      }
+      
+      let data: LoginResponse = {};
       try {
         // Clonar a resposta antes de tentar ler o JSON, caso o backend não retorne corpo
         const responseClone = response.clone();
         data = await responseClone.json();
-      } catch (jsonError) {
-        console.warn("Aviso: O servidor retornou um erro HTTP, mas sem corpo JSON. Status:", response.status);
+      } catch (error) {
+        console.warn("Aviso: O servidor retornou um erro HTTP, mas sem corpo JSON. Status:", response.status, error);
         data = { error: 'O servidor retornou um erro desconhecido.' };
       }
 
@@ -105,7 +113,7 @@ export default function AuthForm() {
 
         // REDIRECIONAMENTO APÓS 3 SEGUNDOS (usando navegação nativa)
         setTimeout(() => {
-          const userRole = (data.user && data.user.role) || 'USER'; // Garante um fallback
+          const userRole = data.user?.role || 'USER'; // Garante um fallback
           if (userRole === 'ADMIN') window.location.href = '/administrador/mural_adm';
           else window.location.href = '/mural';
         }, TOAST_DURATION);

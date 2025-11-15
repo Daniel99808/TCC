@@ -94,7 +94,12 @@ export default function MuralAdm() {
 
     try {
       // Enviar com todos os campos de segmentação
-      const payload: any = {
+      const payload: {
+        conteudo: string;
+        tipoPublico: string;
+        cursoId?: number | string | null;
+        turma?: string | null;
+      } = {
         conteudo: newMessage,
         tipoPublico
       };

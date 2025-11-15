@@ -103,7 +103,12 @@ export default function MuralProfessor() {
     setMessage('');
 
     try {
-      const payload: any = {
+      const payload: {
+        conteudo: string;
+        tipoPublico: string;
+        cursoId?: number | string | null;
+        turma?: string | null;
+      } = {
         conteudo: newMessage,
         tipoPublico,
         cursoId: cursoSelecionado

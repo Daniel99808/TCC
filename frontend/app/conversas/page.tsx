@@ -59,6 +59,7 @@ export default function ConversasPage() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(true);
   const [isNexusChat, setIsNexusChat] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [nexusMensagens, setNexusMensagens] = useState<any[]>([]);
   const [nexusTyping, setNexusTyping] = useState(false);
   const [isSending, setIsSending] = useState(false);

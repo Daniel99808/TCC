@@ -151,7 +151,7 @@ export default function CalendarioAdm() {
                 <div className={`text-center py-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                   <div className="text-4xl mb-2">📅</div>
                   <p>Nenhum evento encontrado</p>
-                  <p className="text-sm">Clique no botão "+" para criar o primeiro evento!</p>
+                  <p className="text-sm">Clique no botão &quot;+&quot; para criar o primeiro evento!</p>
                 </div>
               ) : (
                 eventos.slice(0, 8).map((evento) => (

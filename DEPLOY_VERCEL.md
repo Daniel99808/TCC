@@ -154,25 +154,81 @@ git push origin main
 # Deploy automático acontece!
 ```
 
-## 🎯 Passo 6: Backend (Separado)
+## 🎯 Passo 6: Backend (OBRIGATÓRIO - Separado)
 
-O backend precisa ser hospedado separadamente. Opções:
+⚠️ **IMPORTANTE**: Seu backend TEM que ser hospedado separadamente porque usa:
+- Socket.IO (WebSockets para chat em tempo real)
+- Servidor Express persistente
+- Prisma ORM com banco de dados
 
-1. **Railway** (Recomendado) - https://railway.app
-2. **Render** - https://render.com
-3. **Heroku**
-4. **AWS/Azure**
+A Vercel NÃO suporta bem WebSockets. Use Railway (grátis e fácil):
 
-### Deploy Backend na Railway:
+### 🚂 Deploy Backend na Railway (RECOMENDADO - 5 minutos)
 
-1. Vá para https://railway.app
-2. Conecte com GitHub
-3. Selecione o repositório TCC
-4. Configure Root Directory como `backend`
-5. Adicione variáveis de ambiente
-6. Deploy!
+1. **Criar conta**:
+   - Acesse https://railway.app
+   - Faça login com GitHub (clique em "Login with GitHub")
 
-Depois, atualize a variável `NEXT_PUBLIC_API_URL` na Vercel com a URL do backend.
+2. **Novo Projeto**:
+   - Clique em "New Project"
+   - Selecione "Deploy from GitHub repo"
+   - Escolha o repositório **TCC**
+
+3. **Configurar o Backend**:
+   - Railway vai detectar tanto frontend quanto backend
+   - Você precisa configurar APENAS o backend
+   - Clique em "Settings" → "Root Directory"
+   - Digite: `backend`
+   - Clique em "Save"
+
+4. **Adicionar Variáveis de Ambiente**:
+   - Vá em "Variables"
+   - Adicione as variáveis do seu `.env`:
+     ```
+     DATABASE_URL=sua_connection_string_do_supabase
+     PORT=3000
+     NODE_ENV=production
+     ```
+
+5. **Deploy**:
+   - Railway vai fazer deploy automático
+   - Aguarde alguns minutos
+   - Copie a URL gerada (ex: `https://tcc-backend-production.up.railway.app`)
+
+6. **Testar**:
+   - Acesse `https://sua-url.railway.app/` 
+   - Deve mostrar "Servidor rodando!"
+
+7. **Atualizar Frontend na Vercel**:
+   - Vá nas configurações do projeto na Vercel
+   - Em "Environment Variables", adicione/atualize:
+     ```
+     NEXT_PUBLIC_API_URL=https://sua-url.railway.app
+     ```
+   - Clique em "Redeploy"
+
+### 🔧 Alternativa: Render.com
+
+Se preferir Render:
+
+1. Acesse https://render.com
+2. Conecte GitHub
+3. "New +" → "Web Service"
+4. Selecione repositório TCC
+5. Configure:
+   - **Name**: tcc-backend
+   - **Root Directory**: backend
+   - **Build Command**: `npm install && npm run generate:prisma`
+   - **Start Command**: `npm run dev` (ou crie um script `start`)
+6. Adicione variáveis de ambiente
+7. Deploy!
+
+### 📝 IMPORTANTE:
+
+Depois do deploy do backend:
+- ✅ Atualize `NEXT_PUBLIC_API_URL` na Vercel
+- ✅ Redeploy o frontend
+- ✅ Teste login e chat no site publicado
 
 ## 📱 Verificar o Deploy
 

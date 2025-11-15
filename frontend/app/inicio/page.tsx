@@ -40,6 +40,7 @@ export default function InicioPage() {
   const [eventosProximos, setEventosProximos] = useState(0);
   const [mensagensNaoLidas, setMensagensNaoLidas] = useState(0);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [ultimasAtividades, setUltimasAtividades] = useState<any[]>([]);
   const { isDarkMode } = useDarkMode();
 
