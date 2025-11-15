@@ -459,369 +459,342 @@ Como posso te ajudar hoje?`,
 
 
   // ===============================================
-  // 1. Renderização CONDICIONAL DA ÁREA DE CHAT
+  // RENDERIZAÇÃO PRINCIPAL - LAYOUT TIPO WHATSAPP
   // ===============================================
-  if (conversaSelecionada || isNexusChat) {
-    const isNormalChat = !!conversaSelecionada;
-    const destinatario = isNormalChat ? getOutroUsuario(conversaSelecionada!) : { nome: 'NEXUS IA' };
+  const isNormalChat = !!conversaSelecionada;
+  const destinatario = isNormalChat ? getOutroUsuario(conversaSelecionada!) : { nome: 'NEXUS IA' };
 
-    return (
-        <div className={`flex flex-col min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-            <DynamicHeader />
-            
-            <main className="lg:ml-80 flex-1 p-2 sm:p-4 relative z-0 animate-fade-in">
-                <div className="max-w-4xl mx-auto h-full"> 
-                    <div className={`rounded-lg shadow-xl flex flex-col transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`} style={{ height: 'calc(100vh - 80px)' }}>
-                        
-                        {/* Header do Chat (com botão de voltar) */}
-                        <div className={`p-3 sm:p-4 border-b flex items-center transition-colors duration-300 relative z-10 ${
-                            isDarkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-red-50'
-                        }`}>
-                            <button 
-                                onClick={fecharChat} 
-                                className="mr-4 text-red-600 hover:cursor-pointer hover:text-red-800 transition-colors text-2xl relative z-10"
-                                title="Voltar para conversas"
-                            >
-                                ←
-                            </button>
-                            {isNormalChat ? (
-                                <h3 className="font-semibold text-red-600">{destinatario.nome}</h3>
-                            ) : (
-                                <div className="flex items-center gap-2">
-                                    <h3 className="font-semibold text-red-600">NEXUS IA</h3>
-                                    <span className="text-xs text-gray-500">(Assistente Virtual)</span>
-                                </div>
-                            )}
-                        </div>
-                        
-                        {/* Corpo do Chat (mantido) */}
-                        <div className="flex-1 overflow-hidden flex flex-col">
-                            {/* Renderização das Mensagens (Lógica mantida) */}
-                            {isNexusChat ? (
-                                // Mensagens NEXUS IA
-                                <div 
-                                    ref={messagesContainerRef}
-                                    className="flex-1 overflow-y-auto p-4 scroll-smooth scrollbar-thin scrollbar-thumb-red-500 scrollbar-track-gray-200 dark:scrollbar-track-gray-700"
-                                    style={{ scrollbarWidth: 'thin' }}
-                                >
-                                    <div className="space-y-4 min-h-full flex flex-col justify-end">
-                                        {nexusMensagens.map((mensagem) => (
-                                          <div key={mensagem.id} className={`flex ${mensagem.isNexus ? 'justify-start' : 'justify-end'}`}>
-                                            <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${mensagem.isNexus ? (isDarkMode ? 'bg-gradient-to-r from-red-600 to-red-700 text-white' : 'bg-gradient-to-r from-red-500 to-red-600 text-white') : 'bg-gray-600 text-white'}`}>
-                                              <p className="text-sm break-words whitespace-pre-wrap">{mensagem.conteudo}</p>
-                                              <p className={`text-xs mt-1 ${mensagem.isNexus ? 'text-red-200' : 'text-gray-200'}`}>{formatarHora(mensagem.createdAt)}</p>
-                                            </div>
-                                          </div>
-                                        ))}
-                                        {nexusTyping && (
-                                          <div className="flex justify-start">
-                                            <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${isDarkMode ? 'bg-gradient-to-r from-red-600 to-red-700 text-white' : 'bg-gradient-to-r from-red-500 to-red-600 text-white'}`}>
-                                              <div className="flex items-center space-x-2">
-                                                <div className="flex space-x-1">
-                                                  <div className="w-2 h-2 bg-red-200 rounded-full animate-bounce"></div>
-                                                  <div className="w-2 h-2 bg-red-200 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                                                  <div className="w-2 h-2 bg-red-200 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                                                </div>
-                                                <span className="text-xs text-red-200">NEXUS IA está digitando...</span>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        )}
-                                      </div>
-                                    <div ref={messagesEndRef} />
-                                </div>
-                            ) : (
-                                // Mensagens da Conversa Normal
-                                <div 
-                                    ref={messagesContainerRef}
-                                    className="flex-1 overflow-y-auto p-4 scroll-smooth scrollbar-thin scrollbar-thumb-red-500 scrollbar-track-gray-200 dark:scrollbar-track-gray-700"
-                                    style={{ scrollbarWidth: 'thin' }}
-                                >
-                                    {mensagensConversa.length === 0 ? (
-                                        <div className={`text-center mt-20 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                            <div className="text-4xl mb-4">&#x1F44B;</div>
-                                            <p>Comece uma conversa!</p>
-                                        </div>
-                                    ) : (
-                                        <div className="space-y-4 min-h-full flex flex-col justify-end">
-                                            {mensagensConversa.map((mensagem) => {
-                                                const isRemetente = mensagem.remetente.id === usuarioLogado.id;
-                                                
-                                                return (
-                                                    <div key={mensagem.id} className={`flex ${isRemetente ? 'justify-end' : 'justify-start'}`}>
-                                                        <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${isRemetente ? 'bg-red-600 text-white' : (isDarkMode ? 'bg-gray-600 text-white' : 'bg-gray-200 text-gray-800')}`}>
-                                                            <p className="text-sm break-words">{mensagem.conteudo}</p>
-                                                            
-                                                            <div className={`text-xs mt-1 flex items-center justify-end ${isRemetente ? 'text-red-200' : (isDarkMode ? 'text-gray-300' : 'text-gray-500')}`}>
-                                                                
-                                                                {formatarHora(mensagem.createdAt)}
-                                                                
-                                                                {/* ÍCONE DE VISTO (Somente se você for o remetente) */}
-                                                                {isRemetente && (
-                                                                    <span className={`ml-1 text-sm ${
-                                                                        mensagem.lida ? 'text-blue-400' : 'text-gray-400'
-                                                                    }`}>
-                                                                        
-                                                                    </span>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                )
-                                            })}
-                                            <div ref={messagesEndRef} />
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                        
-                        {/* Campo de Envio */}
-                        <div className={`border-t p-4 transition-colors duration-300 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
-                            <form onSubmit={isNexusChat ? enviarMensagemNexus : enviarMensagem} className="flex gap-2">
-                                <input 
-                                    type="text" 
-                                    value={novaMensagem} 
-                                    onChange={(e) => setNovaMensagem(e.target.value)} 
-                                    placeholder={isNexusChat ? "Faça uma pergunta para a NEXUS IA..." : "Digite sua mensagem..."}
-                                    disabled={isSending || nexusTyping}
-                                    className={`flex-1 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors duration-300 ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-gray-300 text-black placeholder-gray-500'}`} 
-                                />
-                                <button 
-                                    type="submit" 
-                                    disabled={!novaMensagem.trim() || isSending || nexusTyping}
-                                    className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                >
-                                    {isSending || nexusTyping ? '...' : '>'}
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    );
-  }
-
-  // ===============================================
-  // 2. Renderização do Layout da Lista (Tela Cheia)
-  // ===============================================
   return (
     <ProtectedRoute allowedRoles={['ESTUDANTE', 'PROFESSOR', 'ADMIN']}>
       <div className={`flex flex-col min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <DynamicHeader />
         
-        <main className="lg:ml-80 flex-1 p-4 sm:p-6 relative z-0 animate-fade-in">
-        <div className="max-w-2xl mx-auto h-full">
-          <h1 className={`text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Conversas</h1>
-          
-          <div className={`rounded-lg shadow-xl flex flex-col transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`} style={{ minHeight: 'calc(100vh - 200px)' }}>
+        <main className="lg:ml-80 flex-1 relative z-0 animate-fade-in overflow-hidden">
+          <div className="h-full flex">
+            
+            {/* SIDEBAR DE CONVERSAS - Oculta no mobile quando há chat selecionado */}
+            <div className={`${(conversaSelecionada || isNexusChat) ? 'hidden lg:flex' : 'flex'} flex-col w-full lg:w-96 border-r transition-colors duration-300 ${isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-300 bg-white'}`}>
               
-              <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                <div className={`divide-y transition-colors duration-300 ${isDarkMode ? 'divide-gray-200' : 'divide-gray-200'}`}>
-
-                  {listaUnificada.map((item) => {
-                    
-                    if ('isNexus' in item && item.isNexus) {
-                      // NEXUS IA
-                      return (
-                        <div 
-                          key={item.id}
-                          onClick={iniciarChatNexus}
-                          className={`p-4 cursor-pointer transition-colors duration-300 flex justify-between items-center ${
-                            isNexusChat 
-                              ? (isDarkMode ? 'bg-gray-700' : 'bg-red-50')
-                              : (isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50')
-                          }`}
-                        >
-                          <div className="flex items-center gap-4 flex-1">
-                            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center flex-shrink-0 relative border-2 border-red-500 shadow-lg">
-                              <Image src="/maca.png" alt="NEXUS IA" width={24} height={24} unoptimized />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h3 className="font-semibold text-red-600 truncate">NEXUS IA</h3>
-                              <p className={`text-sm truncate ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                                Sua assistente virtual
-                              </p>
-                            </div>
-                          </div>
-                          <div className="w-2 h-2 bg-red-600 rounded-full flex-shrink-0 animate-pulse"></div>
-                        </div>
-                      );
-                    }
-                    
-                    // Usuários (Com ou Sem Conversa)
-                    const usuarioItem = item as Usuario & { conversaAtiva?: Conversa };
-                    const conversa = usuarioItem.conversaAtiva;
-                    const isConversaAtiva = !!conversa;
-                    const keyId = isConversaAtiva ? `conversa-${conversa.id}` : `user-${usuarioItem.id}`;
-                    
-                    const onClickAction = isConversaAtiva ? () => selecionarConversa(conversa!) : () => iniciarConversa(usuarioItem as Usuario);
-                    
-                    // Lógica para status/notificação da conversa ativa
-                    const ultimaMensagem = conversa?.mensagens && conversa.mensagens.length > 0 ? conversa.mensagens[0] : null;
-                    const isMinhaMensagem = usuarioLogado && ultimaMensagem?.remetente.id === usuarioLogado.id;
-                    const naoLidaDoOutro = ultimaMensagem && !isMinhaMensagem && !ultimaMensagem.lida;
-
-                    // Conteúdo do Item
-                    return (
-                        <div 
-                            key={keyId}
-                            onClick={onClickAction}
-                            className={`p-4 cursor-pointer transition-colors duration-300 flex justify-between items-center ${
-                                isConversaAtiva
-                                ? (isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50')
-                                : (isDarkMode ? 'hover:bg-gray-600/50' : 'hover:bg-gray-100')
-                            }`}
-                        >
-                            <div className="flex items-center gap-4 flex-1">
-                                {/* Ícone de Avatar */}
-                                <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <span className="text-white font-semibold text-lg">
-                                        {usuarioItem.nome.charAt(0).toUpperCase()}
-                                    </span>
-                                </div>
-                                
-                                <div className="flex-1 min-w-0">
-                                    {/* Nome */}
-                                    <h3 className={`font-semibold text-base truncate ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                                        {usuarioItem.nome}
-                                    </h3>
-                                    
-                                    {/* Subtítulo: Última mensagem (se ativa) ou Curso (se novo) */}
-                                    {isConversaAtiva && ultimaMensagem ? (
-                                        <p className={`text-sm truncate ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                                            {ultimaMensagem.conteudo}
-                                        </p>
-                                    ) : (
-                                        <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>
-                                            Novo Chat: {usuarioItem.curso?.nome || 'Sem curso'}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                            
-                            {/* Status (Notificação/Visto) - Apenas se for conversa ativa */}
-                            {isConversaAtiva && ultimaMensagem && (
-                                <div className="flex flex-col items-end text-xs">
-                                    {/* Hora da última mensagem */}
-                                    <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                        {formatarHora(ultimaMensagem.createdAt)}
-                                    </span>
-                                    
-                                    {/* Ícone de status */}
-                                    {naoLidaDoOutro ? (
-                                        // Mensagem não lida do outro usuário (Notificação Vermelha '1')
-                                        <div className="w-4 h-4 bg-red-600 rounded-full flex items-center justify-center ml-2 mt-1">
-                                            <span className="text-white text-xs font-bold">1</span>
-                                        </div>
-                                    ) : isMinhaMensagem && ultimaMensagem.lida ? (
-                                        // SUA MENSAGEM LIDA PELO DESTINATÁRIO (AZUL)
-                                        <span className="text-blue-500 ml-2 mt-1"></span>
-                                    ) : isMinhaMensagem ? (
-                                        // SUA MENSAGEM NÃO LIDA PELO DESTINATÁRIO (CINZA)
-                                        <span className="text-gray-400 ml-2 mt-1"></span>
-                                    ) : (
-                                      // Default para mensagens lidas do outro
-                                      null
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    );
-                  })}
-                  
-                  {/* Mensagem quando não há conversas ainda */}
-                  {listaUnificada.length === 1 && ( 
-                    <div className={`text-center p-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                      <div className="text-4xl mb-4">💬</div>
-                      <p className="text-sm">Nenhuma conversa iniciada ainda.</p>
-                      <p className="text-xs mt-2">Converse com a NEXUS IA ou aguarde mensagens de outros usuários!</p>
-                    </div>
-                  )}
-
-                </div>
+              {/* Header da Sidebar */}
+              <div className={`p-4 border-b transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                <h1 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Conversas</h1>
               </div>
-            </div>
-          </div>
-      </main>
-
-      {/* Botão Flutuante para Nova Conversa */}
-      <button
-        onClick={() => setMostrarModalNovaConversa(true)}
-        className="fixed bottom-8 right-8 w-16 h-16 bg-red-600 text-white rounded-full shadow-2xl hover:bg-red-700 transition-all duration-300 flex items-center justify-center text-3xl font-light hover:scale-110 z-50"
-        title="Nova conversa"
-      >
-        +
-      </button>
-
-      {/* Modal de Nova Conversa */}
-      {mostrarModalNovaConversa && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className={`rounded-lg shadow-2xl max-w-md w-full max-h-[80vh] flex flex-col transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            {/* Header do Modal */}
-            <div className={`p-4 border-b flex items-center justify-between transition-colors duration-300 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
-              <h2 className={`text-xl font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Nova Conversa</h2>
-              <button
-                onClick={() => setMostrarModalNovaConversa(false)}
-                className={`text-2xl transition-colors duration-300 ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-800'}`}
-              >
-                ×
-              </button>
-            </div>
-
-            {/* Lista de Usuários */}
-            <div className="flex-1 overflow-y-auto p-4">
-              {usuarios.length === 0 ? (
-                <div className={`text-center py-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                  <p>Nenhum usuário disponível</p>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  {usuarios.map((usuario) => {
-                    const jaTemConversa = conversas.some(c => 
-                      (c.usuario1.id === usuario.id && c.usuario2.id === usuarioLogado?.id) || 
-                      (c.usuario1.id === usuarioLogado?.id && c.usuario2.id === usuario.id)
-                    );
-
+              
+              {/* Lista de Conversas */}
+              <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
+                {listaUnificada.map((item) => {
+                  
+                  if ('isNexus' in item && item.isNexus) {
+                    // NEXUS IA
                     return (
-                      <div
-                        key={usuario.id}
-                        onClick={() => {
-                          iniciarConversa(usuario);
-                          setMostrarModalNovaConversa(false);
-                        }}
-                        className={`p-3 rounded-lg cursor-pointer transition-colors duration-300 flex items-center gap-3 ${
-                          isDarkMode 
-                            ? 'hover:bg-gray-700' 
-                            : 'hover:bg-gray-100'
+                      <div 
+                        key={item.id}
+                        onClick={iniciarChatNexus}
+                        className={`p-4 cursor-pointer transition-colors duration-300 flex items-center gap-4 border-b ${
+                          isNexusChat 
+                            ? (isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-red-50 border-gray-200')
+                            : (isDarkMode ? 'hover:bg-gray-700 border-gray-700' : 'hover:bg-gray-50 border-gray-200')
                         }`}
                       >
-                        <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-white font-semibold text-lg">
-                            {usuario.nome.charAt(0).toUpperCase()}
-                          </span>
+                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0 relative border-2 border-red-500 shadow-lg">
+                          <Image src="/maca.png" alt="NEXUS IA" width={28} height={28} unoptimized />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className={`font-semibold truncate transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                            {usuario.nome}
-                          </h3>
+                          <h3 className="font-semibold text-red-600 text-base">NEXUS IA</h3>
                           <p className={`text-sm truncate transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                            {usuario.curso?.nome || 'Sem curso'}
+                            Sua assistente virtual
                           </p>
                         </div>
-                        {jaTemConversa && (
-                          <span className="text-xs text-red-600 font-semibold">Ativa</span>
-                        )}
+                        <div className="w-2 h-2 bg-red-600 rounded-full flex-shrink-0 animate-pulse"></div>
                       </div>
                     );
-                  })}
+                  }
+                  
+                  // Usuários
+                  const usuarioItem = item as Usuario & { conversaAtiva?: Conversa };
+                  const conversa = usuarioItem.conversaAtiva;
+                  const isConversaAtiva = !!conversa;
+                  const keyId = isConversaAtiva ? `conversa-${conversa.id}` : `user-${usuarioItem.id}`;
+                  const onClickAction = isConversaAtiva ? () => selecionarConversa(conversa!) : () => iniciarConversa(usuarioItem as Usuario);
+                  const ultimaMensagem = conversa?.mensagens && conversa.mensagens.length > 0 ? conversa.mensagens[0] : null;
+                  const isMinhaMensagem = usuarioLogado && ultimaMensagem?.remetente.id === usuarioLogado.id;
+                  const naoLidaDoOutro = ultimaMensagem && !isMinhaMensagem && !ultimaMensagem.lida;
+                  const isSelected = conversaSelecionada?.id === conversa?.id;
+
+                  return (
+                    <div 
+                      key={keyId}
+                      onClick={onClickAction}
+                      className={`p-4 cursor-pointer transition-colors duration-300 flex items-center gap-4 border-b ${
+                        isSelected
+                          ? (isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-red-50 border-gray-200')
+                          : (isDarkMode ? 'hover:bg-gray-700 border-gray-700' : 'hover:bg-gray-50 border-gray-200')
+                      }`}
+                    >
+                      <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-white font-semibold text-lg">
+                          {usuarioItem.nome.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                      
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <h3 className={`font-semibold text-base truncate transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                            {usuarioItem.nome}
+                          </h3>
+                          {isConversaAtiva && ultimaMensagem && (
+                            <span className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                              {formatarHora(ultimaMensagem.createdAt)}
+                            </span>
+                          )}
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          {isConversaAtiva && ultimaMensagem ? (
+                            <p className={`text-sm truncate transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                              {isMinhaMensagem && <span className="mr-1">{ultimaMensagem.lida ? '✓✓' : '✓'}</span>}
+                              {ultimaMensagem.conteudo}
+                            </p>
+                          ) : (
+                            <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>
+                              {usuarioItem.curso?.nome || 'Sem curso'}
+                            </p>
+                          )}
+                          
+                          {naoLidaDoOutro && (
+                            <div className="w-5 h-5 bg-red-600 rounded-full flex items-center justify-center ml-2 flex-shrink-0">
+                              <span className="text-white text-xs font-bold">1</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+                
+                {listaUnificada.length === 1 && ( 
+                  <div className={`text-center p-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    <div className="text-4xl mb-4">💬</div>
+                    <p className="text-sm">Nenhuma conversa iniciada ainda.</p>
+                  </div>
+                )}
+              </div>
+              
+              {/* Botão Nova Conversa na Sidebar */}
+              <div className={`p-4 border-t transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                <button
+                  onClick={() => setMostrarModalNovaConversa(true)}
+                  className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition-colors font-semibold flex items-center justify-center gap-2"
+                >
+                  <span className="text-xl">+</span> Nova Conversa
+                </button>
+              </div>
+            </div>
+
+            {/* ÁREA DE CHAT - Ocupa o resto do espaço */}
+            <div className={`${(conversaSelecionada || isNexusChat) ? 'flex' : 'hidden lg:flex'} flex-1 flex-col transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+              
+              {(conversaSelecionada || isNexusChat) ? (
+                <>
+                  {/* Header do Chat */}
+                  <div className={`p-4 border-b flex items-center gap-4 transition-colors duration-300 ${
+                    isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
+                  }`}>
+                    <button 
+                      onClick={fecharChat} 
+                      className="lg:hidden text-red-600 hover:text-red-800 transition-colors text-2xl"
+                    >
+                      ←
+                    </button>
+                    
+                    {isNexusChat ? (
+                      <>
+                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-red-500">
+                          <Image src="/maca.png" alt="NEXUS IA" width={24} height={24} unoptimized />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-red-600">NEXUS IA</h3>
+                          <span className="text-xs text-gray-500">Assistente Virtual</span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
+                          <span className="text-white font-semibold text-lg">
+                            {destinatario.nome.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                        <h3 className={`font-semibold text-lg transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {destinatario.nome}
+                        </h3>
+                      </>
+                    )}
+                  </div>
+                  
+                  {/* Corpo do Chat - Mensagens */}
+                  <div className="flex-1 overflow-y-auto p-4 scroll-smooth scrollbar-thin scrollbar-thumb-red-500 scrollbar-track-gray-200 dark:scrollbar-track-gray-700">
+                    {isNexusChat ? (
+                      <div className="space-y-4 min-h-full flex flex-col justify-end">
+                        {nexusMensagens.map((mensagem) => (
+                          <div key={mensagem.id} className={`flex ${mensagem.isNexus ? 'justify-start' : 'justify-end'}`}>
+                            <div className={`max-w-xs lg:max-w-md xl:max-w-lg px-4 py-2 rounded-lg ${mensagem.isNexus ? (isDarkMode ? 'bg-gradient-to-r from-red-600 to-red-700 text-white' : 'bg-gradient-to-r from-red-500 to-red-600 text-white') : 'bg-gray-600 text-white'}`}>
+                              <p className="text-sm break-words whitespace-pre-wrap">{mensagem.conteudo}</p>
+                              <p className={`text-xs mt-1 ${mensagem.isNexus ? 'text-red-200' : 'text-gray-200'}`}>{formatarHora(mensagem.createdAt)}</p>
+                            </div>
+                          </div>
+                        ))}
+                        {nexusTyping && (
+                          <div className="flex justify-start">
+                            <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${isDarkMode ? 'bg-gradient-to-r from-red-600 to-red-700 text-white' : 'bg-gradient-to-r from-red-500 to-red-600 text-white'}`}>
+                              <div className="flex items-center space-x-2">
+                                <div className="flex space-x-1">
+                                  <div className="w-2 h-2 bg-red-200 rounded-full animate-bounce"></div>
+                                  <div className="w-2 h-2 bg-red-200 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                                  <div className="w-2 h-2 bg-red-200 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                                </div>
+                                <span className="text-xs text-red-200">NEXUS IA está digitando...</span>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        <div ref={messagesEndRef} />
+                      </div>
+                    ) : (
+                      mensagensConversa.length === 0 ? (
+                        <div className={`h-full flex items-center justify-center transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                          <div className="text-center">
+                            <div className="text-6xl mb-4">👋</div>
+                            <p className="text-lg">Comece uma conversa!</p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-4 min-h-full flex flex-col justify-end">
+                          {mensagensConversa.map((mensagem) => {
+                            const isRemetente = mensagem.remetente.id === usuarioLogado.id;
+                            
+                            return (
+                              <div key={mensagem.id} className={`flex ${isRemetente ? 'justify-end' : 'justify-start'}`}>
+                                <div className={`max-w-xs lg:max-w-md xl:max-w-lg px-4 py-2 rounded-lg ${isRemetente ? 'bg-red-600 text-white' : (isDarkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-800')}`}>
+                                  <p className="text-sm break-words">{mensagem.conteudo}</p>
+                                  <div className={`text-xs mt-1 flex items-center justify-end gap-1 ${isRemetente ? 'text-red-200' : (isDarkMode ? 'text-gray-400' : 'text-gray-500')}`}>
+                                    <span>{formatarHora(mensagem.createdAt)}</span>
+                                    {isRemetente && (
+                                      <span className={mensagem.lida ? 'text-blue-400' : 'text-gray-300'}>
+                                        {mensagem.lida ? '✓✓' : '✓'}
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                          <div ref={messagesEndRef} />
+                        </div>
+                      )
+                    )}
+                  </div>
+                  
+                  {/* Campo de Envio */}
+                  <div className={`p-4 border-t transition-colors duration-300 ${
+                    isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
+                  }`}>
+                    <form onSubmit={isNexusChat ? enviarMensagemNexus : enviarMensagem} className="flex gap-2">
+                      <input 
+                        type="text" 
+                        value={novaMensagem} 
+                        onChange={(e) => setNovaMensagem(e.target.value)} 
+                        placeholder={isNexusChat ? "Faça uma pergunta para a NEXUS IA..." : "Digite sua mensagem..."}
+                        disabled={isSending || nexusTyping}
+                        className={`flex-1 px-4 py-3 border rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors duration-300 ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-gray-300 text-black placeholder-gray-500'}`} 
+                      />
+                      <button 
+                        type="submit" 
+                        disabled={!novaMensagem.trim() || isSending || nexusTyping}
+                        className="bg-red-600 text-white px-6 py-3 rounded-full hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-bold"
+                      >
+                        {isSending || nexusTyping ? '...' : '➤'}
+                      </button>
+                    </form>
+                  </div>
+                </>
+              ) : (
+                // Mensagem de boas-vindas quando nenhum chat está selecionado (Desktop)
+                <div className={`h-full flex items-center justify-center transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                  <div className="text-center">
+                    <div className="text-8xl mb-6">💬</div>
+                    <h2 className="text-2xl font-semibold mb-2">Nexus Conversas</h2>
+                    <p className="text-lg">Selecione uma conversa para começar</p>
+                  </div>
                 </div>
               )}
             </div>
+
           </div>
-        </div>
-      )}
+        </main>
+
+        {/* Modal de Nova Conversa */}
+        {mostrarModalNovaConversa && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className={`rounded-lg shadow-2xl max-w-md w-full max-h-[80vh] flex flex-col transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+              <div className={`p-4 border-b flex items-center justify-between transition-colors duration-300 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
+                <h2 className={`text-xl font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Nova Conversa</h2>
+                <button
+                  onClick={() => setMostrarModalNovaConversa(false)}
+                  className={`text-2xl transition-colors duration-300 ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-800'}`}
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-4">
+                {usuarios.length === 0 ? (
+                  <div className={`text-center py-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    <p>Nenhum usuário disponível</p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {usuarios.map((usuario) => {
+                      const jaTemConversa = conversas.some(c => 
+                        (c.usuario1.id === usuario.id && c.usuario2.id === usuarioLogado?.id) || 
+                        (c.usuario1.id === usuarioLogado?.id && c.usuario2.id === usuario.id)
+                      );
+
+                      return (
+                        <div
+                          key={usuario.id}
+                          onClick={() => {
+                            iniciarConversa(usuario);
+                            setMostrarModalNovaConversa(false);
+                          }}
+                          className={`p-3 rounded-lg cursor-pointer transition-colors duration-300 flex items-center gap-3 ${
+                            isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'
+                          }`}
+                        >
+                          <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span className="text-white font-semibold text-lg">
+                              {usuario.nome.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className={`font-semibold truncate transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                              {usuario.nome}
+                            </h3>
+                            <p className={`text-sm truncate transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                              {usuario.curso?.nome || 'Sem curso'}
+                            </p>
+                          </div>
+                          {jaTemConversa && (
+                            <span className="text-xs text-red-600 font-semibold">Ativa</span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </ProtectedRoute>
   );
