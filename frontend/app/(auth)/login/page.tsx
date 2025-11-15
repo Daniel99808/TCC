@@ -1,8 +1,7 @@
 ﻿'use client';
 
 import React, { useState, useCallback } from 'react';
-// Dependências do Next.js (next/navigation e next/image) substituídas por funcionalidades nativas
-// para garantir a compilação e execução no ambiente de visualização.
+import Link from 'next/link';
 
 // Tipagem para a notificação
 type Toast = {
@@ -14,12 +13,22 @@ type Toast = {
 export default function AuthForm() {
   const [cpf, setCpf] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [toast, setToast] = useState<Toast>({ message: '', type: 'error', visible: false });
   // Variável 'router' removida, usando window.location.href para navegação.
   
   // Duração do Toast ajustada para 3 segundos para coincidir com o redirecionamento
   const TOAST_DURATION = 3000; 
+
+  // Carregar CPF salvo ao montar o componente
+  React.useEffect(() => {
+    const savedCpf = localStorage.getItem('rememberedCpf');
+    if (savedCpf) {
+      setCpf(savedCpf);
+      setRememberMe(true);
+    }
+  }, []);
 
   // Função para exibir a notificação
   const showToast = useCallback((message: string, type: 'success' | 'error') => {
@@ -87,6 +96,13 @@ export default function AuthForm() {
         showToast('Login realizado com sucesso! Redirecionando...', 'success'); 
         localStorage.setItem('usuarioLogado', JSON.stringify(data.user));
 
+        // Salvar ou remover CPF baseado na opção "Lembrar de mim"
+        if (rememberMe) {
+          localStorage.setItem('rememberedCpf', cpf);
+        } else {
+          localStorage.removeItem('rememberedCpf');
+        }
+
         // REDIRECIONAMENTO APÓS 3 SEGUNDOS (usando navegação nativa)
         setTimeout(() => {
           const userRole = (data.user && data.user.role) || 'USER'; // Garante um fallback
@@ -115,7 +131,7 @@ export default function AuthForm() {
       {/* Texto de Boas-vindas à esquerda */}
       <div className="hidden lg:flex flex-col justify-center text-white px-12 max-w-xl">
         <h1 className="text-6xl font-bold mb-4 leading-tight">
-          Olá, seja<br />bem-vindo à<br /><span className="font-extrabold text-red-500">Nexus Senai!</span>
+          Olá, seja<br />bem-vindo à<br /><span className="font-extrabold text-white">Nexus Senai!</span>
         </h1>
         <p className="text-lg text-gray-300 mt-6">
           Por favor, preencha o formulário ao lado para acessar o sistema.
@@ -161,13 +177,26 @@ export default function AuthForm() {
               required
               className="w-full rounded-xl border-2 border-white/30 bg-white/5 px-5 py-4 text-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200"
             />
-            <div className="mt-4 text-right">
-              <a
-                href="#"
+            <div className="mt-4 flex items-center justify-between">
+              {/* Checkbox Lembrar de mim */}
+              <label className="flex items-center cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-5 h-5 rounded border-2 border-white/30 bg-white/5 text-red-600 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black cursor-pointer transition"
+                />
+                <span className="ml-2 text-sm lg:text-base text-white/80 group-hover:text-white transition">
+                  Lembrar de mim
+                </span>
+              </label>
+
+              <Link
+                href="/recuperar-senha"
                 className="text-sm lg:text-base font-medium text-red-400 hover:text-red-300 hover:underline transition italic"
               >
                 Esqueci a senha
-              </a>
+              </Link>
             </div>
           </div>
 

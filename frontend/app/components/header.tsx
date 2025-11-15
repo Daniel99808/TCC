@@ -61,7 +61,7 @@ export default function Header() {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed left-0 top-0 h-full w-[280px] sm:w-[300px] md:w-[320px] lg:w-80 shadow-2xl transition-all duration-300 z-40 overflow-y-auto ${
+      <aside className={`fixed left-0 top-0 h-full w-[300px] sm:w-[320px] md:w-[350px] lg:w-[360px] shadow-2xl transition-all duration-300 z-40 overflow-y-auto ${
         isDarkMode ? 'bg-gray-900' : 'bg-white'
       } ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
         
@@ -77,16 +77,16 @@ export default function Header() {
                 setIsMobileMenuOpen(false);
               }}
             >
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
-                <span className="text-white font-semibold text-base sm:text-lg">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <span className="text-white font-semibold text-lg sm:text-xl">
                   {usuarioLogado.nome.substring(0, 2).toUpperCase()}
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className={`font-semibold text-sm sm:text-base truncate transition-colors duration-300 ${
+                <h3 className={`font-semibold text-base sm:text-lg truncate transition-colors duration-300 ${
                   isDarkMode ? 'text-white' : 'text-gray-800'
                 }`}>{usuarioLogado.nome}</h3>
-                <p className={`text-xs sm:text-sm truncate transition-colors duration-300 ${
+                <p className={`text-sm sm:text-base truncate transition-colors duration-300 ${
                   isDarkMode ? 'text-gray-400' : 'text-gray-600'
                 }`}>{getTipoUsuario(usuarioLogado.tipo)}</p>
               </div>
@@ -96,32 +96,32 @@ export default function Header() {
 
         {/* Menu de Navegação */}
         <nav className="p-3 sm:p-4">
-          <ul className="space-y-1 sm:space-y-2">
+          <ul className="space-y-2 sm:space-y-3">
           <li>
             <a 
               href="/inicio" 
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg transition-colors group ${
+              className={`flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-lg transition-colors group ${
                 isDarkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
-              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-7 h-7 sm:w-8 sm:h-8 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>
-              <span className="font-medium text-sm sm:text-base">Início</span>
+              <span className="font-medium text-base sm:text-lg">Início</span>
             </a>
           </li>            <li>
               <a 
               href="/mural" 
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg transition-colors group ${
+              className={`flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-lg transition-colors group ${
                 isDarkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'
               }`}
               >
-                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-7 h-7 sm:w-8 sm:h-8 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
-                <span className="font-medium text-sm sm:text-base">Mural</span>
+                <span className="font-medium text-base sm:text-lg">Mural</span>
               </a>
             </li>
 
@@ -129,14 +129,14 @@ export default function Header() {
               <a 
               href="/calendario" 
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg transition-colors group ${
+              className={`flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-lg transition-colors group ${
                 isDarkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'
               }`}
               >
-                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-7 h-7 sm:w-8 sm:h-8 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                <span className="font-medium text-sm sm:text-base">Calendário</span>
+                <span className="font-medium text-base sm:text-lg">Calendário</span>
               </a>
             </li>
 
@@ -144,14 +144,14 @@ export default function Header() {
               <a 
               href="/conversas" 
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg transition-colors group ${
+              className={`flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-lg transition-colors group ${
                 isDarkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'
               }`}
               >
-                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-7 h-7 sm:w-8 sm:h-8 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
-                <span className="font-medium text-sm sm:text-base">Conversas</span>
+                <span className="font-medium text-base sm:text-lg">Conversas</span>
               </a>
             </li>
 
@@ -159,14 +159,14 @@ export default function Header() {
               <a 
               href="/perfil" 
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg transition-colors group ${
+              className={`flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-lg transition-colors group ${
                 isDarkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'
               }`}
               >
-                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-7 h-7 sm:w-8 sm:h-8 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
-                <span className="font-medium text-sm sm:text-base">Perfil</span>
+                <span className="font-medium text-base sm:text-lg">Perfil</span>
               </a>
             </li>
           </ul>
@@ -178,34 +178,34 @@ export default function Header() {
         }`}>
           <button
             onClick={toggleDarkMode}
-            className={`flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg transition-colors w-full mb-2 ${
+            className={`flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-lg transition-colors w-full mb-2 ${
               isDarkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
-            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-7 h-7 sm:w-8 sm:h-8 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isDarkMode ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
               ) : (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
               )}
             </svg>
-            <span className="font-medium text-sm sm:text-base">{isDarkMode ? 'Modo Claro' : 'Modo Escuro'}</span>
+            <span className="font-medium text-base sm:text-lg">{isDarkMode ? 'Modo Claro' : 'Modo Escuro'}</span>
           </button>
 
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-2.5 sm:py-3 text-red-400 hover:bg-red-900/20 rounded-lg transition-colors w-full"
+            className="flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 text-red-400 hover:bg-red-900/20 rounded-lg transition-colors w-full"
           >
-            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-7 h-7 sm:w-8 sm:h-8 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
-            <span className="font-medium text-sm sm:text-base">Sair</span>
+            <span className="font-medium text-base sm:text-lg">Sair</span>
           </button>
         </div>
       </aside>
 
       {/* Espaçador para o conteúdo não ficar atrás da sidebar no desktop */}
-      <div className="hidden lg:block lg:w-80" />
+      <div className="hidden lg:block lg:w-[360px]" />
     </>
   );
 }

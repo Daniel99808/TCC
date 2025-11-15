@@ -74,7 +74,7 @@ const CalendarioPage = () => {
     // Dias do mês anterior
     for (let i = primeiroDiaSemana - 1; i >= 0; i--) {
         dias.push(
-            <div key={`vazio-${i}`} className={`p-1.5 sm:p-2 text-center transition-colors duration-300 text-xs sm:text-sm md:text-base min-h-[36px] sm:min-h-[44px] flex items-center justify-center ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+            <div key={`vazio-${i}`} className={`p-2 sm:p-3 md:p-4 lg:p-5 text-center transition-colors duration-300 text-base sm:text-lg md:text-xl lg:text-2xl min-h-[48px] sm:min-h-[56px] md:min-h-[64px] lg:min-h-[72px] flex items-center justify-center ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
                 {ultimoDiaMesAnterior - i}
             </div>
         );
@@ -88,7 +88,7 @@ const CalendarioPage = () => {
         return dataEvento.getDate() === i && dataEvento.getMonth() === mes;
       });
       const isSelecionado = diaSelecionado === i;
-      const classes = `p-1.5 sm:p-2 md:p-2.5 rounded-md sm:rounded-lg text-center cursor-pointer transition-all duration-200 relative text-sm sm:text-base md:text-lg min-h-[36px] sm:min-h-[44px] flex items-center justify-center
+      const classes = `p-2 sm:p-3 md:p-4 lg:p-5 rounded-md sm:rounded-lg text-center cursor-pointer transition-all duration-200 relative text-base sm:text-lg md:text-xl lg:text-2xl min-h-[48px] sm:min-h-[56px] md:min-h-[64px] lg:min-h-[72px] flex items-center justify-center
         ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}
         ${isSelecionado ? (isDarkMode ? 'bg-red-700 border-2 border-red-400 font-bold shadow-lg scale-105' : 'bg-red-200 border-2 border-red-500 font-bold shadow-lg scale-105') : ''}
         ${isHoje ? 'border-2 border-blue-500 font-semibold' : ''}
@@ -117,7 +117,7 @@ const CalendarioPage = () => {
     const diasRestantes = 42 - dias.length;
     for (let i = 1; i <= diasRestantes; i++) {
       dias.push(
-          <div key={`proximo-${i}`} className={`p-1.5 sm:p-2 text-center cursor-pointer transition-colors duration-300 text-xs sm:text-sm md:text-base min-h-[36px] sm:min-h-[44px] flex items-center justify-center ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>
+          <div key={`proximo-${i}`} className={`p-2 sm:p-3 md:p-4 lg:p-5 text-center cursor-pointer transition-colors duration-300 text-base sm:text-lg md:text-xl lg:text-2xl min-h-[48px] sm:min-h-[56px] md:min-h-[64px] lg:min-h-[72px] flex items-center justify-center ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>
               {i}
           </div>
       );
@@ -150,11 +150,11 @@ const CalendarioPage = () => {
           </div>
         )}
         
-        <div className={`max-w-7xl mx-auto p-3 sm:p-4 md:p-6 lg:p-8 rounded-lg sm:rounded-xl shadow-2xl transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          <div className="flex justify-between items-center mb-3 sm:mb-4 md:mb-6 gap-2">
+        <div className={`max-w-7xl mx-auto p-4 sm:p-6 md:p-8 lg:p-10 rounded-lg sm:rounded-xl shadow-2xl transition-colors duration-300 ${isDarkMode ? 'bg-gray-800/60 backdrop-blur-xl border border-gray-700/50' : 'bg-white/60 backdrop-blur-xl border border-gray-200/50'}`}>
+          <div className="flex justify-between items-center mb-4 sm:mb-6 md:mb-8 gap-3">
             <button 
               onClick={() => setDataAtual(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
-              className={`p-2 sm:p-3 text-lg sm:text-xl md:text-2xl font-bold rounded-full transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 ${
+              className={`p-3 sm:p-4 text-2xl sm:text-3xl md:text-4xl font-bold rounded-full transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 ${
                 isDarkMode 
                   ? 'text-gray-300 hover:bg-gray-700' 
                   : 'text-gray-600 hover:bg-gray-200'
@@ -166,13 +166,13 @@ const CalendarioPage = () => {
               ←
             </button>
 
-            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-extrabold text-red-600 text-center flex-1 px-1">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-red-600 text-center flex-1 px-2">
               {`${meses[dataAtual.getMonth()]} ${dataAtual.getFullYear()}`}
             </h2>
 
             <button 
               onClick={() => setDataAtual(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))}
-              className={`p-2 sm:p-3 text-lg sm:text-xl md:text-2xl font-bold rounded-full transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 ${
+              className={`p-3 sm:p-4 text-2xl sm:text-3xl md:text-4xl font-bold rounded-full transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 ${
                 isDarkMode 
                   ? 'text-gray-300 hover:bg-gray-700' 
                   : 'text-gray-600 hover:bg-gray-200'
