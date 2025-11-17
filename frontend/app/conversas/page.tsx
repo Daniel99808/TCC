@@ -467,7 +467,16 @@ Como posso te ajudar hoje?`,
 
   return (
     <ProtectedRoute allowedRoles={['ESTUDANTE', 'PROFESSOR', 'ADMIN']}>
-      <div className={`flex flex-col min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+      <div 
+        className="flex flex-col min-h-screen"
+        style={{
+          backgroundImage: 'url(/fundo.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed'
+        }}
+      >
         <DynamicHeader />
         
         {/* Título Mobile - Visível apenas no mobile quando não há chat selecionado */}
@@ -483,7 +492,7 @@ Como posso te ajudar hoje?`,
           <div className="h-full flex rounded-lg overflow-hidden shadow-xl" style={{ minHeight: 'calc(100vh - 120px)' }}>
             
             {/* SIDEBAR DE CONVERSAS - Oculta no mobile quando há chat selecionado */}
-            <div className={`${(conversaSelecionada || isNexusChat) ? 'hidden lg:flex' : 'flex'} flex-col w-full lg:w-[380px] xl:w-[420px] border-r transition-colors duration-300 ${isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-300 bg-white'}`}>
+            <div className={`${(conversaSelecionada || isNexusChat) ? 'hidden lg:flex' : 'flex'} flex-col w-full lg:w-[380px] xl:w-[420px] border-r-2 border-white bg-white/10 backdrop-blur-md`}>
               
               {/* Header da Sidebar - Oculto no mobile */}
               <div className={`hidden lg:block p-5 border-b transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
@@ -602,14 +611,12 @@ Como posso te ajudar hoje?`,
             </div>
 
             {/* ÁREA DE CHAT - Ocupa o resto do espaço */}
-            <div className={`${(conversaSelecionada || isNexusChat) ? 'flex' : 'hidden lg:flex'} flex-1 flex-col transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+            <div className={`${(conversaSelecionada || isNexusChat) ? 'flex' : 'hidden lg:flex'} flex-1 flex-col bg-white/10 backdrop-blur-md`}>
               
               {(conversaSelecionada || isNexusChat) ? (
                 <>
                   {/* Header do Chat */}
-                  <div className={`p-5 border-b flex items-center gap-4 transition-colors duration-300 ${
-                    isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
-                  }`}>
+                  <div className="p-4 border-t-2 border-white bg-white/10 backdrop-blur-md flex items-center gap-2">
                     <button 
                       onClick={fecharChat} 
                       className="lg:hidden text-red-600 hover:text-red-800 transition-colors text-3xl font-bold"
@@ -705,10 +712,12 @@ Como posso te ajudar hoje?`,
                   </div>
                   
                   {/* Campo de Envio */}
-                  <div className={`p-4 border-t transition-colors duration-300 ${
-                    isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
-                  }`}>
-                    <form onSubmit={isNexusChat ? enviarMensagemNexus : enviarMensagem} className="flex gap-2">
+                  <div 
+                    className={`p-4 border-t-2 flex items-center gap-2 transition-colors duration-300 ${
+                      isDarkMode ? 'border-white/80 bg-gray-800/20 backdrop-blur-md' : 'border-white/80 bg-white/20 backdrop-blur-md'
+                    }`}
+                  >
+                    <form onSubmit={isNexusChat ? enviarMensagemNexus : enviarMensagem} className="flex gap-2 w-full">
                       <input 
                         type="text" 
                         value={novaMensagem} 
@@ -745,7 +754,7 @@ Como posso te ajudar hoje?`,
         {/* Modal de Nova Conversa */}
         {mostrarModalNovaConversa && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className={`rounded-lg shadow-2xl max-w-md w-full max-h-[80vh] flex flex-col transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <div className={`rounded-lg shadow-2xl max-w-md w-full max-h-[80vh] flex flex-col transition-colors duration-300 border-2 border-white/80 ${isDarkMode ? 'bg-gray-800/20 backdrop-blur-md' : 'bg-white/20 backdrop-blur-md'}`}>
               <div className={`p-4 border-b flex items-center justify-between transition-colors duration-300 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
                 <h2 className={`text-xl font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Nova Conversa</h2>
                 <button

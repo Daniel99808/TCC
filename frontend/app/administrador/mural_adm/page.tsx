@@ -168,7 +168,16 @@ export default function MuralAdm() {
   return (
     <ProtectedRoute allowedRoles={['ADMIN']}>
       {/* Container principal com flexbox para ocupar a altura da tela */}
-      <div className={`flex flex-col min-h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+            <div 
+        className={`flex flex-col min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}
+        style={{
+          backgroundImage: 'url(/fundo.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed'
+        }}
+      >
         <Header />
       
       {/* Título Mobile - Visível apenas no mobile */}
@@ -212,8 +221,8 @@ export default function MuralAdm() {
           </div>
         )}
 
-        {/* Mural Card com altura máxima controlada */}
-        <div className={`w-full max-w-2xl rounded-lg shadow-xl p-6 flex flex-col h-full transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          {/* Mural Card com altura máxima controlada */}
+          <div className={`w-full max-w-2xl rounded-lg shadow-xl p-6 flex flex-col h-full transition-colors duration-300 ${isDarkMode ? 'bg-gray-800/30 backdrop-blur-md border border-gray-700/30' : 'bg-white/20 backdrop-blur-md border border-gray-200/30'}`}>
           {/* A div interna é o painel de scroll */}
           <div className="flex-1 overflow-y-auto space-y-6">
             {messages.length === 0 ? (

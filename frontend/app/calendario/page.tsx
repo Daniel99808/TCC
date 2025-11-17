@@ -128,7 +128,16 @@ const CalendarioPage = () => {
 
   return (
     <ProtectedRoute allowedRoles={['ESTUDANTE', 'PROFESSOR', 'ADMIN']}>
-      <div className={`flex flex-col min-h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+      <div 
+        className="flex flex-col min-h-screen font-sans"
+        style={{
+          backgroundImage: 'url(/fundo.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed'
+        }}
+      >
         <DynamicHeader />
         
         {/* Título Mobile - Visível apenas no mobile */}
@@ -150,7 +159,7 @@ const CalendarioPage = () => {
           </div>
         )}
         
-        <div className={`max-w-7xl mx-auto p-4 sm:p-6 md:p-8 lg:p-10 rounded-lg sm:rounded-xl shadow-2xl transition-colors duration-300 ${isDarkMode ? 'bg-gray-800/60 backdrop-blur-xl border border-gray-700/50' : 'bg-white/60 backdrop-blur-xl border border-gray-200/50'}`}>
+        <div className="max-w-7xl mx-auto p-4 sm:p-6 md:p-8 lg:p-10 rounded-lg sm:rounded-xl shadow-2xl bg-white/10 backdrop-blur-md border-2 border-white">
           <div className="flex justify-between items-center mb-4 sm:mb-6 md:mb-8 gap-3">
             <button 
               onClick={() => setDataAtual(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
@@ -208,7 +217,7 @@ const CalendarioPage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {eventosDoDia.length > 0 ? (
                 eventosDoDia.map(evento => (
-                  <div key={evento.id} className={`p-3 sm:p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ${isDarkMode ? 'bg-gray-700 hover:bg-gray-650' : 'bg-gray-50 hover:bg-white'}`}>
+                  <div key={evento.id} className={`p-3 sm:p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ${isDarkMode ? 'bg-gray-800/30 hover:bg-gray-800/40 border border-white/50' : 'bg-white/30 hover:bg-white/40 border border-white/50'}`}>
                     <p className="text-lg sm:text-xl md:text-2xl font-bold text-red-600 break-words">
                       {evento.titulo}
                     </p>
