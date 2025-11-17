@@ -228,18 +228,35 @@ export default function CalendarioAdm() {
 
       {/* Modal para adicionar evento */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[200vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className={`rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border transition-colors duration-300 ${
+            isDarkMode 
+              ? 'bg-gray-900/95 backdrop-blur-xl border-gray-700' 
+              : 'bg-white/95 backdrop-blur-xl border-gray-200'
+          }`}>
             {/* Header da modal */}
-            <div className="flex justify-between items-center p-6 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800">
-                Adicionar Novo Evento
-              </h2>
+            <div className={`flex justify-between items-center p-6 border-b transition-colors duration-300 ${
+              isDarkMode ? 'border-gray-700' : 'border-gray-200'
+            }`}>
+              <div>
+                <h2 className={`text-xl sm:text-2xl font-bold transition-colors duration-300 ${
+                  isDarkMode ? 'text-white' : 'text-gray-800'
+                }`}>
+                  Adicionar Novo Evento
+                </h2>
+                <p className={`text-xs sm:text-sm mt-1 transition-colors duration-300 ${
+                  isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                }`}>Preencha os detalhes do evento</p>
+              </div>
               <button
                 onClick={closeModal}
-                className="text-gray-400 hover:text-gray-600 text-2xl hover:cursor-pointer"
+                className={`p-2 rounded-full transition-all duration-300 ${
+                  isDarkMode ? 'hover:bg-white/10 text-white' : 'hover:bg-gray-100 text-gray-600'
+                }`}
               >
-                ×
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
 
@@ -247,7 +264,7 @@ export default function CalendarioAdm() {
             <div className="p-6">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="titulo" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="titulo" className={`block text-sm font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                     Título do Evento *
                   </label>
                   <input
@@ -255,17 +272,17 @@ export default function CalendarioAdm() {
                     id="titulo"
                     value={titulo}
                     onChange={(e) => setTitulo(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className={`w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500'}`}
                     placeholder="Ex: Reunião de Condomínio, Festa Junina..."
                     maxLength={100}
                   />
-                  <div className="text-xs text-gray-500 mt-1">
+                  <div className={`text-xs mt-2 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                     {titulo.length}/100 caracteres
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="descricao" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="descricao" className={`block text-sm font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                     Descrição do Evento *
                   </label>
                   <textarea
@@ -273,17 +290,17 @@ export default function CalendarioAdm() {
                     value={descricao}
                     onChange={(e) => setDescricao(e.target.value)}
                     rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+                    className={`w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500'}`}
                     placeholder="Descreva os detalhes do evento: horário, local, o que trazer..."
                     maxLength={500}
                   />
-                  <div className="text-xs text-gray-500 mt-1">
+                  <div className={`text-xs mt-2 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                     {descricao.length}/500 caracteres
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="data" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="data" className={`block text-sm font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                     Data do Evento *
                   </label>
                   <input
@@ -292,16 +309,16 @@ export default function CalendarioAdm() {
                     value={data}
                     onChange={(e) => setData(e.target.value)}
                     min={dataMinima}
-                    className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className={`w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]' : 'bg-white border-2 border-gray-300 text-gray-900'}`}
                   />
                 </div>
 
                 {/* Mensagem de feedback */}
                 {message && (
-                  <div className={`p-3 rounded-md text-sm ${
+                  <div className={`p-4 rounded-xl text-sm font-semibold shadow-lg ${
                     message.includes('sucesso') 
-                      ? 'bg-green-100 text-green-700 border border-green-200' 
-                      : 'bg-red-100 text-red-700 border border-red-200'
+                      ? 'bg-green-600/20 text-green-100 border-2 border-green-500/30' 
+                      : 'bg-red-600/20 text-red-100 border-2 border-red-500/30'
                   }`}>
                     {message}
                   </div>
@@ -312,7 +329,7 @@ export default function CalendarioAdm() {
                   <button
                     type="submit"
                     disabled={loading || !titulo.trim() || !descricao.trim() || !data}
-                    className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 px-4 rounded-xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
                     {loading ? 'Criando...' : 'Criar Evento'}
                   </button>
@@ -320,7 +337,7 @@ export default function CalendarioAdm() {
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                    className={`px-6 py-3 border-2 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] ${isDarkMode ? 'border-white/30 text-white hover:bg-white/10' : 'border-gray-300 text-gray-700 hover:bg-white/50'}`}
                   >
                     Cancelar
                   </button>

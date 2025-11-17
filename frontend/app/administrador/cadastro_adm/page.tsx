@@ -209,7 +209,7 @@ export default function CadastroAdmPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Campo Nome */}
             <div>
-              <label htmlFor="nome" className={`block text-sm font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+              <label htmlFor="nome" className={`block text-sm font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                 Nome Completo *
               </label>
               <input
@@ -219,14 +219,14 @@ export default function CadastroAdmPage() {
                 value={formData.nome}
                 onChange={handleInputChange}
                 placeholder="Digite o nome completo do usuário"
-                className={`w-full p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 ${isDarkMode ? 'bg-white/10 border border-white/20 text-white placeholder-gray-400' : 'bg-white/50 border border-white/30 text-gray-900 placeholder-gray-600'}`}
+                className={`w-full p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500'}`}
                 disabled={isLoading}
               />
             </div>
 
             {/* Campo CPF */}
             <div>
-              <label htmlFor="cpf" className={`block text-sm font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+              <label htmlFor="cpf" className={`block text-sm font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                 CPF *
               </label>
               <input
@@ -237,14 +237,14 @@ export default function CadastroAdmPage() {
                 onChange={handleInputChange}
                 placeholder="000.000.000-00"
                 maxLength={14}
-                className={`w-full p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 ${isDarkMode ? 'bg-white/10 border border-white/20 text-white placeholder-gray-400' : 'bg-white/50 border border-white/30 text-gray-900 placeholder-gray-600'}`}
+                className={`w-full p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500'}`}
                 disabled={isLoading}
               />
             </div>
 
             {/* Campo Curso */}
             <div>
-              <label htmlFor="cursoId" className={`block text-sm font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+              <label htmlFor="cursoId" className={`block text-sm font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                 Curso *
               </label>
               <select
@@ -252,7 +252,7 @@ export default function CadastroAdmPage() {
                 name="cursoId"
                 value={formData.cursoId}
                 onChange={(e) => setFormData(prev => ({ ...prev, cursoId: e.target.value }))}
-                className={`w-full p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 ${isDarkMode ? 'bg-white/10 border border-white/20 text-white [color-scheme:dark]' : 'bg-white/50 border border-white/30 text-gray-900'}`}
+                className={`w-full p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]' : 'bg-white border-2 border-gray-300 text-gray-900'}`}
                 disabled={isLoading}
               >
                 <option value="">Selecione o curso</option>
@@ -266,7 +266,7 @@ export default function CadastroAdmPage() {
 
             {/* Campo Cargo (Role) */}
             <div>
-              <label htmlFor="role" className={`block text-sm font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+              <label htmlFor="role" className={`block text-sm font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                 Cargo *
               </label>
               <select
@@ -274,7 +274,7 @@ export default function CadastroAdmPage() {
                 name="role"
                 value={formData.role}
                 onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
-                className={`w-full p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 ${isDarkMode ? 'bg-white/10 border border-white/20 text-white [color-scheme:dark]' : 'bg-white/50 border border-white/30 text-gray-900'}`}
+                className={`w-full p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]' : 'bg-white border-2 border-gray-300 text-gray-900'}`}
                 disabled={isLoading}
               >
                 <option value="ESTUDANTE">Estudante</option>
@@ -289,7 +289,7 @@ export default function CadastroAdmPage() {
             {/* Campo Turma - Apenas para Professor e Estudante */}
             {(formData.role === 'PROFESSOR' || formData.role === 'ESTUDANTE') && (
               <div>
-                <label htmlFor="turma" className={`block text-sm font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                <label htmlFor="turma" className={`block text-sm font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                   Turma *
                 </label>
                 <select
@@ -297,7 +297,7 @@ export default function CadastroAdmPage() {
                   name="turma"
                   value={formData.turma}
                   onChange={(e) => setFormData(prev => ({ ...prev, turma: e.target.value }))}
-                  className={`w-full p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 ${isDarkMode ? 'bg-white/10 border border-white/20 text-white [color-scheme:dark]' : 'bg-white/50 border border-white/30 text-gray-900'}`}
+                  className={`w-full p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]' : 'bg-white border-2 border-gray-300 text-gray-900'}`}
                   disabled={isLoading}
                 >
                   <option value="">Selecione a turma</option>
@@ -349,7 +349,7 @@ export default function CadastroAdmPage() {
 
             {/* Campo Senha */}
             <div>
-              <label htmlFor="password" className={`block text-sm font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+              <label htmlFor="password" className={`block text-sm font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                 Senha *
               </label>
               <input
@@ -359,14 +359,14 @@ export default function CadastroAdmPage() {
                 value={formData.password}
                 onChange={handleInputChange}
                 placeholder="Digite a senha inicial"
-                className={`w-full p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 ${isDarkMode ? 'bg-white/10 border border-white/20 text-white placeholder-gray-400' : 'bg-white/50 border border-white/30 text-gray-900 placeholder-gray-600'}`}
+                className={`w-full p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500'}`}
                 disabled={isLoading}
               />
             </div>
 
             {/* Campo Confirmar Senha */}
             <div>
-              <label htmlFor="confirmPassword" className={`block text-sm font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+              <label htmlFor="confirmPassword" className={`block text-sm font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                 Confirmar Senha *
               </label>
               <input
@@ -376,7 +376,7 @@ export default function CadastroAdmPage() {
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 placeholder="Confirme a senha"
-                className={`w-full p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 ${isDarkMode ? 'bg-white/10 border border-white/20 text-white placeholder-gray-400' : 'bg-white/50 border border-white/30 text-gray-900 placeholder-gray-600'}`}
+                className={`w-full p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500'}`}
                 disabled={isLoading}
               />
             </div>

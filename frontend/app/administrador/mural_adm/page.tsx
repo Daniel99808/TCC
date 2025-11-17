@@ -269,7 +269,7 @@ export default function MuralAdm() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Tipo de Público */}
               <div>
-                <label htmlFor="tipoPublico" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="tipoPublico" className={`block text-sm font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                   Publicar para *
                 </label>
                 <select
@@ -280,7 +280,7 @@ export default function MuralAdm() {
                     setCursoSelecionado('');
                     setTurmaSelecionada('');
                   }}
-                  className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                  className={`w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]' : 'bg-white border-2 border-gray-300 text-gray-900'}`}
                 >
                   <option value="TODOS">Todos os usuários</option>
                   <option value="CURSO">Curso específico</option>
@@ -291,14 +291,14 @@ export default function MuralAdm() {
               {/* Seleção de Curso */}
               {(tipoPublico === 'CURSO' || tipoPublico === 'TURMA') && (
                 <div>
-                  <label htmlFor="curso" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="curso" className={`block text-sm font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                     Curso *
                   </label>
                   <select
                     id="curso"
                     value={cursoSelecionado}
                     onChange={(e) => setCursoSelecionado(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className={`w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]' : 'bg-white border-2 border-gray-300 text-gray-900'}`}
                     required
                   >
                     <option value="">Selecione um curso</option>
@@ -314,14 +314,14 @@ export default function MuralAdm() {
               {/* Seleção de Turma */}
               {tipoPublico === 'TURMA' && (
                 <div>
-                  <label htmlFor="turma" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="turma" className={`block text-sm font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                     Turma *
                   </label>
                   <select
                     id="turma"
                     value={turmaSelecionada}
                     onChange={(e) => setTurmaSelecionada(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className={`w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]' : 'bg-white border-2 border-gray-300 text-gray-900'}`}
                     required
                   >
                     <option value="">Selecione uma turma</option>
@@ -332,7 +332,7 @@ export default function MuralAdm() {
               )}
               
               <div>
-                <label htmlFor="mensagem" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="mensagem" className={`block text-sm font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                   Mensagem *
                 </label>
                 <textarea
@@ -340,23 +340,23 @@ export default function MuralAdm() {
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-vertical"
+                  className={`w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 resize-vertical font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500'}`}
                   placeholder="Digite a mensagem para o mural..."
                   maxLength={500}
                 />
-                <div className="text-xs text-gray-500 mt-1">
+                <div className={`text-xs mt-2 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                   {newMessage.length}/500 caracteres
                 </div>
               </div>
 
               {/* Preview da mensagem */}
               {newMessage && (
-                <div className="border border-gray-200 rounded-md p-3 bg-gray-50">
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Preview:</h4>
-                  <div className="text-sm text-gray-600 whitespace-pre-line">
+                <div className={`rounded-xl p-4 border-2 ${isDarkMode ? 'bg-gray-800 border-gray-600' : 'bg-gray-50 border-gray-300'}`}>
+                  <h4 className={`text-sm font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Preview:</h4>
+                  <div className={`text-sm whitespace-pre-line ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                     {newMessage}
                   </div>
-                  <div className="text-xs text-blue-600 mt-2">
+                  <div className="text-xs text-blue-500 mt-2 font-bold">
                     Será publicado para: {
                       tipoPublico === 'TODOS' ? 'Todos' :
                       tipoPublico === 'CURSO' && cursoSelecionado ? 

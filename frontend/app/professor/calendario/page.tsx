@@ -236,8 +236,8 @@ export default function CalendarioProfessor() {
             <div className="p-6">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="titulo" className={`block text-sm font-medium mb-1 transition-colors duration-300 ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                  <label htmlFor="titulo" className={`block text-sm font-bold mb-2 transition-colors duration-300 ${
+                    isDarkMode ? 'text-white' : 'text-gray-800'
                   }`}>
                     Título do Evento *
                   </label>
@@ -246,22 +246,22 @@ export default function CalendarioProfessor() {
                     id="titulo"
                     value={titulo}
                     onChange={(e) => setTitulo(e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors duration-300 ${
+                    className={`w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 font-medium transition-all duration-300 ${
                       isDarkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                        ? 'bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400' 
+                        : 'bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500'
                     }`}
                     placeholder="Ex: Reunião de Pais, Prova de Matemática..."
                     maxLength={100}
                   />
-                  <div className={`text-xs mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                  <div className={`text-xs mt-2 font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                     {titulo.length}/100 caracteres
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="descricao" className={`block text-sm font-medium mb-1 transition-colors duration-300 ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                  <label htmlFor="descricao" className={`block text-sm font-bold mb-2 transition-colors duration-300 ${
+                    isDarkMode ? 'text-white' : 'text-gray-800'
                   }`}>
                     Descrição do Evento *
                   </label>
@@ -270,22 +270,22 @@ export default function CalendarioProfessor() {
                     value={descricao}
                     onChange={(e) => setDescricao(e.target.value)}
                     rows={4}
-                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none transition-colors duration-300 ${
+                    className={`w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 resize-vertical font-medium transition-all duration-300 ${
                       isDarkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                        ? 'bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400' 
+                        : 'bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500'
                     }`}
                     placeholder="Descreva os detalhes do evento: horário, local, o que trazer..."
                     maxLength={500}
                   />
-                  <div className={`text-xs mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                  <div className={`text-xs mt-2 font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                     {descricao.length}/500 caracteres
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="data" className={`block text-sm font-medium mb-1 transition-colors duration-300 ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                  <label htmlFor="data" className={`block text-sm font-bold mb-2 transition-colors duration-300 ${
+                    isDarkMode ? 'text-white' : 'text-gray-800'
                   }`}>
                     Data do Evento *
                   </label>
@@ -295,9 +295,9 @@ export default function CalendarioProfessor() {
                     value={data}
                     onChange={(e) => setData(e.target.value)}
                     min={dataMinima}
-                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors duration-300 ${
+                    className={`w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 font-medium transition-all duration-300 ${
                       isDarkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white [color-scheme:dark]' 
+                        ? 'bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]' 
                         : 'bg-white border-gray-300 text-gray-900'
                     }`}
                   />
