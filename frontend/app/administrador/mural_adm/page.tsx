@@ -5,6 +5,7 @@ import Header from '../../components/header_adm';
 import Footer from '../../components/footer';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { useDarkMode } from '../../contexts/DarkModeContext';
+import { useSidebar } from '../../contexts/SidebarContext';
 
 interface Curso {
   id: number;
@@ -32,6 +33,7 @@ export default function MuralAdm() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const { isDarkMode } = useDarkMode();
+  const { isSidebarOpen } = useSidebar();
 
   useEffect(() => {
     fetchMessages();
@@ -169,7 +171,7 @@ export default function MuralAdm() {
     <ProtectedRoute allowedRoles={['ADMIN']}>
       {/* Container principal com flexbox para ocupar a altura da tela */}
             <div 
-        className={`flex flex-col min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}
+        className="flex flex-col min-h-screen"
         style={{
           backgroundImage: 'url(/fundo.png)',
           backgroundSize: 'cover',
@@ -182,31 +184,31 @@ export default function MuralAdm() {
       
       {/* Título Mobile - Visível apenas no mobile */}
       <div className="lg:hidden pt-16 pb-4 px-4">
-        <p className="text-sm text-red-600 text-center mb-1">Painel Administrativo</p>
-        <h2 className={`text-2xl font-bold text-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+        <p className="text-sm text-red-600 text-center mb-1 font-semibold">Painel Administrativo</p>
+        <h2 className={`text-2xl sm:text-3xl font-bold text-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
           Mural de Avisos
         </h2>
-        <p className={`text-center text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+        <p className={`text-center text-sm mt-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
           Gerencie os avisos da comunidade
         </p>
       </div>
       
       {/* Main agora usa 'overflow-auto' para gerenciar o scroll de todo o conteúdo */}
-      <main className="lg:ml-80 flex-1 p-3 sm:p-4 lg:p-8 flex flex-col items-center overflow-auto animate-fade-in">
+      <main className={`flex-1 p-3 sm:p-4 md:p-6 lg:p-8 flex flex-col items-center overflow-auto animate-fade-in transition-all duration-300 ${isSidebarOpen ? 'lg:ml-80' : 'lg:ml-0'}`}>
         {/* Bem-vindo section - Oculto no mobile */}
-        <div className="text-center mb-6 hidden lg:block">
-          <p className="text-sm text-red-600">Painel Administrativo</p>
-          <h2 className={`text-3xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Mural de Avisos</h2>
-          <p className={`mt-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Gerencie os avisos da comunidade</p>
+        <div className="text-center mb-6 sm:mb-8 hidden lg:block">
+          <p className="text-sm text-red-600 font-semibold">Painel Administrativo</p>
+          <h2 className={`text-3xl lg:text-4xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Mural de Avisos</h2>
+          <p className={`mt-2 text-base lg:text-lg transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>Gerencie os avisos da comunidade</p>
         </div>
 
         {/* Botão para adicionar nova mensagem */}
-        <div className="w-full max-w-2xl mb-4">
+        <div className="w-full max-w-3xl mb-4 sm:mb-6">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="w-full bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors font-semibold"
+            className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-3 sm:py-4 px-6 rounded-xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] text-base sm:text-lg"
           >
-            Adicionar Nova Mensagem
+            📝 Adicionar Nova Mensagem
           </button>
         </div>
 
@@ -222,32 +224,32 @@ export default function MuralAdm() {
         )}
 
           {/* Mural Card com altura máxima controlada */}
-          <div className={`w-full max-w-2xl rounded-lg shadow-xl p-6 flex flex-col h-full transition-colors duration-300 ${isDarkMode ? 'bg-gray-800/30 backdrop-blur-md border border-gray-700/30' : 'bg-white/20 backdrop-blur-md border border-gray-200/30'}`}>
+          <div className="w-full max-w-3xl rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 bg-white/10 backdrop-blur-lg border border-white/20">
           {/* A div interna é o painel de scroll */}
-          <div className="flex-1 overflow-y-auto space-y-6">
+          <div className="flex-1 overflow-y-auto space-y-4 sm:space-y-6">
             {messages.length === 0 ? (
-              <div className={`text-center transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                <div className="text-4xl mb-2">📭</div>
-                <p>Nenhum aviso no momento.</p>
-                <p className="text-sm">Clique no botão acima para adicionar o primeiro aviso!</p>
+              <div className={`text-center py-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                <div className="text-5xl mb-4">📭</div>
+                <p className="text-lg font-semibold">Nenhum aviso no momento.</p>
+                <p className="text-sm mt-2">Clique no botão acima para adicionar o primeiro aviso!</p>
               </div>
             ) : (
               messages.map((message) => (
-                <div key={message.id} className={`border-b pb-4 last:border-b-0 last:pb-0 transition-colors duration-300 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
-                  <div className="flex items-center mb-2">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-white">
-                      <i className="bi bi-person-circle text-4xl text-red-600"></i> 
+                <div key={message.id} className="p-4 sm:p-5 rounded-xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01]">
+                  <div className="flex items-center mb-3">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-red-600/20">
+                      <i className="bi bi-person-circle text-3xl sm:text-4xl text-red-600"></i> 
                     </div>
                     <div className="ml-3">
-                      <h3 className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Administração</h3>
+                      <h3 className={`font-bold text-base sm:text-lg transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Administração</h3>
                     </div>
                   </div>
-                  <p className={`whitespace-pre-line transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{message.conteudo}</p>
-                  <div className="flex items-center justify-between mt-2">
-                    <span className="text-xs text-gray-500">
+                  <p className={`text-sm sm:text-base whitespace-pre-line mb-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{message.conteudo}</p>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <span className={`text-xs sm:text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                       {new Date(message.createdAt).toLocaleString('pt-BR')}
                     </span>
-                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                    <span className="text-xs sm:text-sm bg-blue-600/80 text-white px-3 py-1 rounded-full font-semibold shadow-md w-fit">
                       {getTipoPublicoLabel(message)}
                     </span>
                   </div>
@@ -260,9 +262,9 @@ export default function MuralAdm() {
 
       {/* Modal para adicionar mensagem */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className={`rounded-lg w-full max-w-md p-6 max-h-[90vh] overflow-y-auto transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            <h3 className={`text-xl font-semibold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Adicionar Nova Mensagem</h3>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl w-full max-w-md p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
+            <h3 className={`text-xl sm:text-2xl font-bold mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Adicionar Nova Mensagem</h3>
             
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Tipo de Público */}
@@ -372,7 +374,7 @@ export default function MuralAdm() {
                 <button
                   type="submit"
                   disabled={loading || !newMessage.trim()}
-                  className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-3 px-4 rounded-xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
                   {loading ? 'Publicando...' : 'Publicar'}
                 </button>
@@ -387,7 +389,11 @@ export default function MuralAdm() {
                     setTurmaSelecionada('');
                     setMessage('');
                   }}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                  className={`px-6 py-3 border rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] ${
+                    isDarkMode 
+                      ? 'border-white/30 text-white hover:bg-white/10' 
+                      : 'border-gray-300 text-gray-700 hover:bg-white/50'
+                  }`}
                 >
                   Cancelar
                 </button>

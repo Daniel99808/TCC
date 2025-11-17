@@ -6,6 +6,7 @@ import Footer from '../../components/footer';
 import Image from 'next/image';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { useDarkMode } from '../../contexts/DarkModeContext';
+import { useSidebar } from '../../contexts/SidebarContext';
 
 interface CalendarioEvento {
   id: number;
@@ -23,6 +24,7 @@ export default function CalendarioProfessor() {
   const [eventos, setEventos] = useState<CalendarioEvento[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { isDarkMode } = useDarkMode();
+  const { isSidebarOpen } = useSidebar();
 
   // Carregar eventos existentes
   useEffect(() => {
@@ -126,45 +128,45 @@ export default function CalendarioProfessor() {
 
   return (
     <ProtectedRoute allowedRoles={['PROFESSOR']}>
-      <div className={`min-h-screen flex flex-col pt-16 lg:pt-0 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+      <div className="min-h-screen flex flex-col pt-16 lg:pt-0" style={{backgroundImage: 'url(/fundo.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed'}}>
         <HeaderProfessor />
         
-        <main className="lg:ml-80 flex-1 container mx-auto px-4 sm:px-6 py-4 sm:py-8 animate-fade-in">
+        <main className={`flex-1 container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 animate-fade-in transition-all duration-300 ${isSidebarOpen ? 'lg:ml-80' : 'lg:ml-0'}`}>
         <div className="max-w-4xl mx-auto">
           {/* Cabeçalho da página */}
-          <div className={`rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            <h1 className={`text-2xl sm:text-3xl font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+          <div className="rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6 bg-white/10 backdrop-blur-lg border border-white/20">
+            <h1 className={`text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 transition-colors duration-300 text-center ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
               Painel do Professor - Calendário
             </h1>
-            <p className={`text-sm sm:text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className={`text-sm sm:text-base lg:text-lg transition-colors duration-300 text-center ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
               Publique eventos no calendário da comunidade
             </p>
           </div>
 
           {/* Lista de eventos */}
-          <div className={`rounded-xl shadow-lg p-4 sm:p-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            <h2 className={`text-lg sm:text-xl font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+          <div className="rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 bg-white/10 backdrop-blur-lg border border-white/20">
+            <h2 className={`text-lg sm:text-xl lg:text-2xl font-bold mb-4 sm:mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
               Próximos Eventos
             </h2>
             
-            <div className="space-y-3">
+            <div className="space-y-4">
               {eventos.length === 0 ? (
-                <div className="text-center text-gray-500 py-8">
-                  <p>Nenhum evento encontrado</p>
-                  <p className="text-sm">Clique no botão &quot;+&quot; para criar o primeiro evento!</p>
+                <div className={`text-center py-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                  <p className="text-lg font-semibold">Nenhum evento encontrado</p>
+                  <p className="text-sm mt-2">Clique no botão &quot;+&quot; para criar o primeiro evento!</p>
                 </div>
               ) : (
                 eventos.slice(0, 8).map((evento) => (
-                  <div key={evento.id} className="border border-gray-200 rounded-md p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold text-gray-800 text-lg">
+                  <div key={evento.id} className="p-4 sm:p-5 rounded-xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01]">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
+                      <h3 className={`font-bold text-base sm:text-lg ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                         {evento.titulo}
                       </h3>
-                      <span className="text-sm text-gray-500 bg-white px-3 py-1 rounded-full">
+                      <span className="text-xs sm:text-sm bg-red-600/80 text-white px-3 py-1 rounded-full font-semibold shadow-md w-fit">
                         {formatarData(evento.data)}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 whitespace-pre-wrap">
+                    <p className={`text-sm sm:text-base whitespace-pre-wrap ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                       {evento.descricao}
                     </p>
                   </div>
@@ -173,10 +175,10 @@ export default function CalendarioProfessor() {
             </div>
             
             {eventos.length > 8 && (
-              <div className="text-center mt-4">
+              <div className="text-center mt-6">
                 <a 
                   href="/calendario" 
-                  className="text-red-600 hover:text-red-700 text-sm font-medium"
+                  className="text-red-600 hover:text-red-700 text-sm sm:text-base font-bold hover:underline transition-all duration-300"
                 >
                   Ver todos os eventos →
                 </a>
@@ -185,9 +187,9 @@ export default function CalendarioProfessor() {
           </div>
 
           {/* Informações adicionais */}
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mt-6">
-            <h3 className="text-sm font-medium text-red-800 mb-2">Dicas para criar eventos:</h3>
-            <ul className="text-sm text-red-700 space-y-1">
+          <div className="bg-red-600/20 backdrop-blur-sm border border-red-500/30 rounded-xl p-4 sm:p-5 mt-6 shadow-lg">
+            <h3 className={`text-sm sm:text-base font-bold mb-3 ${isDarkMode ? 'text-red-300' : 'text-red-800'}`}>Dicas para criar eventos:</h3>
+            <ul className={`text-sm space-y-2 ${isDarkMode ? 'text-red-200' : 'text-red-700'}`}>
               <li>• Use títulos claros e descritivos</li>
               <li>• Inclua informações importantes: horário, local, o que trazer</li>
               <li>• Para eventos recorrentes, crie um evento para cada data</li>
@@ -200,7 +202,7 @@ export default function CalendarioProfessor() {
       {/* Botão flutuante para adicionar evento */}
       <button
         onClick={openModal}
-        className="fixed bottom-6 right-6 bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl hover:shadow-red-500/50 transition-all duration-300 z-50 flex items-center justify-center hover:scale-110 active:scale-95 group"
+        className="fixed bottom-6 right-6 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl hover:shadow-red-500/50 transition-all duration-300 z-50 flex items-center justify-center hover:scale-110 active:scale-95 group"
         title="Adicionar novo evento"
       >
         <svg className="w-6 h-6 sm:w-7 sm:h-7 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -210,21 +212,19 @@ export default function CalendarioProfessor() {
 
       {/* Modal para adicionar evento */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className={`rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
             {/* Header da modal */}
-            <div className={`flex justify-between items-center p-6 border-b transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+            <div className="flex justify-between items-center p-6 border-b border-white/20">
               <div>
                 <h2 className={`text-xl sm:text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                   Novo Evento
                 </h2>
-                <p className={`text-xs sm:text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Preencha os detalhes do evento</p>
+                <p className={`text-xs sm:text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Preencha os detalhes do evento</p>
               </div>
               <button
                 onClick={closeModal}
-                className={`p-2 rounded-full transition-colors ${
-                  isDarkMode ? 'text-gray-400 hover:bg-gray-700' : 'text-gray-400 hover:bg-gray-100'
-                }`}
+                className="p-2 rounded-full hover:bg-white/10 transition-all duration-300 text-white"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -319,7 +319,7 @@ export default function CalendarioProfessor() {
                   <button
                     type="submit"
                     disabled={loading || !titulo.trim() || !descricao.trim() || !data}
-                    className="flex-1 bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-2.5 px-4 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-md hover:shadow-lg"
+                    className="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-3 px-4 rounded-xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
                     {loading ? 'Criando...' : 'Criar Evento'}
                   </button>
@@ -327,10 +327,10 @@ export default function CalendarioProfessor() {
                   <button
                     type="button"
                     onClick={closeModal}
-                    className={`px-4 py-2.5 border rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-300 ${
+                    className={`px-6 py-3 border rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] ${
                       isDarkMode 
-                        ? 'border-gray-600 text-gray-300 hover:bg-gray-700 focus:ring-gray-500' 
-                        : 'border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500'
+                        ? 'border-white/30 text-white hover:bg-white/10' 
+                        : 'border-gray-300 text-gray-700 hover:bg-white/50'
                     }`}
                   >
                     Cancelar
