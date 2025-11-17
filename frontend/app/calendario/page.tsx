@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import DynamicHeader from '../components/DynamicHeader';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import { useSidebar } from '../contexts/SidebarContext';
 import ProtectedRoute from '../components/ProtectedRoute';
 
 // Tipagem para os eventos, para garantir que os dados da API estejam corretos
@@ -21,6 +22,7 @@ const CalendarioPage = () => {
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const { isDarkMode } = useDarkMode();
+  const { isSidebarOpen } = useSidebar();
 
   const meses = [
     'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
@@ -74,7 +76,7 @@ const CalendarioPage = () => {
     // Dias do mês anterior
     for (let i = primeiroDiaSemana - 1; i >= 0; i--) {
         dias.push(
-            <div key={`vazio-${i}`} className={`p-2 sm:p-3 md:p-4 lg:p-5 text-center transition-colors duration-300 text-base sm:text-lg md:text-xl lg:text-2xl min-h-[48px] sm:min-h-[56px] md:min-h-[64px] lg:min-h-[72px] flex items-center justify-center ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+            <div key={`vazio-${i}`} className={`p-2 sm:p-3 md:p-4 lg:p-5 text-center transition-colors duration-300 text-xl sm:text-2xl md:text-3xl lg:text-4xl min-h-[50px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[80px] flex items-center justify-center font-bold ${isDarkMode ? 'text-gray-500/50' : 'text-white/30'}`}>
                 {ultimoDiaMesAnterior - i}
             </div>
         );
@@ -88,12 +90,12 @@ const CalendarioPage = () => {
         return dataEvento.getDate() === i && dataEvento.getMonth() === mes;
       });
       const isSelecionado = diaSelecionado === i;
-      const classes = `p-2 sm:p-3 md:p-4 lg:p-5 rounded-md sm:rounded-lg text-center cursor-pointer transition-all duration-200 relative text-base sm:text-lg md:text-xl lg:text-2xl min-h-[48px] sm:min-h-[56px] md:min-h-[64px] lg:min-h-[72px] flex items-center justify-center
-        ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}
-        ${isSelecionado ? (isDarkMode ? 'bg-red-700 border-2 border-red-400 font-bold shadow-lg scale-105' : 'bg-red-200 border-2 border-red-500 font-bold shadow-lg scale-105') : ''}
-        ${isHoje ? 'border-2 border-blue-500 font-semibold' : ''}
-        ${temEvento ? 'text-red-600 font-semibold' : ''}
-        ${!isSelecionado && !isHoje ? (isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100') : ''}
+      const classes = `p-2 sm:p-3 md:p-4 lg:p-5 rounded-lg sm:rounded-xl text-center cursor-pointer transition-all duration-300 relative text-xl sm:text-2xl md:text-3xl lg:text-4xl min-h-[50px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[80px] flex items-center justify-center font-bold
+        ${isDarkMode ? 'text-gray-200' : 'text-white'}
+        ${isSelecionado ? 'bg-gradient-to-br from-red-600 to-red-700 text-white font-bold shadow-2xl scale-110 ring-4 ring-red-500/50' : ''}
+        ${isHoje && !isSelecionado ? 'border-2 border-blue-500 font-bold bg-blue-500/10 shadow-lg' : ''}
+        ${temEvento && !isSelecionado ? 'text-red-500 font-bold' : ''}
+        ${!isSelecionado && !isHoje ? (isDarkMode ? 'hover:bg-gradient-to-br hover:from-gray-700/30 hover:to-gray-800/30 hover:shadow-lg hover:scale-105' : 'hover:bg-gradient-to-br hover:from-white/10 hover:to-white/5 hover:shadow-lg hover:scale-105') : ''}
         active:scale-95
       `;
 
@@ -117,7 +119,7 @@ const CalendarioPage = () => {
     const diasRestantes = 42 - dias.length;
     for (let i = 1; i <= diasRestantes; i++) {
       dias.push(
-          <div key={`proximo-${i}`} className={`p-2 sm:p-3 md:p-4 lg:p-5 text-center cursor-pointer transition-colors duration-300 text-base sm:text-lg md:text-xl lg:text-2xl min-h-[48px] sm:min-h-[56px] md:min-h-[64px] lg:min-h-[72px] flex items-center justify-center ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>
+          <div key={`proximo-${i}`} className={`p-2 sm:p-3 md:p-4 lg:p-5 text-center cursor-pointer transition-colors duration-300 text-xl sm:text-2xl md:text-3xl lg:text-4xl min-h-[50px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[80px] flex items-center justify-center font-bold ${isDarkMode ? 'text-gray-500/50' : 'text-white/30'}`}>
               {i}
           </div>
       );
@@ -147,7 +149,9 @@ const CalendarioPage = () => {
           </h1>
         </div>
         
-        <main className="lg:ml-80 flex-1 p-2 sm:p-4 md:p-6 lg:p-8 overflow-auto relative z-0 animate-fade-in">
+        <main className={`transition-all duration-300 flex-1 p-2 sm:p-4 md:p-6 lg:p-8 relative z-0 animate-fade-in ${
+          isSidebarOpen ? 'lg:ml-80' : 'lg:ml-0'
+        }`}>
         {/* Título Principal - Oculto no mobile */}
         <h1 className={`hidden lg:block text-3xl sm:text-5xl font-bold mb-4 sm:mb-6 text-center m-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
           Calendário
@@ -159,14 +163,14 @@ const CalendarioPage = () => {
           </div>
         )}
         
-        <div className="max-w-7xl mx-auto p-4 sm:p-6 md:p-8 lg:p-10 rounded-lg sm:rounded-xl shadow-2xl bg-white/10 backdrop-blur-md border-2 border-white">
+        <div className="max-w-7xl mx-auto p-4 sm:p-6 md:p-8 lg:p-10 rounded-2xl shadow-2xl bg-black/20 backdrop-blur-sm border border-white/10">
           <div className="flex justify-between items-center mb-4 sm:mb-6 md:mb-8 gap-3">
             <button 
               onClick={() => setDataAtual(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
-              className={`p-3 sm:p-4 text-2xl sm:text-3xl md:text-4xl font-bold rounded-full transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 ${
+              className={`p-3 sm:p-4 text-2xl sm:text-3xl md:text-4xl font-bold rounded-full transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 hover:scale-110 ${
                 isDarkMode 
-                  ? 'text-gray-300 hover:bg-gray-700' 
-                  : 'text-gray-600 hover:bg-gray-200'
+                  ? 'text-white hover:bg-red-600/30 bg-gray-800/50' 
+                  : 'text-gray-700 hover:bg-red-500/20 bg-white/30'
               }`}
               disabled={carregando || (
                 dataAtual.getFullYear() === new Date().getFullYear() && dataAtual.getMonth() === 0
@@ -175,16 +179,16 @@ const CalendarioPage = () => {
               ←
             </button>
 
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-red-600 text-center flex-1 px-2">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-red-600 to-red-500 bg-clip-text text-transparent text-center flex-1 px-2 drop-shadow-lg">
               {`${meses[dataAtual.getMonth()]} ${dataAtual.getFullYear()}`}
             </h2>
 
             <button 
               onClick={() => setDataAtual(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))}
-              className={`p-3 sm:p-4 text-2xl sm:text-3xl md:text-4xl font-bold rounded-full transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 ${
+              className={`p-3 sm:p-4 text-2xl sm:text-3xl md:text-4xl font-bold rounded-full transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 hover:scale-110 ${
                 isDarkMode 
-                  ? 'text-gray-300 hover:bg-gray-700' 
-                  : 'text-gray-600 hover:bg-gray-200'
+                  ? 'text-white hover:bg-red-600/30 bg-gray-800/50' 
+                  : 'text-gray-700 hover:bg-red-500/20 bg-white/30'
               }`}
               disabled={carregando || (
                 dataAtual.getFullYear() === new Date().getFullYear() && dataAtual.getMonth() === 11
@@ -201,8 +205,14 @@ const CalendarioPage = () => {
             </div>
           )}
 
-          <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center text-red-600 font-extrabold text-sm sm:text-base md:text-lg mb-2">
-            <div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div>
+          <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center text-red-500 font-extrabold text-base sm:text-lg md:text-xl lg:text-2xl mb-3 sm:mb-4">
+            <div className="py-2">D</div>
+            <div className="py-2">S</div>
+            <div className="py-2">T</div>
+            <div className="py-2">Q</div>
+            <div className="py-2">Q</div>
+            <div className="py-2">S</div>
+            <div className="py-2">S</div>
           </div>
 
           <div className="grid grid-cols-7 gap-1 sm:gap-2">
@@ -217,11 +227,11 @@ const CalendarioPage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {eventosDoDia.length > 0 ? (
                 eventosDoDia.map(evento => (
-                  <div key={evento.id} className={`p-3 sm:p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ${isDarkMode ? 'bg-gray-800/30 hover:bg-gray-800/40 border border-white/50' : 'bg-white/30 hover:bg-white/40 border border-white/50'}`}>
-                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-red-600 break-words">
+                  <div key={evento.id} className={`p-4 sm:p-5 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border backdrop-blur-sm hover:scale-105 ${isDarkMode ? 'bg-black/30 hover:bg-black/40 border-white/20' : 'bg-black/20 hover:bg-black/30 border-white/20'}`}>
+                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-red-500 break-words">
                       {evento.titulo}
                     </p>
-                    <p className={`text-xs sm:text-sm mt-1 sm:mt-2 break-words transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{evento.descricao}</p>
+                    <p className={`text-xs sm:text-sm mt-2 sm:mt-3 break-words transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-white/90'}`}>{evento.descricao}</p>
                   </div>
                 ))
               ) : (

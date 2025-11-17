@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import { useSidebar } from '../contexts/SidebarContext';
 
 interface Usuario {
   id: number;
@@ -12,6 +13,7 @@ interface Usuario {
 export default function Header() {
   const [usuarioLogado, setUsuarioLogado] = useState<Usuario | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isSidebarOpen, toggleSidebar } = useSidebar();
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   useEffect(() => {
@@ -52,6 +54,25 @@ export default function Header() {
         </svg>
       </button>
 
+      {/* Botão Toggle Sidebar Desktop */}
+      <button
+        onClick={toggleSidebar}
+        className={`hidden lg:block fixed top-3 z-50 p-2.5 rounded-lg transition-all duration-300 ${
+          isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'
+        } shadow-lg ${
+          isSidebarOpen ? 'left-[330px]' : 'left-3'
+        }`}
+        aria-label="Toggle Sidebar"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          {isSidebarOpen ? (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+          ) : (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+          )}
+        </svg>
+      </button>
+
       {/* Overlay para Mobile */}
       {isMobileMenuOpen && (
         <div 
@@ -63,7 +84,7 @@ export default function Header() {
       {/* Sidebar */}
       <aside className={`fixed left-0 top-0 h-full w-[300px] sm:w-[320px] md:w-[350px] lg:w-[360px] shadow-2xl transition-all duration-300 z-40 overflow-y-auto ${
         isDarkMode ? 'bg-gray-900' : 'bg-white'
-      } ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+      } ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         
         {/* Perfil do Usuário no Topo */}
         {usuarioLogado && (
@@ -205,7 +226,7 @@ export default function Header() {
       </aside>
 
       {/* Espaçador para o conteúdo não ficar atrás da sidebar no desktop */}
-      <div className="hidden lg:block lg:w-[360px]" />
+      <div className={`hidden lg:block transition-all duration-300 ${isSidebarOpen ? 'lg:w-[360px]' : 'lg:w-0'}`} />
     </>
   );
 }

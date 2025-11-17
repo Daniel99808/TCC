@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { DarkModeProvider } from './contexts/DarkModeContext';
+import { SidebarProvider } from './contexts/SidebarContext';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import Script from 'next/script';
 
@@ -64,8 +65,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <DarkModeProvider>
-          {children}
-          <PWAInstallPrompt />
+          <SidebarProvider>
+            {children}
+            <PWAInstallPrompt />
+          </SidebarProvider>
         </DarkModeProvider>
         
         {/* Service Worker Registration */}

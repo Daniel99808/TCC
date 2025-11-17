@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import DynamicHeader from '../components/DynamicHeader';
 import { io } from 'socket.io-client';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import { useSidebar } from '../contexts/SidebarContext';
 import Image from 'next/image';
 import ProtectedRoute from '../components/ProtectedRoute';
 
@@ -67,6 +68,7 @@ export default function ConversasPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const { isDarkMode } = useDarkMode();
+  const { isSidebarOpen } = useSidebar();
 
   const scrollToBottom = (smooth = true) => {
     if (messagesEndRef.current) {
@@ -479,24 +481,17 @@ Como posso te ajudar hoje?`,
       >
         <DynamicHeader />
         
-        {/* Título Mobile - Visível apenas no mobile quando não há chat selecionado */}
-        {!conversaSelecionada && !isNexusChat && (
-          <div className="lg:hidden pt-16 pb-3 px-4">
-            <h1 className={`text-2xl font-bold text-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-              Conversas
-            </h1>
-          </div>
-        )}
-        
-        <main className="lg:ml-80 flex-1 relative z-0 animate-fade-in overflow-hidden p-3 sm:p-4 lg:p-6">
-          <div className="h-full flex rounded-lg overflow-hidden shadow-xl" style={{ minHeight: 'calc(100vh - 120px)' }}>
+        <main className="flex-1 pt-16 overflow-hidden">
+          <div className={`h-full flex transition-all duration-300 ${
+            isSidebarOpen ? 'ml-0 lg:ml-80' : 'ml-0'
+          }`} style={{ height: 'calc(100vh - 64px)' }}>
             
             {/* SIDEBAR DE CONVERSAS - Oculta no mobile quando há chat selecionado */}
-            <div className={`${(conversaSelecionada || isNexusChat) ? 'hidden lg:flex' : 'flex'} flex-col w-full lg:w-[380px] xl:w-[420px] border-r-2 border-white bg-white/10 backdrop-blur-md`}>
+            <div className={`${(conversaSelecionada || isNexusChat) ? 'hidden lg:flex' : 'flex'} flex-col w-full lg:w-[400px] xl:w-[420px] lg:border-r border-white/20 bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-lg shadow-2xl`}>
               
               {/* Header da Sidebar - Oculto no mobile */}
-              <div className={`hidden lg:block p-5 border-b transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
-                <h1 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Conversas</h1>
+              <div className={`hidden lg:block px-6 py-4 border-b transition-colors duration-300 ${isDarkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
+                <h1 className={`text-2xl font-bold text-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Conversas</h1>
               </div>
               
               {/* Lista de Conversas */}
@@ -509,17 +504,17 @@ Como posso te ajudar hoje?`,
                       <div 
                         key={item.id}
                         onClick={iniciarChatNexus}
-                        className={`p-5 cursor-pointer transition-colors duration-300 flex items-center gap-4 border-b ${
+                        className={`px-5 py-4 cursor-pointer transition-all duration-200 flex items-center gap-4 border-b ${
                           isNexusChat 
-                            ? (isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-red-50 border-gray-200')
-                            : (isDarkMode ? 'hover:bg-gray-700 border-gray-700' : 'hover:bg-gray-50 border-gray-200')
+                            ? (isDarkMode ? 'bg-red-900/30 border-red-800/50 shadow-lg' : 'bg-red-50 border-red-100')
+                            : (isDarkMode ? 'hover:bg-gray-700/40 border-gray-700/30' : 'hover:bg-gray-50/80 border-gray-200/30')
                         }`}
                       >
                         <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center flex-shrink-0 relative border-2 border-red-500 shadow-lg">
                           <Image src="/maca.png" alt="NEXUS IA" width={32} height={32} unoptimized />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-red-600 text-lg mb-1">NEXUS IA</h3>
+                          <h3 className="font-bold text-red-600 text-lg mb-1">NEXUS IA</h3>
                           <p className={`text-sm truncate transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                             Sua assistente virtual
                           </p>
@@ -544,44 +539,44 @@ Como posso te ajudar hoje?`,
                     <div 
                       key={keyId}
                       onClick={onClickAction}
-                      className={`p-5 cursor-pointer transition-colors duration-300 flex items-center gap-4 border-b ${
+                      className={`px-5 py-4 cursor-pointer transition-all duration-200 flex items-center gap-4 border-b ${
                         isSelected
-                          ? (isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-red-50 border-gray-200')
-                          : (isDarkMode ? 'hover:bg-gray-700 border-gray-700' : 'hover:bg-gray-50 border-gray-200')
+                          ? (isDarkMode ? 'bg-red-900/30 border-red-800/50 shadow-lg' : 'bg-red-50 border-red-100')
+                          : (isDarkMode ? 'hover:bg-gray-700/40 border-gray-700/30' : 'hover:bg-gray-50/80 border-gray-200/30')
                       }`}
                     >
-                      <div className="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-white font-semibold text-xl">
+                      <div className="w-14 h-14 bg-gradient-to-br from-red-600 to-red-700 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                        <span className="text-white font-bold text-xl">
                           {usuarioItem.nome.charAt(0).toUpperCase()}
                         </span>
                       </div>
                       
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between mb-1">
-                          <h3 className={`font-semibold text-lg truncate transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        <div className="flex items-center justify-between mb-0.5">
+                          <h3 className={`font-semibold text-base truncate pr-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                             {usuarioItem.nome}
                           </h3>
                           {isConversaAtiva && ultimaMensagem && (
-                            <span className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                            <span className={`text-xs flex-shrink-0 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                               {formatarHora(ultimaMensagem.createdAt)}
                             </span>
                           )}
                         </div>
                         
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
                           {isConversaAtiva && ultimaMensagem ? (
-                            <p className={`text-sm truncate transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            <p className={`text-xs truncate flex-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                               {isMinhaMensagem && <span className="mr-1">{ultimaMensagem.lida ? '✓✓' : '✓'}</span>}
                               {ultimaMensagem.conteudo}
                             </p>
                           ) : (
-                            <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>
+                            <p className={`text-xs flex-1 truncate transition-colors duration-300 ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>
                               {usuarioItem.curso?.nome || 'Sem curso'}
                             </p>
                           )}
                           
                           {naoLidaDoOutro && (
-                            <div className="w-6 h-6 bg-red-600 rounded-full flex items-center justify-center ml-2 flex-shrink-0">
+                            <div className="w-5 h-5 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
                               <span className="text-white text-xs font-bold">1</span>
                             </div>
                           )}
@@ -600,48 +595,48 @@ Como posso te ajudar hoje?`,
               </div>
               
               {/* Botão Nova Conversa na Sidebar */}
-              <div className={`p-5 border-t transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+              <div className={`p-3 border-t transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
                 <button
                   onClick={() => setMostrarModalNovaConversa(true)}
-                  className="w-full bg-red-600 text-white py-4 rounded-lg hover:bg-red-700 transition-colors font-semibold flex items-center justify-center gap-2 text-base"
+                  className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition-colors font-semibold flex items-center justify-center gap-2 text-sm"
                 >
-                  <span className="text-2xl">+</span> Nova Conversa
+                  <span className="text-xl">+</span> Nova Conversa
                 </button>
               </div>
             </div>
 
             {/* ÁREA DE CHAT - Ocupa o resto do espaço */}
-            <div className={`${(conversaSelecionada || isNexusChat) ? 'flex' : 'hidden lg:flex'} flex-1 flex-col bg-white/10 backdrop-blur-md`}>
+            <div className={`${(conversaSelecionada || isNexusChat) ? 'flex' : 'hidden lg:flex'} flex-1 flex-col bg-gradient-to-b from-white/5 to-transparent backdrop-blur-sm`}>
               
               {(conversaSelecionada || isNexusChat) ? (
                 <>
                   {/* Header do Chat */}
-                  <div className="p-4 border-t-2 border-white bg-white/10 backdrop-blur-md flex items-center gap-2">
+                  <div className="px-6 py-4 border-b border-white/20 bg-white/10 backdrop-blur-md flex items-center gap-4 shadow-lg">
                     <button 
                       onClick={fecharChat} 
-                      className="lg:hidden text-red-600 hover:text-red-800 transition-colors text-3xl font-bold"
+                      className="lg:hidden bg-red-600 hover:bg-red-700 text-white transition-all duration-200 text-2xl font-bold p-2.5 rounded-xl shadow-lg hover:scale-110 active:scale-95"
                     >
                       ←
                     </button>
                     
                     {isNexusChat ? (
                       <>
-                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center border-2 border-red-500">
+                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center border-2 border-red-500 shadow-lg">
                           <Image src="/maca.png" alt="NEXUS IA" width={28} height={28} unoptimized />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-red-600 text-lg">NEXUS IA</h3>
+                          <h3 className="font-bold text-red-600 text-lg leading-tight">NEXUS IA</h3>
                           <span className="text-sm text-gray-500">Assistente Virtual</span>
                         </div>
                       </>
                     ) : (
                       <>
-                        <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">
-                          <span className="text-white font-semibold text-xl">
+                        <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-700 rounded-full flex items-center justify-center shadow-lg">
+                          <span className="text-white font-bold text-xl">
                             {destinatario.nome.charAt(0).toUpperCase()}
                           </span>
                         </div>
-                        <h3 className={`font-semibold text-xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        <h3 className={`font-bold text-lg transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                           {destinatario.nome}
                         </h3>
                       </>
@@ -649,27 +644,27 @@ Como posso te ajudar hoje?`,
                   </div>
                   
                   {/* Corpo do Chat - Mensagens */}
-                  <div className="flex-1 overflow-y-auto p-4 scroll-smooth scrollbar-thin scrollbar-thumb-red-500 scrollbar-track-gray-200 dark:scrollbar-track-gray-700">
+                  <div className="flex-1 overflow-y-auto p-6 scroll-smooth scrollbar-thin scrollbar-thumb-red-500/50 scrollbar-track-transparent">
                     {isNexusChat ? (
                       <div className="space-y-4 min-h-full flex flex-col justify-end">
                         {nexusMensagens.map((mensagem) => (
                           <div key={mensagem.id} className={`flex ${mensagem.isNexus ? 'justify-start' : 'justify-end'}`}>
-                            <div className={`max-w-xs lg:max-w-md xl:max-w-lg px-4 py-2 rounded-lg ${mensagem.isNexus ? (isDarkMode ? 'bg-gradient-to-r from-red-600 to-red-700 text-white' : 'bg-gradient-to-r from-red-500 to-red-600 text-white') : 'bg-gray-600 text-white'}`}>
-                              <p className="text-sm break-words whitespace-pre-wrap">{mensagem.conteudo}</p>
-                              <p className={`text-xs mt-1 ${mensagem.isNexus ? 'text-red-200' : 'text-gray-200'}`}>{formatarHora(mensagem.createdAt)}</p>
+                            <div className={`max-w-md lg:max-w-xl xl:max-w-2xl px-5 py-3 rounded-2xl shadow-lg ${mensagem.isNexus ? (isDarkMode ? 'bg-gradient-to-br from-red-600 to-red-700 text-white' : 'bg-gradient-to-br from-red-500 to-red-600 text-white') : 'bg-gray-700 text-white'}`}>
+                              <p className="text-base break-words whitespace-pre-wrap leading-relaxed">{mensagem.conteudo}</p>
+                              <p className={`text-xs mt-2 ${mensagem.isNexus ? 'text-red-200' : 'text-gray-300'}`}>{formatarHora(mensagem.createdAt)}</p>
                             </div>
                           </div>
                         ))}
                         {nexusTyping && (
                           <div className="flex justify-start">
-                            <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${isDarkMode ? 'bg-gradient-to-r from-red-600 to-red-700 text-white' : 'bg-gradient-to-r from-red-500 to-red-600 text-white'}`}>
-                              <div className="flex items-center space-x-2">
-                                <div className="flex space-x-1">
-                                  <div className="w-2 h-2 bg-red-200 rounded-full animate-bounce"></div>
-                                  <div className="w-2 h-2 bg-red-200 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                                  <div className="w-2 h-2 bg-red-200 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                            <div className={`max-w-md px-5 py-3 rounded-2xl shadow-lg ${isDarkMode ? 'bg-gradient-to-br from-red-600 to-red-700 text-white' : 'bg-gradient-to-br from-red-500 to-red-600 text-white'}`}>
+                              <div className="flex items-center space-x-3">
+                                <div className="flex space-x-1.5">
+                                  <div className="w-2.5 h-2.5 bg-red-200 rounded-full animate-bounce"></div>
+                                  <div className="w-2.5 h-2.5 bg-red-200 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                                  <div className="w-2.5 h-2.5 bg-red-200 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
                                 </div>
-                                <span className="text-xs text-red-200">NEXUS IA está digitando...</span>
+                                <span className="text-sm text-red-200">NEXUS IA está digitando...</span>
                               </div>
                             </div>
                           </div>
@@ -691,9 +686,9 @@ Como posso te ajudar hoje?`,
                             
                             return (
                               <div key={mensagem.id} className={`flex ${isRemetente ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-xs lg:max-w-md xl:max-w-lg px-4 py-2 rounded-lg ${isRemetente ? 'bg-red-600 text-white' : (isDarkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-800')}`}>
-                                  <p className="text-sm break-words">{mensagem.conteudo}</p>
-                                  <div className={`text-xs mt-1 flex items-center justify-end gap-1 ${isRemetente ? 'text-red-200' : (isDarkMode ? 'text-gray-400' : 'text-gray-500')}`}>
+                                <div className={`max-w-md lg:max-w-xl xl:max-w-2xl px-5 py-3 rounded-2xl shadow-lg ${isRemetente ? 'bg-gradient-to-br from-red-600 to-red-700 text-white' : (isDarkMode ? 'bg-gray-700/80 text-white' : 'bg-gray-200 text-gray-800')}`}>
+                                  <p className="text-base break-words leading-relaxed">{mensagem.conteudo}</p>
+                                  <div className={`text-xs mt-2 flex items-center justify-end gap-1.5 ${isRemetente ? 'text-red-200' : (isDarkMode ? 'text-gray-400' : 'text-gray-500')}`}>
                                     <span>{formatarHora(mensagem.createdAt)}</span>
                                     {isRemetente && (
                                       <span className={mensagem.lida ? 'text-blue-400' : 'text-gray-300'}>
@@ -713,23 +708,23 @@ Como posso te ajudar hoje?`,
                   
                   {/* Campo de Envio */}
                   <div 
-                    className={`p-4 border-t-2 flex items-center gap-2 transition-colors duration-300 ${
-                      isDarkMode ? 'border-white/80 bg-gray-800/20 backdrop-blur-md' : 'border-white/80 bg-white/20 backdrop-blur-md'
+                    className={`px-6 py-4 border-t border-white/20 flex items-center gap-3 transition-colors duration-300 bg-white/10 backdrop-blur-md shadow-lg ${
+                      isDarkMode ? 'border-gray-700' : 'border-gray-200'
                     }`}
                   >
-                    <form onSubmit={isNexusChat ? enviarMensagemNexus : enviarMensagem} className="flex gap-2 w-full">
+                    <form onSubmit={isNexusChat ? enviarMensagemNexus : enviarMensagem} className="flex gap-3 w-full">
                       <input 
                         type="text" 
                         value={novaMensagem} 
                         onChange={(e) => setNovaMensagem(e.target.value)} 
                         placeholder={isNexusChat ? "Faça uma pergunta para a NEXUS IA..." : "Digite sua mensagem..."}
                         disabled={isSending || nexusTyping}
-                        className={`flex-1 px-4 py-3 border rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors duration-300 ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-gray-300 text-black placeholder-gray-500'}`} 
+                        className={`flex-1 px-5 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 text-base shadow-inner ${isDarkMode ? 'bg-gray-700/80 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-gray-300 text-black placeholder-gray-500'}`} 
                       />
                       <button 
                         type="submit" 
                         disabled={!novaMensagem.trim() || isSending || nexusTyping}
-                        className="bg-red-600 text-white px-6 py-3 rounded-full hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-bold"
+                        className="bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-2xl hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-bold text-xl shadow-lg hover:shadow-xl hover:scale-105"
                       >
                         {isSending || nexusTyping ? '...' : '➤'}
                       </button>
