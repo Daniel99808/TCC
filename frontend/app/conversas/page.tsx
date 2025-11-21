@@ -65,6 +65,8 @@ export default function ConversasPage() {
   const [nexusTyping, setNexusTyping] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [mostrarModalNovaConversa, setMostrarModalNovaConversa] = useState(false);
+  const [textoDigitando, setTextoDigitando] = useState('');
+  const [isDigitando, setIsDigitando] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const { isDarkMode } = useDarkMode();
@@ -78,6 +80,26 @@ export default function ConversasPage() {
       });
     }
   };
+
+  // Carregar mensagens da NEXUS IA do localStorage
+  useEffect(() => {
+    const mensagensSalvas = localStorage.getItem('nexusMensagens');
+    if (mensagensSalvas) {
+      try {
+        const mensagens = JSON.parse(mensagensSalvas);
+        setNexusMensagens(mensagens);
+      } catch (error) {
+        console.error('Erro ao carregar mensagens da NEXUS:', error);
+      }
+    }
+  }, []);
+
+  // Salvar mensagens da NEXUS IA no localStorage sempre que mudarem
+  useEffect(() => {
+    if (nexusMensagens.length > 0) {
+      localStorage.setItem('nexusMensagens', JSON.stringify(nexusMensagens));
+    }
+  }, [nexusMensagens]);
 
   useEffect(() => {
     scrollToBottom();
@@ -338,23 +360,55 @@ export default function ConversasPage() {
     return conversa.usuario1.id === usuarioLogado?.id ? conversa.usuario2 : conversa.usuario1;
   };
 
+  const resetarConversaNexus = () => {
+    const mensagemInicial = [{
+      id: 1,
+      conteudo: `Olá ${usuarioLogado?.nome}! Eu sou a NEXUS IA, sua assistente virtual. Estou aqui para te ajudar com dúvidas sobre seus estudos, tirar questões sobre as matérias e muito mais! 
+Como posso te ajudar hoje?`,
+      createdAt: new Date().toISOString(),
+      isNexus: true
+    }];
+    setNexusMensagens(mensagemInicial);
+    localStorage.setItem('nexusMensagens', JSON.stringify(mensagemInicial));
+  };
+
   const iniciarChatNexus = () => {
     setIsNexusChat(true);
     setConversaSelecionada(null);
     if (nexusMensagens.length === 0) {
-      setNexusMensagens([{
-        id: 1,
-        conteudo: `Olá ${usuarioLogado?.nome}! Eu sou a NEXUS IA, sua assistente virtual. Estou aqui para te ajudar com dúvidas sobre seus estudos, tirar questões sobre as matérias e muito mais! 
-Como posso te ajudar hoje?`,
-        createdAt: new Date().toISOString(),
-        isNexus: true
-      }]);
+      resetarConversaNexus();
     }
+  };
+
+  // Função para simular digitação palavra por palavra
+  const digitarMensagem = (texto: string, callback: (textoCompleto: string) => void) => {
+    const palavras = texto.split(' ');
+    let textoAtual = '';
+    let indice = 0;
+    
+    setIsDigitando(true);
+    setTextoDigitando('');
+
+    const intervalo = setInterval(() => {
+      if (indice < palavras.length) {
+        textoAtual += (indice > 0 ? ' ' : '') + palavras[indice];
+        setTextoDigitando(textoAtual);
+        indice++;
+        
+        // Scroll automático enquanto digita
+        setTimeout(() => scrollToBottom(), 10);
+      } else {
+        clearInterval(intervalo);
+        setIsDigitando(false);
+        setTextoDigitando('');
+        callback(texto);
+      }
+    }, 50); // 50ms entre cada palavra (super rápido)
   };
 
   const enviarMensagemNexus = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!novaMensagem.trim() || !usuarioLogado || nexusTyping) return;
+    if (!novaMensagem.trim() || !usuarioLogado || nexusTyping || isDigitando) return;
 
     const mensagemUsuario = {
       id: Date.now(),
@@ -378,34 +432,44 @@ Como posso te ajudar hoje?`,
 
       const data = await response.json();
 
+      setNexusTyping(false);
+
       if (data.success) {
-        const respostaNexus = {
-          id: Date.now() + 1,
-          conteudo: data.resposta,
-          createdAt: new Date().toISOString(),
-          isNexus: true
-        };
-        setNexusMensagens(prev => [...prev, respostaNexus]);
+        // Usar efeito de digitação para a resposta
+        digitarMensagem(data.resposta, (textoCompleto) => {
+          const respostaNexus = {
+            id: Date.now() + 1,
+            conteudo: textoCompleto,
+            createdAt: new Date().toISOString(),
+            isNexus: true
+          };
+          setNexusMensagens(prev => [...prev, respostaNexus]);
+        });
       } else {
+        const mensagemErro = data.error || "Ops! Parece que estou com alguns problemas técnicos. Tente novamente em alguns instantes!";
+        digitarMensagem(mensagemErro, (textoCompleto) => {
+          const erroMensagem = {
+            id: Date.now() + 1,
+            conteudo: textoCompleto,
+            createdAt: new Date().toISOString(),
+            isNexus: true
+          };
+          setNexusMensagens(prev => [...prev, erroMensagem]);
+        });
+      }
+    } catch (error) {
+      console.error('Erro ao comunicar com NEXUS IA:', error);
+      setNexusTyping(false);
+      
+      digitarMensagem("Ops! Parece que estou com alguns problemas técnicos. Tente novamente em alguns instantes!", (textoCompleto) => {
         const erroMensagem = {
           id: Date.now() + 1,
-          conteudo: data.error || "Ops! Parece que estou com alguns problemas técnicos. Tente novamente em alguns instantes!",
+          conteudo: textoCompleto,
           createdAt: new Date().toISOString(),
           isNexus: true
         };
         setNexusMensagens(prev => [...prev, erroMensagem]);
-      }
-    } catch (error) {
-      console.error('Erro ao comunicar com NEXUS IA:', error);
-      const erroMensagem = {
-        id: Date.now() + 1,
-        conteudo: "Ops! Parece que estou com alguns problemas técnicos. Tente novamente em alguns instantes!",
-        createdAt: new Date().toISOString(),
-        isNexus: true
-      };
-      setNexusMensagens(prev => [...prev, erroMensagem]);
-    } finally {
-      setNexusTyping(false);
+      });
     }
   };
 
@@ -481,13 +545,17 @@ Como posso te ajudar hoje?`,
       >
         <DynamicHeader />
         
-        <main className="flex-1 pt-16 overflow-hidden">
-          <div className={`h-full flex transition-all duration-300 ${
-            isSidebarOpen ? 'ml-0 lg:ml-80' : 'ml-0'
-          }`} style={{ height: 'calc(100vh - 64px)' }}>
-            
-            {/* SIDEBAR DE CONVERSAS - Oculta no mobile quando há chat selecionado */}
-            <div className={`${(conversaSelecionada || isNexusChat) ? 'hidden lg:flex' : 'flex'} flex-col w-full lg:w-[400px] xl:w-[420px] lg:border-r border-white/20 bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-lg shadow-2xl`}>
+        <main className={`flex-1 pt-16 overflow-hidden transition-all duration-300 ${
+          isSidebarOpen ? 'lg:ml-80' : 'lg:ml-0'
+        }`}>
+          {/* Container com padding/margin responsivo */}
+          <div className="h-full w-full px-2 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-3 md:py-4" style={{ height: 'calc(100vh - 64px)' }}>
+            <div className="h-full w-full max-w-[1800px] mx-auto flex relative z-10 rounded-2xl overflow-hidden shadow-2xl" style={{
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+            }}>
+              
+              {/* SIDEBAR DE CONVERSAS - Oculta no mobile quando há chat selecionado */}
+              <div className={`${(conversaSelecionada || isNexusChat) ? 'hidden lg:flex' : 'flex'} flex-col w-full lg:w-[400px] xl:w-[420px] lg:border-r border-white/20 bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-lg shadow-2xl relative z-10`}>
               
               {/* Header da Sidebar - Oculto no mobile */}
               <div className={`hidden lg:block px-6 py-4 border-b transition-colors duration-300 ${isDarkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
@@ -606,40 +674,57 @@ Como posso te ajudar hoje?`,
             </div>
 
             {/* ÁREA DE CHAT - Ocupa o resto do espaço */}
-            <div className={`${(conversaSelecionada || isNexusChat) ? 'flex' : 'hidden lg:flex'} flex-1 flex-col bg-gradient-to-b from-white/5 to-transparent backdrop-blur-sm`}>
+            <div className={`${(conversaSelecionada || isNexusChat) ? 'flex' : 'hidden lg:flex'} flex-1 flex-col bg-gradient-to-b from-white/5 to-transparent backdrop-blur-sm relative z-10`}>
               
               {(conversaSelecionada || isNexusChat) ? (
                 <>
                   {/* Header do Chat */}
-                  <div className="px-6 py-4 border-b border-white/20 bg-white/10 backdrop-blur-md flex items-center gap-4 shadow-lg">
-                    <button 
-                      onClick={fecharChat} 
-                      className="lg:hidden bg-red-600 hover:bg-red-700 text-white transition-all duration-200 text-2xl font-bold p-2.5 rounded-xl shadow-lg hover:scale-110 active:scale-95"
-                    >
-                      ←
-                    </button>
-                    
-                    {isNexusChat ? (
-                      <>
-                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center border-2 border-red-500 shadow-lg">
-                          <Image src="/maca.png" alt="NEXUS IA" width={28} height={28} unoptimized />
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-red-600 text-lg leading-tight">NEXUS IA</h3>
-                          <span className="text-sm text-gray-500">Assistente Virtual</span>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-700 rounded-full flex items-center justify-center shadow-lg">
-                          <span className="text-white font-bold text-xl">
-                            {destinatario.nome.charAt(0).toUpperCase()}
-                          </span>
-                        </div>
-                        <h3 className={`font-bold text-lg transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                          {destinatario.nome}
-                        </h3>
-                      </>
+                  <div className="px-6 py-4 border-b border-white/20 bg-white/10 backdrop-blur-md flex items-center justify-between shadow-lg">
+                    <div className="flex items-center gap-4">
+                      <button 
+                        onClick={fecharChat} 
+                        className="lg:hidden bg-red-600 hover:bg-red-700 text-white transition-all duration-200 text-2xl font-bold p-2.5 rounded-xl shadow-lg hover:scale-110 active:scale-95"
+                      >
+                        ←
+                      </button>
+                      
+                      {isNexusChat ? (
+                        <>
+                          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center border-2 border-red-500 shadow-lg">
+                            <Image src="/maca.png" alt="NEXUS IA" width={28} height={28} unoptimized />
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-red-600 text-lg leading-tight">NEXUS IA</h3>
+                            <span className="text-sm text-gray-500">Assistente Virtual</span>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-700 rounded-full flex items-center justify-center shadow-lg">
+                            <span className="text-white font-bold text-xl">
+                              {destinatario.nome.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                          <h3 className={`font-bold text-lg transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                            {destinatario.nome}
+                          </h3>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Botão Resetar Conversa (apenas para NEXUS IA) */}
+                    {isNexusChat && (
+                      <button
+                        onClick={resetarConversaNexus}
+                        title="Resetar conversa"
+                        className={`p-2.5 rounded-xl transition-all duration-200 hover:scale-110 active:scale-95 ${
+                          isDarkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                        } shadow-lg`}
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                      </button>
                     )}
                   </div>
                   
@@ -655,7 +740,20 @@ Como posso te ajudar hoje?`,
                             </div>
                           </div>
                         ))}
-                        {nexusTyping && (
+                        
+                        {/* Mensagem sendo digitada */}
+                        {isDigitando && textoDigitando && (
+                          <div className="flex justify-start">
+                            <div className={`max-w-md lg:max-w-xl xl:max-w-2xl px-5 py-3 rounded-2xl shadow-lg ${isDarkMode ? 'bg-gradient-to-br from-red-600 to-red-700 text-white' : 'bg-gradient-to-br from-red-500 to-red-600 text-white'}`}>
+                              <p className="text-base break-words whitespace-pre-wrap leading-relaxed">
+                                {textoDigitando}
+                                <span className="inline-block w-1 h-4 ml-1 bg-red-200 animate-pulse"></span>
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {nexusTyping && !isDigitando && (
                           <div className="flex justify-start">
                             <div className={`max-w-md px-5 py-3 rounded-2xl shadow-lg ${isDarkMode ? 'bg-gradient-to-br from-red-600 to-red-700 text-white' : 'bg-gradient-to-br from-red-500 to-red-600 text-white'}`}>
                               <div className="flex items-center space-x-3">
@@ -664,7 +762,7 @@ Como posso te ajudar hoje?`,
                                   <div className="w-2.5 h-2.5 bg-red-200 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
                                   <div className="w-2.5 h-2.5 bg-red-200 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
                                 </div>
-                                <span className="text-sm text-red-200">NEXUS IA está digitando...</span>
+                                <span className="text-sm text-red-200">NEXUS IA está pensando...</span>
                               </div>
                             </div>
                           </div>
@@ -718,15 +816,15 @@ Como posso te ajudar hoje?`,
                         value={novaMensagem} 
                         onChange={(e) => setNovaMensagem(e.target.value)} 
                         placeholder={isNexusChat ? "Faça uma pergunta para a NEXUS IA..." : "Digite sua mensagem..."}
-                        disabled={isSending || nexusTyping}
+                        disabled={isSending || nexusTyping || isDigitando}
                         className={`flex-1 px-5 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 text-base shadow-inner ${isDarkMode ? 'bg-gray-700/80 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-gray-300 text-black placeholder-gray-500'}`} 
                       />
                       <button 
                         type="submit" 
-                        disabled={!novaMensagem.trim() || isSending || nexusTyping}
+                        disabled={!novaMensagem.trim() || isSending || nexusTyping || isDigitando}
                         className="bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-2xl hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-bold text-xl shadow-lg hover:shadow-xl hover:scale-105"
                       >
-                        {isSending || nexusTyping ? '...' : '➤'}
+                        {isSending || nexusTyping || isDigitando ? '...' : '➤'}
                       </button>
                     </form>
                   </div>
@@ -743,6 +841,7 @@ Como posso te ajudar hoje?`,
               )}
             </div>
 
+          </div>
           </div>
         </main>
 

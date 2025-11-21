@@ -152,7 +152,7 @@ export default function InicioPage() {
             {/* Header da Dashboard */}
             <div className="mb-10 lg:mb-12">
               <div className="flex flex-col items-center text-center">
-                <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-bold mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Olá, {usuarioLogado.nome.split(' ')[0]}! 👋
                 </h1>
                 <p className={`text-base sm:text-lg lg:text-xl transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>

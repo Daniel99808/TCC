@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
   images: {
     domains: [],
   },
+  devIndicators: {
+    appIsrStatus: false,
+    buildActivity: false,
+    buildActivityPosition: 'bottom-right',
+  },
 };
 
 export default nextConfig;
