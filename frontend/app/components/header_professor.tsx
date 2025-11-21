@@ -57,7 +57,7 @@ export default function HeaderProfessor() {
 
       {/* Sidebar */}
       <aside className={`fixed left-0 top-0 h-full w-[300px] sm:w-[320px] md:w-[350px] lg:w-[360px] shadow-2xl transition-all duration-300 z-40 overflow-y-auto ${
-        isDarkMode ? 'bg-gray-900' : 'bg-white'
+        isDarkMode ? 'bg-gray-900/80 backdrop-blur-xl border-r border-white/10' : 'bg-white/80 backdrop-blur-xl border-r border-gray-200/50'
       } ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
         
         {/* Perfil do Usuário */}
@@ -139,26 +139,10 @@ export default function HeaderProfessor() {
           </ul>
         </nav>
 
-        {/* Rodapé */}
+        {/* Rodapé - Botão Sair */}
         <div className={`absolute bottom-0 left-0 right-0 p-3 sm:p-4 border-t transition-colors duration-300 ${
           isDarkMode ? 'border-gray-700 bg-gray-900' : 'border-gray-200 bg-white'
         }`}>
-          <button
-            onClick={toggleDarkMode}
-            className={`flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-lg transition-colors w-full mb-2 ${
-              isDarkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            <svg className="w-7 h-7 sm:w-8 sm:h-8 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {isDarkMode ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              )}
-            </svg>
-            <span className="font-medium text-base sm:text-lg">{isDarkMode ? 'Modo Claro' : 'Modo Escuro'}</span>
-          </button>
-
           <button
             onClick={handleLogout}
             className="flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 text-red-400 hover:bg-red-900/20 rounded-lg transition-colors w-full"

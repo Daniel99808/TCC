@@ -222,24 +222,6 @@ export default function PerfilPage() {
                       </svg>
                     </div>
                   </button>
-
-                  {/* Modo Escuro */}
-                  <div className="flex items-center justify-between p-3 sm:p-4 lg:p-5 border border-white/20 rounded-lg sm:rounded-xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm">
-                    <div className="flex items-center gap-3 sm:gap-4">
-                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                      </svg>
-                      <span className={`font-bold text-base sm:text-lg transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                        Modo Escuro
-                      </span>
-                    </div>
-                    <button 
-                      onClick={toggleDarkMode}
-                      className={`relative inline-flex h-7 w-12 sm:h-8 sm:w-14 cursor-pointer items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 shadow-lg ${isDarkMode ? 'bg-red-600' : 'bg-gray-400'}`}
-                    >
-                      <span className={`inline-block h-5 w-5 sm:h-6 sm:w-6 transform rounded-full bg-white transition-transform shadow-md ${isDarkMode ? 'translate-x-6 sm:translate-x-7' : 'translate-x-1'}`} />
-                    </button>
-                  </div>
                 </div>
                 
                 {/* Botão Sair */}
