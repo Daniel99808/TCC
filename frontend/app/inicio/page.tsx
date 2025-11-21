@@ -145,34 +145,34 @@ export default function InicioPage() {
       >
         <DynamicHeader />
         
-        <main className={`transition-all duration-300 pt-20 lg:pt-24 pb-12 px-4 sm:px-6 lg:px-8 xl:px-12 animate-fade-in relative z-0 ${
+        <main className={`transition-all duration-300 pt-16 lg:pt-20 pb-8 px-4 sm:px-6 lg:px-8 animate-fade-in relative z-0 ${
           isSidebarOpen ? 'lg:ml-80' : 'lg:ml-0'
         }`}>
           <div className="max-w-7xl mx-auto">
             {/* Header da Dashboard */}
-            <div className="mb-10 lg:mb-12">
+            <div className="mb-6 lg:mb-8">
               <div className="flex flex-col items-center text-center">
-                <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h1 className={`text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Olá, {usuarioLogado.nome.split(' ')[0]}! 👋
                 </h1>
-                <p className={`text-base sm:text-lg lg:text-xl transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-sm sm:text-base lg:text-lg transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Aqui está o resumo das suas atividades
                 </p>
               </div>
             </div>
 
             {/* Cards de Estatísticas - Estilo Moderno */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-10 lg:mb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-6 lg:mb-8">
               {/* Card Avisos */}
-              <div className={`group relative overflow-hidden rounded-2xl p-8 lg:p-10 transition-all duration-300 hover:scale-[1.02] ${
+              <div className={`group relative overflow-hidden rounded-2xl p-5 lg:p-6 transition-all duration-300 hover:scale-[1.02] ${
                 isDarkMode ? 'bg-gradient-to-br from-red-900/40 to-red-950/40 backdrop-blur-md border border-red-800/50' : 'bg-gradient-to-br from-red-50 to-white backdrop-blur-md border border-red-100'
               } shadow-xl hover:shadow-2xl`}>
                 <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className={`w-14 h-14 lg:w-16 lg:h-16 rounded-xl flex items-center justify-center ${
+                  <div className="flex items-center justify-between mb-4">
+                    <div className={`w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center ${
                       isDarkMode ? 'bg-red-500/20' : 'bg-red-100'
                     } group-hover:scale-110 transition-transform`}>
-                    <svg className="w-7 h-7 lg:w-8 lg:h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 lg:w-7 lg:h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                     </svg>
                   </div>
@@ -182,10 +182,10 @@ export default function InicioPage() {
                     </span>
                   )}
                 </div>
-                <h3 className={`text-5xl lg:text-6xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className={`text-3xl lg:text-4xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   {avisosNovos}
                 </h3>
-                <p className={`text-base lg:text-lg font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-sm lg:text-base font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Avisos Novos
                 </p>
               </div>
@@ -193,15 +193,15 @@ export default function InicioPage() {
             </div>
 
             {/* Card Eventos */}
-            <div className={`group relative overflow-hidden rounded-2xl p-8 lg:p-10 transition-all duration-300 hover:scale-[1.02] ${
+            <div className={`group relative overflow-hidden rounded-2xl p-5 lg:p-6 transition-all duration-300 hover:scale-[1.02] ${
               isDarkMode ? 'bg-gradient-to-br from-blue-900/40 to-blue-950/40 backdrop-blur-md border border-blue-800/50' : 'bg-gradient-to-br from-blue-50 to-white backdrop-blur-md border border-blue-100'
             } shadow-xl hover:shadow-2xl`}>
               <div className="relative z-10">
-                <div className="flex items-center justify-between mb-6">
-                  <div className={`w-14 h-14 lg:w-16 lg:h-16 rounded-xl flex items-center justify-center ${
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center ${
                     isDarkMode ? 'bg-blue-500/20' : 'bg-blue-100'
                   } group-hover:scale-110 transition-transform`}>
-                    <svg className="w-7 h-7 lg:w-8 lg:h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 lg:w-7 lg:h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </div>
@@ -211,10 +211,10 @@ export default function InicioPage() {
                     </span>
                   )}
                 </div>
-                <h3 className={`text-5xl lg:text-6xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className={`text-3xl lg:text-4xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   {eventosProximos}
                 </h3>
-                <p className={`text-base lg:text-lg font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-sm lg:text-base font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Eventos Esta Semana
                 </p>
               </div>
@@ -222,15 +222,15 @@ export default function InicioPage() {
             </div>
 
             {/* Card Mensagens */}
-            <div className={`group relative overflow-hidden rounded-2xl p-8 lg:p-10 transition-all duration-300 hover:scale-[1.02] ${
+            <div className={`group relative overflow-hidden rounded-2xl p-5 lg:p-6 transition-all duration-300 hover:scale-[1.02] ${
               isDarkMode ? 'bg-gradient-to-br from-purple-900/40 to-purple-950/40 backdrop-blur-md border border-purple-800/50' : 'bg-gradient-to-br from-purple-50 to-white backdrop-blur-md border border-purple-100'
             } shadow-xl hover:shadow-2xl`}>
               <div className="relative z-10">
-                <div className="flex items-center justify-between mb-6">
-                  <div className={`w-14 h-14 lg:w-16 lg:h-16 rounded-xl flex items-center justify-center ${
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center ${
                     isDarkMode ? 'bg-purple-500/20' : 'bg-purple-100'
                   } group-hover:scale-110 transition-transform`}>
-                    <svg className="w-7 h-7 lg:w-8 lg:h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 lg:w-7 lg:h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
                   </div>
@@ -240,10 +240,10 @@ export default function InicioPage() {
                     </span>
                   )}
                 </div>
-                <h3 className={`text-5xl lg:text-6xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className={`text-3xl lg:text-4xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   {mensagensNaoLidas}
                 </h3>
-                <p className={`text-base lg:text-lg font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-sm lg:text-base font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Mensagens Não Lidas
                 </p>
               </div>
@@ -251,36 +251,36 @@ export default function InicioPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
             {/* Acesso Rápido - 2 colunas */}
             <div className="lg:col-span-2">
-              <div className={`rounded-2xl p-8 lg:p-10 ${
+              <div className={`rounded-2xl p-5 lg:p-6 ${
                 isDarkMode ? 'bg-gray-800/50 backdrop-blur-md border border-gray-700' : 'bg-white/50 backdrop-blur-md border border-gray-200'
               } shadow-xl`}>
-                <h2 className={`text-2xl lg:text-3xl font-bold mb-8 flex items-center gap-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  <svg className="w-7 h-7 lg:w-8 lg:h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <h2 className={`text-xl lg:text-2xl font-bold mb-5 flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <svg className="w-6 h-6 lg:w-7 lg:h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                     Acesso Rápido
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4">
                     <a
                       href="/mural"
-                      className={`group p-6 lg:p-7 rounded-xl transition-all duration-300 hover:scale-105 ${
+                      className={`group p-4 lg:p-5 rounded-xl transition-all duration-300 hover:scale-105 ${
                       isDarkMode ? 'bg-gray-700/50 hover:bg-gray-700' : 'bg-gray-50 hover:bg-white hover:shadow-lg'
                     } border ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}
                   >
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-2 ${
                         isDarkMode ? 'bg-red-500/20' : 'bg-red-100'
                       } group-hover:scale-110 transition-transform`}>
-                        <svg className="w-6 h-6 lg:w-7 lg:h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 lg:w-6 lg:h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                         </svg>
                       </div>
-                      <h3 className={`text-lg lg:text-xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <h3 className={`text-base lg:text-lg font-semibold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         Mural de Avisos
                       </h3>
-                      <p className={`text-sm lg:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <p className={`text-xs lg:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         Ver notícias e comunicados
                       </p>
                     </a>
@@ -353,38 +353,38 @@ export default function InicioPage() {
 
               {/* Atividades Recentes - 1 coluna */}
               <div className="lg:col-span-1">
-                <div className={`rounded-2xl p-8 lg:p-10 h-full ${
+                <div className={`rounded-2xl p-5 lg:p-6 h-full ${
                   isDarkMode ? 'bg-gray-800/50 backdrop-blur-md border border-gray-700' : 'bg-white/50 backdrop-blur-md border border-gray-200'
                 } shadow-xl`}>
-                  <h2 className={`text-2xl lg:text-3xl font-bold mb-8 flex items-center gap-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    <svg className="w-7 h-7 lg:w-8 lg:h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <h2 className={`text-xl lg:text-2xl font-bold mb-5 flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <svg className="w-6 h-6 lg:w-7 lg:h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     Atividades Recentes
                   </h2>
                   {ultimasAtividades.length > 0 ? (
-                    <div className="space-y-5">
+                    <div className="space-y-3">
                       {ultimasAtividades.slice(0, 5).map((atividade, index) => (
                         <div
                           key={index}
-                          className={`p-5 lg:p-6 rounded-xl transition-all duration-300 hover:scale-[1.02] ${
+                          className={`p-3 lg:p-4 rounded-xl transition-all duration-300 hover:scale-[1.02] ${
                           isDarkMode ? 'bg-gray-700/50 hover:bg-gray-700' : 'bg-gray-50 hover:bg-white'
                           } border ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}
                         >
-                          <div className="flex items-start gap-4">
-                            <div className="w-12 h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                              <svg className="w-6 h-6 lg:w-7 lg:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <div className="flex items-start gap-3">
+                            <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                              <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                               </svg>
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h3 className={`font-semibold text-base lg:text-lg mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                              <h3 className={`font-semibold text-sm lg:text-base mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                                 {atividade.titulo}
                               </h3>
-                              <p className={`text-sm lg:text-base mb-2 line-clamp-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                              <p className={`text-xs lg:text-sm mb-1 line-clamp-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                                 {atividade.descricao}
                               </p>
-                              <p className="text-sm text-red-500 font-medium">{atividade.tempo}</p>
+                              <p className="text-xs text-red-500 font-medium">{atividade.tempo}</p>
                             </div>
                           </div>
                         </div>
