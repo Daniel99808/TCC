@@ -6,6 +6,7 @@ import Footer from '../../components/footer';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { useDarkMode } from '../../contexts/DarkModeContext';
 import { useSidebar } from '../../contexts/SidebarContext';
+import { apiUrl } from '@/lib/api';
 
 interface Curso {
   id: number;
@@ -58,7 +59,7 @@ export default function MuralProfessor() {
 
   const fetchCursos = async () => {
     try {
-      const response = await fetch('http://localhost:3000/cursos');
+      const response = await fetch(apiUrl('/cursos'));
       const data = await response.json();
       setCursos(data);
     } catch (error) {
@@ -68,7 +69,7 @@ export default function MuralProfessor() {
 
   const fetchMessages = async () => {
     try {
-      const response = await fetch('http://localhost:3000/mural');
+      const response = await fetch(apiUrl('/mural'));
       const data = await response.json();
       // Verificar se data é um array antes de setar
       if (Array.isArray(data)) {
@@ -122,7 +123,7 @@ export default function MuralProfessor() {
       
       console.log('Enviando payload:', payload);
       
-      const response = await fetch('http://localhost:3000/mural', {
+      const response = await fetch(apiUrl('/mural'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -6,6 +6,7 @@ import Header from '../../components/header_adm';
 import Footer from '../../components/footer';
 import { useDarkMode } from '../../contexts/DarkModeContext';
 import { useSidebar } from '../../contexts/SidebarContext';
+import { apiUrl } from '@/lib/api';
 
 interface CadastroData {
   nome: string;
@@ -57,7 +58,7 @@ export default function CadastroAdmPage() {
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const response = await fetch('http://localhost:3000/cursos');
+        const response = await fetch(apiUrl('/cursos'));
         if (response.ok) {
           const data = await response.json();
           setCursos(data);
@@ -139,7 +140,7 @@ export default function CadastroAdmPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3000/cadastro', {
+      const response = await fetch(apiUrl('/cadastro'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

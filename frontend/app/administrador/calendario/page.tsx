@@ -5,6 +5,7 @@ import Header from '../../components/header_adm';
 import Footer from '../../components/footer';
 import Image from 'next/image';
 import { useDarkMode } from '../../contexts/DarkModeContext';
+import { apiUrl } from '@/lib/api';
 
 interface CalendarioEvento {
   id: number;
@@ -35,7 +36,7 @@ export default function CalendarioAdm() {
       const futuro = new Date();
       futuro.setDate(hoje.getDate() + 30);
 
-      const response = await fetch(`http://localhost:3000/calendario?inicio=${hoje.toISOString()}&fim=${futuro.toISOString()}`);
+      const response = await fetch(apiUrl(`/calendario?inicio=${hoje.toISOString()}&fim=${futuro.toISOString()}`));
       if (response.ok) {
         const data = await response.json();
         setEventos(data);
@@ -62,7 +63,7 @@ export default function CalendarioAdm() {
       const [ano, mes, dia] = data.split('-').map(Number);
       const dataEvento = new Date(ano, mes - 1, dia, 12, 0, 0); // Meio-dia para evitar problemas de fuso horário
 
-      const response = await fetch('http://localhost:3000/calendario', {
+      const response = await fetch(apiUrl('/calendario'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

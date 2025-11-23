@@ -6,6 +6,7 @@ import DynamicHeader from '../components/DynamicHeader';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import { useSidebar } from '../contexts/SidebarContext';
 import ProtectedRoute from '../components/ProtectedRoute';
+import { apiUrl } from '@/lib/api';
 
 // Tipagem para os eventos, para garantir que os dados da API estejam corretos
 interface Evento {
@@ -38,7 +39,7 @@ const CalendarioPage = () => {
       const inicioDoMes = new Date(ano, mes, 1).toISOString();
       const fimDoMes = new Date(ano, mes + 1, 0).toISOString();
 
-      const response = await fetch(`http://localhost:3000/calendario?inicio=${inicioDoMes}&fim=${fimDoMes}`);
+      const response = await fetch(apiUrl(`/calendario?inicio=${inicioDoMes}&fim=${fimDoMes}`));
       
       if (!response.ok) {
         throw new Error(`Erro HTTP: ${response.status}`);

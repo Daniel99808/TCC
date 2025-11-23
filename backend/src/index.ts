@@ -10,14 +10,25 @@ const prisma = new PrismaClient();
 const app = express();
 const server = http.createServer(app);
 
-// Configurarrr Socket.IO
+// Configurar CORS - permite frontend local e produção
+const allowedOrigins = [
+  'http://localhost:3001',
+  'http://localhost:3000',
+  process.env.FRONTEND_URL || '*'
+];
+
+// Configurar Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: "*"
+    origin: allowedOrigins,
+    credentials: true
   }
 });
 
-app.use(cors());
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 app.use(express.json());
 
 // Rota inicial

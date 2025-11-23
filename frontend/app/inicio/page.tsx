@@ -5,6 +5,7 @@ import DynamicHeader from '../components/DynamicHeader';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import { useSidebar } from '../contexts/SidebarContext';
 import ProtectedRoute from '../components/ProtectedRoute';
+import { apiUrl } from '@/lib/api';
 
 interface Usuario {
   id: number;
@@ -58,7 +59,7 @@ export default function InicioPage() {
   const carregarDashboard = async (usuario: Usuario) => {
     try {
       // Buscar avisos novos (últimas 24h)
-      const resAvisos = await fetch('http://localhost:3000/mensagens');
+      const resAvisos = await fetch(apiUrl('/mensagens'));
       if (resAvisos.ok) {
         const avisos: Mensagem[] = await resAvisos.json();
         const agora = new Date();
@@ -77,7 +78,7 @@ export default function InicioPage() {
       }
 
       // Buscar eventos próximos (próxima semana)
-      const resEventos = await fetch('http://localhost:3000/eventos');
+      const resEventos = await fetch(apiUrl('/eventos'));
       if (resEventos.ok) {
         const eventos: Evento[] = await resEventos.json();
         const agora = new Date();
@@ -90,7 +91,7 @@ export default function InicioPage() {
       }
 
       // Buscar conversas não lidas
-      const resConversas = await fetch(`http://localhost:3000/conversas/${usuario.id}`);
+      const resConversas = await fetch(apiUrl(`/conversas/${usuario.id}`));
       if (resConversas.ok) {
         const conversas: Conversa[] = await resConversas.json();
         let naoLidas = 0;

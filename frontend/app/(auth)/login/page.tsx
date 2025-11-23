@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback } from 'react';
 import Link from 'next/link';
+import { apiUrl } from '@/lib/api';
 
 // Tipagem para a notificação
 type Toast = {
@@ -63,7 +64,7 @@ export default function AuthForm() {
     setToast({ message: '', type: 'error', visible: false });
     setIsLoading(true);
 
-    const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/login`;
+    const url = apiUrl('/login');
     const cleanedCpf = cpf.replace(/\D/g, '');
     
     // DEBUG 1: Imprime o URL e os dados enviados (CPF sem formatação)

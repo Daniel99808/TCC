@@ -7,8 +7,9 @@ import { useDarkMode } from '../contexts/DarkModeContext';
 import { useSidebar } from '../contexts/SidebarContext';
 import Image from 'next/image';
 import ProtectedRoute from '../components/ProtectedRoute';
+import { API_URL, apiUrl } from '@/lib/api';
 
-const socket = io('http://localhost:3000');
+const socket = io(API_URL);
 
 interface Usuario {
   id: number;
@@ -115,7 +116,7 @@ export default function ConversasPage() {
   // Função para buscar conversas (estabilizada com useCallback)
   const buscarConversas = useCallback(async (userId: number) => {
     try {
-      const response = await fetch(`http://localhost:3000/conversas/${userId}`);
+      const response = await fetch(apiUrl(`/conversas/${userId}`));
       if (response.ok) {
         const dados = await response.json();
         setConversas(dados);
@@ -128,7 +129,7 @@ export default function ConversasPage() {
   // Busca mensagens (estabilizada com useCallback)
   const buscarMensagensConversa = useCallback(async (conversaId: number) => {
     try {
-      const response = await fetch(`http://localhost:3000/conversa/${conversaId}/mensagens`);
+      const response = await fetch(apiUrl(`/conversa/${conversaId}/mensagens`));
       if (response.ok) {
         const dados = await response.json();
         setMensagensConversa(dados);
@@ -141,7 +142,7 @@ export default function ConversasPage() {
   // Função para buscar usuários (estabilizada com useCallback)
   const buscarUsuarios = useCallback(async (userId: number) => {
     try {
-      const response = await fetch('http://localhost:3000/usuarios');
+      const response = await fetch(apiUrl('/usuarios'));
       if (response.ok) {
         const dados: Usuario[] = await response.json();
         // **FILTRO ESSENCIAL:** Remove o próprio usuário logado
@@ -160,7 +161,7 @@ export default function ConversasPage() {
         if (!prevUser) return null;
 
         // 1. Notifica o servidor
-        fetch(`http://localhost:3000/conversa/${conversaId}/marcar-lida/${prevUser.id}`, {
+        fetch(apiUrl(`/conversa/${conversaId}/marcar-lida/${prevUser.id}`), {
             method: 'PUT',
         }).catch(error => console.error('Erro ao marcar como lida (fetch):', error));
         
@@ -273,7 +274,7 @@ export default function ConversasPage() {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/conversa', {
+      const response = await fetch(apiUrl('/conversa'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -320,7 +321,7 @@ export default function ConversasPage() {
     setIsSending(true);
 
     try {
-      const response = await fetch('http://localhost:3000/mensagem', {
+      const response = await fetch(apiUrl('/mensagem'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

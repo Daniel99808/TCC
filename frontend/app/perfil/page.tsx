@@ -5,6 +5,7 @@ import DynamicHeader from '../components/DynamicHeader';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import { useSidebar } from '../contexts/SidebarContext';
 import ProtectedRoute from '../components/ProtectedRoute';
+import { apiUrl } from '@/lib/api';
 
 interface Usuario {
   id: number;
@@ -39,7 +40,7 @@ export default function PerfilPage() {
         const dadosUsuario = JSON.parse(usuarioLogado);
         
         // Buscar dados completos do perfil
-        const response = await fetch(`http://localhost:3000/perfil/${dadosUsuario.cpf}`);
+        const response = await fetch(apiUrl(`/perfil/${dadosUsuario.cpf}`));
         
         if (!response.ok) {
           throw new Error('Erro ao buscar dados do usuário');

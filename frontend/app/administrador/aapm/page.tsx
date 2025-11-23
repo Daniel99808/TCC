@@ -6,6 +6,7 @@ import Footer from '../../components/footer';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { useDarkMode } from '../../contexts/DarkModeContext';
 import { useSidebar } from '../../contexts/SidebarContext';
+import { apiUrl } from '@/lib/api';
 
 interface Usuario {
   id: number;
@@ -45,7 +46,7 @@ export default function AAPMPage() {
 
   const fetchUsuarios = async () => {
     try {
-      const response = await fetch('http://localhost:3000/usuarios');
+      const response = await fetch(apiUrl('/usuarios'));
       if (response.ok) {
         const data = await response.json();
         setUsuarios(data);
@@ -89,7 +90,7 @@ export default function AAPMPage() {
 
   const toggleAAPM = async (usuarioId: number, currentStatus: boolean) => {
     try {
-      const response = await fetch(`http://localhost:3000/usuarios/${usuarioId}/aapm`, {
+      const response = await fetch(apiUrl(`/usuarios/${usuarioId}/aapm`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

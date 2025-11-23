@@ -6,8 +6,9 @@ import DynamicHeader from '../components/DynamicHeader';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import { useSidebar } from '../contexts/SidebarContext';
 import ProtectedRoute from '../components/ProtectedRoute';
+import { API_URL, apiUrl } from '@/lib/api';
 
-const socket = io('http://localhost:3000');
+const socket = io(API_URL);
 
 interface Curso {
   id: number;
@@ -77,7 +78,7 @@ export default function MuralDeAvisos() {
       if (user.cursoId) params.append('cursoId', user.cursoId.toString());
       if (user.turma) params.append('turma', user.turma);
       
-      const response = await fetch(`http://localhost:3000/mural?${params.toString()}`);
+      const response = await fetch(apiUrl(`/mural?${params.toString()}`));
       const data = await response.json();
       // Verificar se data é um array antes de setar
       if (Array.isArray(data)) {

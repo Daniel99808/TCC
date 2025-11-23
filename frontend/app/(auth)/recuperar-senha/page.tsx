@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { apiUrl } from '@/lib/api';
 
 type Toast = {
   message: string;
@@ -44,7 +45,7 @@ export default function RecuperarSenhaPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/recuperar-senha`, {
+      const response = await fetch(apiUrl('/recuperar-senha'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
