@@ -37,22 +37,20 @@ export default function Header() {
 
   return (
     <>
-      {/* Botão Menu Mobile */}
-      <button
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className={`fixed top-3 left-3 z-50 lg:hidden p-2.5 rounded-lg ${
-          isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'
-        } shadow-lg`}
-        aria-label="Menu"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          {isMobileMenuOpen ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          ) : (
+      {/* Botão Menu Mobile (sem X, só hamburguer) */}
+      {!isMobileMenuOpen && (
+        <button
+          onClick={() => setIsMobileMenuOpen(true)}
+          className={`fixed top-3 left-3 z-50 lg:hidden p-2.5 rounded-lg ${
+            isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'
+          } shadow-lg`}
+          aria-label="Menu"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          )}
-        </svg>
-      </button>
+          </svg>
+        </button>
+      )}
 
       {/* Botão Toggle Sidebar Desktop */}
       <button
@@ -73,7 +71,7 @@ export default function Header() {
         </svg>
       </button>
 
-      {/* Overlay para Mobile */}
+      {/* Overlay para Mobile - fecha ao clicar fora */}
       {isMobileMenuOpen && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"

@@ -23,7 +23,7 @@ const CalendarioPage = () => {
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const { isDarkMode } = useDarkMode();
-  const { isSidebarOpen } = useSidebar();
+  // Sidebar removido para evitar espaço extra à esquerda
 
   const meses = [
     'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
@@ -150,9 +150,7 @@ const CalendarioPage = () => {
           </h1>
         </div>
         
-        <main className={`transition-all duration-300 flex-1 p-3 sm:p-4 md:p-5 lg:p-6 relative z-0 animate-fade-in ${
-          isSidebarOpen ? 'lg:ml-80' : 'lg:ml-0'
-        }`}>
+        <main className="transition-all duration-300 flex-1 p-3 sm:p-4 md:p-5 lg:p-6 relative z-0 animate-fade-in">
         {/* Título Principal - Oculto no mobile */}
         <h1 className={`hidden lg:block text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-center m-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
           Calendário

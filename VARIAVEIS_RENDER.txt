@@ -1,0 +1,41 @@
+# ===================================================
+# VARIÁVEIS DE AMBIENTE PARA O RENDER
+# Copie e cole cada uma no Render (passo 4)
+# ===================================================
+
+# 1. DATABASE_URL
+# Key: DATABASE_URL
+# Value:
+postgresql://postgres.zswhlxrbxughxkofibcz:0qeH8DnuXFYORhcz@aws-1-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require&pgbouncer=true&connection_limit=1
+
+# 2. DIRECT_URL
+# Key: DIRECT_URL
+# Value:
+postgresql://postgres.zswhlxrbxughxkofibcz:0qeH8DnuXFYORhcz@aws-1-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require
+
+# 3. FRONTEND_URL (VOCÊ PRECISA SUBSTITUIR PELA URL DO SEU FRONTEND NA VERCEL)
+# Key: FRONTEND_URL
+# Value: (copie a URL do seu frontend na Vercel)
+https://SEU-FRONTEND.vercel.app
+
+# 4. PORT
+# Key: PORT
+# Value:
+10000
+
+# 5. NODE_ENV
+# Key: NODE_ENV
+# Value:
+production
+
+# ===================================================
+# INSTRUÇÕES:
+# ===================================================
+# 1. No Render, clique em "Add Environment Variable"
+# 2. Copie o "Key" (exemplo: DATABASE_URL)
+# 3. Copie o "Value" (a linha completa abaixo do Key)
+# 4. Cole no Render
+# 5. Repita para todas as 5 variáveis
+# 
+# ATENÇÃO: Para FRONTEND_URL, substitua por sua URL real da Vercel!
+# ===================================================
