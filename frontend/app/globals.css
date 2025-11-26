@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  overflow-x: hidden;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -98,6 +102,15 @@ body {
 
 .animate-slide-in {
   animation: slideIn 0.4s ease-out forwards;
+}
+
+/* Ocultar scrollbar mantendo funcionalidade */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
 }
 
 /* Transição suave em elementos interativos */

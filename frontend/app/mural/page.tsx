@@ -104,7 +104,7 @@ export default function MuralDeAvisos() {
     <ProtectedRoute allowedRoles={['ESTUDANTE', 'PROFESSOR', 'ADMIN']}>
       {/* Container principal com flexbox para ocupar a altura da tela */}
       <div 
-        className={`flex flex-col min-h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}
+        className="flex flex-col min-h-screen font-sans bg-gray-900"
         style={{
           backgroundImage: 'url(/fundo.png)',
           backgroundSize: 'cover',
@@ -117,10 +117,10 @@ export default function MuralDeAvisos() {
         
         {/* Título Mobile - Visível apenas no mobile */}
         <div className="lg:hidden pt-16 pb-3 px-4">
-          <p className={`text-center text-sm mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+          <p className="text-center text-sm mb-1 transition-colors duration-300 text-gray-400">
             Bem-vindo {usuarioLogado?.nome}
           </p>
-          <h2 className={`text-2xl font-bold text-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+          <h2 className="text-2xl font-bold text-center transition-colors duration-300 text-white">
             Avisos Recentes
           </h2>
         </div>
@@ -131,31 +131,31 @@ export default function MuralDeAvisos() {
         }`}>
         {/* Bem-vindo section - Oculto no mobile */}
         <div className="text-center mb-3 sm:mb-4 md:mb-6 px-2 hidden lg:block">
-          <p className={`text-xs sm:text-sm md:text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Bem-vindo {usuarioLogado?.nome}</p>
-          <h2 className={`text-xl sm:text-2xl md:text-3xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Avisos recentes</h2>
+          <p className="text-xs sm:text-sm md:text-base transition-colors duration-300 text-gray-400">Bem-vindo {usuarioLogado?.nome}</p>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold transition-colors duration-300 text-white">Avisos recentes</h2>
         </div>
         {/* Aviso Card com altura máxima controlada */}
-        <div className={`w-full max-w-3xl rounded-lg shadow-xl p-4 sm:p-6 md:p-8 lg:p-10 flex flex-col h-full transition-colors duration-300 ${isDarkMode ? 'bg-gray-800/30 backdrop-blur-md border border-gray-700/30' : 'bg-white/20 backdrop-blur-md border border-gray-200/30'}`}>
+        <div className="w-full max-w-3xl rounded-lg shadow-xl p-4 sm:p-6 md:p-8 lg:p-10 flex flex-col h-full transition-colors duration-300 bg-gray-800/30 backdrop-blur-md border border-gray-700/30">
           {/* A div interna é o painel de scroll */}
           <div className="flex-1 overflow-y-auto space-y-4 sm:space-y-6 md:space-y-8 px-1">
             {messages.length === 0 ? (
-              <div className={`text-center py-12 text-base sm:text-lg lg:text-xl transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Nenhum aviso no momento.</div>
+              <div className="text-center py-12 text-base sm:text-lg lg:text-xl transition-colors duration-300 text-gray-400">Nenhum aviso no momento.</div>
             ) : (
               messages.map((message) => (
-                <div key={message.id} className={`border-b pb-4 sm:pb-6 last:border-b-0 last:pb-0 transition-colors duration-300 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
+                <div key={message.id} className="border-b pb-4 sm:pb-6 last:border-b-0 last:pb-0 transition-colors duration-300 border-gray-600">
                   <div className="flex items-center mb-3 gap-3 sm:gap-4">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center text-white flex-shrink-0">
                       <i className="bi bi-person-circle text-4xl sm:text-5xl lg:text-6xl text-red-600"></i> 
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className={`font-bold text-base sm:text-lg lg:text-xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Administração</h3>
+                      <h3 className="font-bold text-base sm:text-lg lg:text-xl transition-colors duration-300 text-white">Administração</h3>
                       <span className="text-xs sm:text-sm lg:text-base bg-blue-100 text-blue-800 px-3 py-1 rounded-full inline-block mt-1">
                         {getTipoPublicoLabel(message)}
                       </span>
                     </div>
                   </div>
-                  <p className={`whitespace-pre-line text-base sm:text-lg lg:text-xl leading-relaxed transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{message.conteudo}</p>
-                  <span className={`block text-sm sm:text-base lg:text-lg mt-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                  <p className="whitespace-pre-line text-base sm:text-lg lg:text-xl leading-relaxed transition-colors duration-300 text-gray-300">{message.conteudo}</p>
+                  <span className="block text-sm sm:text-base lg:text-lg mt-3 transition-colors duration-300 text-gray-400">
                     {new Date(message.createdAt).toLocaleString('pt-BR')}
                   </span>
                 </div>

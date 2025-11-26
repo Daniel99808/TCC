@@ -95,10 +95,10 @@ export default function PWAInstallPrompt() {
                 </svg>
               </div>
               <div className="flex-1">
-                <h3 className={`text-lg font-bold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className="text-lg font-bold mb-1 text-white">
                   Instalar Nexus Senai
                 </h3>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className="text-sm text-gray-400">
                   Acesse o app rapidamente da sua tela inicial
                 </p>
               </div>

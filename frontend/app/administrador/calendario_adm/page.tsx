@@ -24,7 +24,6 @@ export default function CalendarioAdm() {
   const [message, setMessage] = useState('');
   const [eventos, setEventos] = useState<CalendarioEvento[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { isDarkMode } = useDarkMode();
   // Sidebar removido para evitar bug de deslocamento lateral
 
   // Carregar eventos existentes
@@ -135,51 +134,51 @@ export default function CalendarioAdm() {
         
         {/* Título Mobile - Visível apenas no mobile */}
         <div className="lg:hidden pt-16 pb-4 px-4">
-          <h1 className={`text-2xl sm:text-3xl font-bold text-center mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+          <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 transition-colors duration-300 text-white">
             Calendário ADM
           </h1>
-          <p className={`text-center text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+          <p className="text-center text-sm transition-colors duration-300 text-gray-200">
             Gerencie eventos do calendário
           </p>
         </div>
         
-        <main className="flex-1 container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 animate-fade-in transition-all duration-300">
+        <main className="flex-1 container mx-auto p-2 sm:p-3 md:p-4 lg:p-6 py-3 sm:py-4 md:py-6 lg:py-8 animate-fade-in transition-all duration-300">
         <div className="max-w-4xl mx-auto">
           {/* Cabeçalho da página - Oculto no mobile */}
-          <div className="hidden lg:block rounded-2xl shadow-2xl p-6 lg:p-8 mb-6 bg-white/10 backdrop-blur-lg border border-white/20">
-            <h1 className={`text-3xl lg:text-4xl font-bold mb-2 text-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-              Painel Administrativo - Calendário
+          <div className="hidden lg:block rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6 lg:mb-8 bg-white/10 backdrop-blur-lg border border-white/20">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-center transition-colors duration-300 text-white">
+              Calendário - Painel ADM
             </h1>
-            <p className={`text-base lg:text-lg text-center transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-              Gerencie eventos do calendário da comunidade
+            <p className="text-xs sm:text-sm lg:text-base text-center transition-colors duration-300 text-gray-200">
+              Gerencie eventos da comunidade
             </p>
           </div>
 
           {/* Lista de eventos */}
-          <div className="rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 bg-white/10 backdrop-blur-lg border border-white/20">
-            <h2 className={`text-lg sm:text-xl lg:text-2xl font-bold mb-4 sm:mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+          <div className="rounded-2xl shadow-2xl p-3 sm:p-4 md:p-6 lg:p-8 bg-white/10 backdrop-blur-lg border border-white/20">
+            <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-3 sm:mb-4 md:mb-6 transition-colors duration-300 text-white">
               Próximos Eventos
             </h2>
             
-            <div className="space-y-4">
+            <div className="space-y-2.5 sm:space-y-3 md:space-y-4">
               {eventos.length === 0 ? (
-                <div className={`text-center py-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <div className="text-5xl mb-4">📅</div>
-                  <p className="text-lg font-semibold">Nenhum evento encontrado</p>
-                  <p className="text-sm mt-2">Clique no botão &quot;+&quot; para criar o primeiro evento!</p>
+                <div className="text-center py-6 sm:py-8 md:py-10 text-gray-300">
+                  <div className="text-3xl sm:text-4xl md:text-5xl mb-2.5 sm:mb-3 md:mb-4">📅</div>
+                  <p className="text-sm sm:text-base md:text-lg font-semibold">Nenhum evento encontrado</p>
+                  <p className="text-xs sm:text-sm mt-1.5 sm:mt-2">Clique no botão &quot;+&quot; para criar o primeiro evento!</p>
                 </div>
               ) : (
                 eventos.slice(0, 8).map((evento) => (
-                  <div key={evento.id} className="p-4 sm:p-5 rounded-xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01]">
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
-                      <h3 className={`font-bold text-base sm:text-lg ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                  <div key={evento.id} className="p-3 sm:p-4 md:p-5 rounded-xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01]">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1.5 sm:gap-2 md:gap-3 mb-2 sm:mb-3">
+                      <h3 className="font-bold text-sm sm:text-base md:text-lg text-white">
                         {evento.titulo}
                       </h3>
-                      <span className="text-xs sm:text-sm bg-blue-600/80 text-white px-3 py-1 rounded-full font-semibold shadow-md w-fit">
+                      <span className="text-xs sm:text-sm bg-blue-600/80 text-white px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full font-semibold shadow-md w-fit whitespace-nowrap">
                         {formatarData(evento.data)}
                       </span>
                     </div>
-                    <p className={`text-sm sm:text-base whitespace-pre-wrap ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                    <p className="text-xs sm:text-sm md:text-base whitespace-pre-wrap text-gray-200">
                       {evento.descricao}
                     </p>
                   </div>
@@ -188,10 +187,10 @@ export default function CalendarioAdm() {
             </div>
             
             {eventos.length > 8 && (
-              <div className="text-center mt-6">
+              <div className="text-center mt-4 sm:mt-5 md:mt-6">
                 <a 
                   href="/calendario" 
-                  className="text-blue-500 hover:text-blue-600 text-sm sm:text-base font-bold hover:underline transition-all duration-300"
+                  className="text-blue-400 hover:text-blue-300 text-xs sm:text-sm md:text-base font-bold hover:underline transition-all duration-300 inline-block"
                 >
                   Ver todos os eventos →
                 </a>
@@ -200,13 +199,17 @@ export default function CalendarioAdm() {
           </div>
 
           {/* Informações adicionais */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
-            <h3 className="text-sm font-medium text-blue-800 mb-2">Dicas para criar eventos:</h3>
-            <ul className="text-sm text-blue-700 space-y-1">
+          <div className={`border rounded-lg p-3 sm:p-4 md:p-5 mt-4 sm:mt-5 md:mt-6 ${
+            isDarkMode 
+              ? 'bg-blue-900/20 border-blue-700/50' 
+              : 'bg-blue-50 border-blue-200'
+          }`}>
+            <h3 className="text-xs sm:text-sm font-bold mb-2 text-blue-300">Dicas:</h3>
+            <ul className="text-xs sm:text-sm space-y-0.5 sm:space-y-1 text-blue-200">
               <li>• Use títulos claros e descritivos</li>
-              <li>• Inclua informações importantes: horário, local, o que trazer</li>
-              <li>• Para eventos recorrentes, crie um evento para cada data</li>
-              <li>• Evite abreviações - seja claro e objetivo</li>
+              <li>• Inclua: horário, local, o que trazer</li>
+              <li>• Para eventos recorrentes, crie um para cada data</li>
+              <li>• Seja claro e objetivo</li>
             </ul>
           </div>
         </div>
@@ -215,7 +218,7 @@ export default function CalendarioAdm() {
       {/* Botão flutuante para adicionar evento */}
       <button
         onClick={openModal}
-        className="fixed bottom-5 right-5 bg-red-600 hover:bg-red-700 text-white p-8 hover:cursor-pointer rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-200"
+        className="fixed bottom-5 sm:bottom-6 md:bottom-8 right-5 sm:right-6 md:right-8 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white p-4 sm:p-5 hover:cursor-pointer rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-40 transform hover:scale-110 active:scale-95"
         title="Adicionar novo evento"
       >
         <Image 
@@ -223,86 +226,74 @@ export default function CalendarioAdm() {
           alt="Adicionar evento" 
           width={24} 
           height={24}
-          className="w-9 h-9"
+          className="w-6 h-6 sm:w-7 sm:h-7"
         />
       </button>
 
       {/* Modal para adicionar evento */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className={`rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border transition-colors duration-300 ${
-            isDarkMode 
-              ? 'bg-gray-900/95 backdrop-blur-xl border-gray-700' 
-              : 'bg-white/95 backdrop-blur-xl border-gray-200'
-          }`}>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
+          <div className="rounded-2xl shadow-2xl max-w-lg w-full max-h-[95vh] overflow-y-auto border bg-gray-900/95 backdrop-blur-xl border-gray-700">
             {/* Header da modal */}
-            <div className={`flex justify-between items-center p-6 border-b transition-colors duration-300 ${
-              isDarkMode ? 'border-gray-700' : 'border-gray-200'
-            }`}>
+            <div className="flex justify-between items-center p-3 sm:p-4 md:p-6 border-b border-gray-700">
               <div>
-                <h2 className={`text-xl sm:text-2xl font-bold transition-colors duration-300 ${
-                  isDarkMode ? 'text-white' : 'text-gray-800'
-                }`}>
-                  Adicionar Novo Evento
+                <h2 className="text-base sm:text-lg md:text-2xl font-bold text-white">
+                  Adicionar Evento
                 </h2>
-                <p className={`text-xs sm:text-sm mt-1 transition-colors duration-300 ${
-                  isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                }`}>Preencha os detalhes do evento</p>
+                <p className="text-xs sm:text-sm mt-0.5 sm:mt-1 text-gray-400">Preencha os detalhes</p>
               </div>
               <button
                 onClick={closeModal}
-                className={`p-2 rounded-full transition-all duration-300 ${
-                  isDarkMode ? 'hover:bg-white/10 text-white' : 'hover:bg-gray-100 text-gray-600'
-                }`}
+                className="p-1.5 sm:p-2 rounded-full transition-all duration-300 flex-shrink-0 hover:bg-white/10 text-white"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
             {/* Conteúdo da modal */}
-            <div className="p-6">
-              <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="p-3 sm:p-4 md:p-6">
+              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                 <div>
-                  <label htmlFor="titulo" className={`block text-sm font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                    Título do Evento *
+                  <label htmlFor="titulo" className="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 text-white">
+                    Título *
                   </label>
                   <input
                     type="text"
                     id="titulo"
                     value={titulo}
                     onChange={(e) => setTitulo(e.target.value)}
-                    className={`w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500'}`}
-                    placeholder="Ex: Reunião de Condomínio, Festa Junina..."
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all duration-300 bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400"
+                    placeholder="Ex: Reunião..."
                     maxLength={100}
                   />
-                  <div className={`text-xs mt-2 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                    {titulo.length}/100 caracteres
+                  <div className="text-xs mt-1 font-semibold text-gray-300">
+                    {titulo.length}/100
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="descricao" className={`block text-sm font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                    Descrição do Evento *
+                  <label htmlFor="descricao" className="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 text-white">
+                    Descrição *
                   </label>
                   <textarea
                     id="descricao"
                     value={descricao}
                     onChange={(e) => setDescricao(e.target.value)}
-                    rows={4}
-                    className={`w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500'}`}
-                    placeholder="Descreva os detalhes do evento: horário, local, o que trazer..."
+                    rows={3}
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-medium transition-all duration-300 bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400"
+                    placeholder="Detalhes do evento..."
                     maxLength={500}
                   />
-                  <div className={`text-xs mt-2 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                    {descricao.length}/500 caracteres
+                  <div className="text-xs mt-1 font-semibold text-gray-300">
+                    {descricao.length}/500
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="data" className={`block text-sm font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                    Data do Evento *
+                  <label htmlFor="data" className="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 text-white">
+                    Data *
                   </label>
                   <input
                     type="date"
@@ -310,13 +301,13 @@ export default function CalendarioAdm() {
                     value={data}
                     onChange={(e) => setData(e.target.value)}
                     min={dataMinima}
-                    className={`w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]' : 'bg-white border-2 border-gray-300 text-gray-900'}`}
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all duration-300 bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]"
                   />
                 </div>
 
                 {/* Mensagem de feedback */}
                 {message && (
-                  <div className={`p-4 rounded-xl text-sm font-semibold shadow-lg ${
+                  <div className={`p-2.5 sm:p-3 md:p-4 rounded-lg text-xs sm:text-sm font-semibold shadow-lg ${
                     message.includes('sucesso') 
                       ? 'bg-green-600/20 text-green-100 border-2 border-green-500/30' 
                       : 'bg-red-600/20 text-red-100 border-2 border-red-500/30'
@@ -326,19 +317,19 @@ export default function CalendarioAdm() {
                 )}
 
                 {/* Botões */}
-                <div className="flex space-x-3 pt-2">
+                <div className="flex gap-2 pt-2">
                   <button
                     type="submit"
                     disabled={loading || !titulo.trim() || !descricao.trim() || !data}
-                    className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 px-4 rounded-xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg text-sm sm:text-base font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
-                    {loading ? 'Criando...' : 'Criar Evento'}
+                    {loading ? 'Criando...' : 'Criar'}
                   </button>
                   
                   <button
                     type="button"
                     onClick={closeModal}
-                    className={`px-6 py-3 border-2 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] ${isDarkMode ? 'border-white/30 text-white hover:bg-white/10' : 'border-gray-300 text-gray-700 hover:bg-white/50'}`}
+                    className="px-3 sm:px-4 py-2.5 sm:py-3 border-2 rounded-lg text-sm sm:text-base font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] border-white/30 text-white hover:bg-white/10"
                   >
                     Cancelar
                   </button>

@@ -22,7 +22,6 @@ export default function CalendarioAdm() {
   const [message, setMessage] = useState('');
   const [eventos, setEventos] = useState<CalendarioEvento[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { isDarkMode } = useDarkMode();
 
   // Carregar eventos existentes
   useEffect(() => {
@@ -126,50 +125,46 @@ export default function CalendarioAdm() {
   const dataMinima = new Date().toISOString().split('T')[0];
 
   return (
-    <div className={`min-h-screen flex flex-col transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+    <div className="min-h-screen flex flex-col bg-gray-900">
       <Header />
       
       <main className="flex-1 container mx-auto px-4 py-8 animate-fade-in">
         <div className="max-w-4xl mx-auto">
           {/* Cabeçalho da página */}
-          <div className={`rounded-lg shadow-md p-6 mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            <h1 className={`text-3xl font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+          <div className="rounded-lg shadow-md p-6 mb-6 bg-gray-800">
+            <h1 className="text-3xl font-bold mb-2 text-white">
               Painel Administrativo - Calendário
             </h1>
-            <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className="text-gray-300">
               Gerencie eventos do calendário da comunidade
             </p>
           </div>
 
           {/* Lista de eventos */}
-          <div className={`rounded-lg shadow-md p-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            <h2 className={`text-xl font-semibold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+          <div className="rounded-lg shadow-md p-6 bg-gray-800">
+            <h2 className="text-xl font-semibold mb-4 text-white">
               Próximos Eventos
             </h2>
             
             <div className="space-y-3">
               {eventos.length === 0 ? (
-                <div className={`text-center py-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                <div className="text-center py-8 text-gray-400">
                   <div className="text-4xl mb-2">📅</div>
                   <p>Nenhum evento encontrado</p>
                   <p className="text-sm">Clique no botão &quot;+&quot; para criar o primeiro evento!</p>
                 </div>
               ) : (
                 eventos.slice(0, 8).map((evento) => (
-                  <div key={evento.id} className={`border rounded-md p-4 transition-all duration-300 hover:shadow-md ${
-                    isDarkMode 
-                      ? 'border-gray-700 bg-gray-750 hover:bg-gray-700' 
-                      : 'border-gray-200 bg-gray-50 hover:bg-gray-100'
-                  }`}>
+                  <div key={evento.id} className="border border-gray-700 rounded-md p-4 bg-gray-750 hover:bg-gray-700 transition-all duration-300 hover:shadow-md">
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold text-gray-800 text-lg">
+                      <h3 className="font-semibold text-white text-lg">
                         {evento.titulo}
                       </h3>
-                      <span className="text-sm text-gray-500 bg-white px-3 py-1 rounded-full">
+                      <span className="text-sm text-gray-400 bg-gray-700 px-3 py-1 rounded-full">
                         {formatarData(evento.data)}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 whitespace-pre-wrap">
+                    <p className="text-sm text-gray-300 whitespace-pre-wrap">
                       {evento.descricao}
                     </p>
                   </div>
@@ -216,11 +211,11 @@ export default function CalendarioAdm() {
       {/* Modal para adicionar evento */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
-          <div className={`rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          <div className="rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto bg-gray-800">
             {/* Header da modal */}
-            <div className={`flex justify-between items-center p-6 border-b transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+            <div className="flex justify-between items-center p-6 border-b border-gray-700">
               <div>
-                <h2 className={`text-xl sm:text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                <h2 className="text-xl sm:text-2xl font-bold text-white">
                   Novo Evento
                 </h2>
                 <p className={`text-xs sm:text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Preencha os detalhes do evento</p>

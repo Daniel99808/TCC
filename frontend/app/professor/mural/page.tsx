@@ -190,8 +190,8 @@ export default function MuralProfessor() {
         {/* Bem-vindo section */}
         <div className="text-center mb-6 sm:mb-8">
           <p className="text-sm sm:text-base text-red-600 font-semibold">Painel do Professor</p>
-          <h2 className={`text-2xl sm:text-3xl lg:text-4xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Meu Mural</h2>
-          <p className={`text-sm sm:text-base mt-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Publique avisos para seus alunos</p>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold transition-colors duration-300 text-white">Meu Mural</h2>
+          <p className="text-sm sm:text-base mt-2 transition-colors duration-300 text-gray-300">Publique avisos para seus alunos</p>
         </div>
 
         {/* Botão para adicionar nova mensagem */}
@@ -220,7 +220,7 @@ export default function MuralProfessor() {
           {/* A div interna é o painel de scroll */}
           <div className="flex-1 overflow-y-auto space-y-4 sm:space-y-6">
             {messages.length === 0 ? (
-              <div className={`text-center py-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              <div className="text-center py-8 transition-colors duration-300 text-gray-300">
                 <p className="text-lg font-semibold">Nenhum aviso no momento.</p>
                 <p className="text-sm mt-2">Clique no botão acima para adicionar o primeiro aviso!</p>
               </div>
@@ -232,12 +232,12 @@ export default function MuralProfessor() {
                       <i className="bi bi-person-circle text-3xl sm:text-4xl text-red-600"></i> 
                     </div>
                     <div className="ml-3">
-                      <h3 className={`font-bold text-base sm:text-lg transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Professor</h3>
+                      <h3 className="font-bold text-base sm:text-lg transition-colors duration-300 text-white">Professor</h3>
                     </div>
                   </div>
-                  <p className={`text-sm sm:text-base whitespace-pre-line mb-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{message.conteudo}</p>
+                  <p className="text-sm sm:text-base whitespace-pre-line mb-3 transition-colors duration-300 text-gray-200">{message.conteudo}</p>
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                    <span className={`text-xs sm:text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    <span className="text-xs sm:text-sm transition-colors duration-300 text-gray-400">
                       {new Date(message.createdAt).toLocaleString('pt-BR')}
                     </span>
                     <span className="text-xs sm:text-sm bg-red-600/80 text-white px-3 py-1 rounded-full font-semibold shadow-md w-fit">
@@ -255,14 +255,12 @@ export default function MuralProfessor() {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl w-full max-w-md p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
-            <h3 className={`text-xl sm:text-2xl font-bold mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Adicionar Nova Mensagem</h3>
+            <h3 className="text-xl sm:text-2xl font-bold mb-6 transition-colors duration-300 text-white">Adicionar Nova Mensagem</h3>
             
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Tipo de Público */}
               <div>
-                <label htmlFor="tipoPublico" className={`block text-sm font-bold mb-2 transition-colors duration-300 ${
-                  isDarkMode ? 'text-white' : 'text-gray-800'
-                }`}>
+                <label htmlFor="tipoPublico" className="block text-sm font-bold mb-2 transition-colors duration-300 text-white">
                   Publicar para *
                 </label>
                 <select
@@ -285,9 +283,7 @@ export default function MuralProfessor() {
 
               {/* Seleção de Curso */}
               <div>
-                <label htmlFor="curso" className={`block text-sm font-bold mb-2 transition-colors duration-300 ${
-                  isDarkMode ? 'text-white' : 'text-gray-800'
-                }`}>
+                <label htmlFor="curso" className="block text-sm font-bold mb-2 transition-colors duration-300 text-white">
                   Curso *
                 </label>
                 <select
@@ -313,9 +309,7 @@ export default function MuralProfessor() {
               {/* Seleção de Turma */}
               {tipoPublico === 'TURMA' && (
                 <div>
-                  <label htmlFor="turma" className={`block text-sm font-bold mb-2 transition-colors duration-300 ${
-                    isDarkMode ? 'text-white' : 'text-gray-800'
-                  }`}>
+                  <label htmlFor="turma" className="block text-sm font-bold mb-2 transition-colors duration-300 text-white">
                     Turma *
                   </label>
                   <select
@@ -355,22 +349,16 @@ export default function MuralProfessor() {
                   placeholder="Digite a mensagem para o mural..."
                   maxLength={500}
                 />
-                <div className={`text-xs mt-2 font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                <div className="text-xs mt-2 font-semibold transition-colors duration-300 text-gray-300">
                   {newMessage.length}/500 caracteres
                 </div>
               </div>
 
               {/* Preview da mensagem */}
               {newMessage && (
-                <div className={`rounded-xl p-4 border-2 transition-colors duration-300 ${
-                  isDarkMode ? 'border-gray-600 bg-gray-800' : 'border-gray-300 bg-gray-50'
-                }`}>
-                  <h4 className={`text-sm font-bold mb-2 transition-colors duration-300 ${
-                    isDarkMode ? 'text-white' : 'text-gray-800'
-                  }`}>Preview:</h4>
-                  <div className={`text-sm whitespace-pre-line transition-colors duration-300 ${
-                    isDarkMode ? 'text-gray-200' : 'text-gray-700'
-                  }`}>
+                <div className="rounded-xl p-4 border-2 transition-colors duration-300 border-gray-600 bg-gray-800">
+                  <h4 className="text-sm font-bold mb-2 transition-colors duration-300 text-white">Preview:</h4>
+                  <div className="text-sm whitespace-pre-line transition-colors duration-300 text-gray-200">
                     {newMessage}
                   </div>
                   <div className="text-xs text-red-500 mt-2 font-bold">
@@ -405,11 +393,7 @@ export default function MuralProfessor() {
                     setTurmaSelecionada('');
                     setMessage('');
                   }}
-                  className={`px-6 py-3 border rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] ${
-                    isDarkMode 
-                      ? 'border-white/30 text-white hover:bg-white/10' 
-                      : 'border-gray-300 text-gray-700 hover:bg-white/50'
-                  }`}
+                  className="px-6 py-3 border rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] border-white/30 text-white hover:bg-white/10"
                 >
                   Cancelar
                 </button>

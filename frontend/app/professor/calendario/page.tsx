@@ -136,23 +136,23 @@ export default function CalendarioProfessor() {
         <div className="max-w-4xl mx-auto">
           {/* Cabeçalho da página */}
           <div className="rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6 bg-white/10 backdrop-blur-lg border border-white/20">
-            <h1 className={`text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 transition-colors duration-300 text-center ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 transition-colors duration-300 text-center text-white">
               Painel do Professor - Calendário
             </h1>
-            <p className={`text-sm sm:text-base lg:text-lg transition-colors duration-300 text-center ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+            <p className="text-sm sm:text-base lg:text-lg transition-colors duration-300 text-center text-gray-200">
               Publique eventos no calendário da comunidade
             </p>
           </div>
 
           {/* Lista de eventos */}
           <div className="rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 bg-white/10 backdrop-blur-lg border border-white/20">
-            <h2 className={`text-lg sm:text-xl lg:text-2xl font-bold mb-4 sm:mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-4 sm:mb-6 transition-colors duration-300 text-white">
               Próximos Eventos
             </h2>
             
             <div className="space-y-4">
               {eventos.length === 0 ? (
-                <div className={`text-center py-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                <div className="text-center py-8 transition-colors duration-300 text-gray-300">
                   <p className="text-lg font-semibold">Nenhum evento encontrado</p>
                   <p className="text-sm mt-2">Clique no botão &quot;+&quot; para criar o primeiro evento!</p>
                 </div>
@@ -160,14 +160,14 @@ export default function CalendarioProfessor() {
                 eventos.slice(0, 8).map((evento) => (
                   <div key={evento.id} className="p-4 sm:p-5 rounded-xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01]">
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
-                      <h3 className={`font-bold text-base sm:text-lg ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                      <h3 className="font-bold text-base sm:text-lg text-white">
                         {evento.titulo}
                       </h3>
                       <span className="text-xs sm:text-sm bg-red-600/80 text-white px-3 py-1 rounded-full font-semibold shadow-md w-fit">
                         {formatarData(evento.data)}
                       </span>
                     </div>
-                    <p className={`text-sm sm:text-base whitespace-pre-wrap ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                    <p className="text-sm sm:text-base whitespace-pre-wrap text-gray-200">
                       {evento.descricao}
                     </p>
                   </div>
@@ -189,8 +189,8 @@ export default function CalendarioProfessor() {
 
           {/* Informações adicionais */}
           <div className="bg-red-600/20 backdrop-blur-sm border border-red-500/30 rounded-xl p-4 sm:p-5 mt-6 shadow-lg">
-            <h3 className={`text-sm sm:text-base font-bold mb-3 ${isDarkMode ? 'text-red-300' : 'text-red-800'}`}>Dicas para criar eventos:</h3>
-            <ul className={`text-sm space-y-2 ${isDarkMode ? 'text-red-200' : 'text-red-700'}`}>
+            <h3 className="text-sm sm:text-base font-bold mb-3 text-red-300">Dicas para criar eventos:</h3>
+            <ul className="text-sm space-y-2 text-red-200">
               <li>• Use títulos claros e descritivos</li>
               <li>• Inclua informações importantes: horário, local, o que trazer</li>
               <li>• Para eventos recorrentes, crie um evento para cada data</li>

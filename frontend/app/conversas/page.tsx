@@ -70,7 +70,6 @@ export default function ConversasPage() {
   const [isDigitando, setIsDigitando] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const { isDarkMode } = useDarkMode();
   const { isSidebarOpen } = useSidebar();
 
   const scrollToBottom = (smooth = true) => {
@@ -477,7 +476,7 @@ Como posso te ajudar hoje?`,
   if (loading || !usuarioLogado) {
     // Renderização de loading/login
     return (
-        <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+        <div className="flex flex-col h-screen bg-gray-900">
             <DynamicHeader />
             <div className="flex-1 flex items-center justify-center">
                 {loading ? (
@@ -485,8 +484,8 @@ Como posso te ajudar hoje?`,
                 ) : (
                     <div className="text-center">
                         <div className="text-red-600 text-6xl mb-4">&#x1F512;</div>
-                        <h2 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Login necessário</h2>
-                        <p className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Faça login para acessar suas conversas</p>
+                        <h2 className="text-xl font-semibold mb-2 text-white">Login necessário</h2>
+                        <p className="mb-4 transition-colors duration-300 text-gray-300">Faça login para acessar suas conversas</p>
                         <button 
                             onClick={() => window.location.href = '/login'}
                             className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
@@ -559,8 +558,8 @@ Como posso te ajudar hoje?`,
               <div className={`${(conversaSelecionada || isNexusChat) ? 'hidden lg:flex' : 'flex'} flex-col w-full lg:w-[400px] xl:w-[420px] lg:border-r border-white/20 bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-lg shadow-2xl relative z-10`}>
               
               {/* Header da Sidebar - Oculto no mobile */}
-              <div className={`hidden lg:block px-6 py-4 border-b transition-colors duration-300 ${isDarkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
-                <h1 className={`text-2xl font-bold text-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Conversas</h1>
+              <div className="hidden lg:block px-6 py-4 border-b border-gray-700/50">
+                <h1 className="text-2xl font-bold text-center text-white">Conversas</h1>
               </div>
               
               {/* Lista de Conversas */}
@@ -575,8 +574,8 @@ Como posso te ajudar hoje?`,
                         onClick={iniciarChatNexus}
                         className={`px-5 py-4 cursor-pointer transition-all duration-200 flex items-center gap-4 border-b ${
                           isNexusChat 
-                            ? (isDarkMode ? 'bg-red-900/30 border-red-800/50 shadow-lg' : 'bg-red-50 border-red-100')
-                            : (isDarkMode ? 'hover:bg-gray-700/40 border-gray-700/30' : 'hover:bg-gray-50/80 border-gray-200/30')
+                              ? 'bg-red-900/30 border-red-800/50 shadow-lg'
+                            : 'hover:bg-gray-700/40 border-gray-700/30'
                         }`}
                       >
                         <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center flex-shrink-0 relative border-2 border-red-500 shadow-lg">
@@ -610,8 +609,8 @@ Como posso te ajudar hoje?`,
                       onClick={onClickAction}
                       className={`px-5 py-4 cursor-pointer transition-all duration-200 flex items-center gap-4 border-b ${
                         isSelected
-                          ? (isDarkMode ? 'bg-red-900/30 border-red-800/50 shadow-lg' : 'bg-red-50 border-red-100')
-                          : (isDarkMode ? 'hover:bg-gray-700/40 border-gray-700/30' : 'hover:bg-gray-50/80 border-gray-200/30')
+                          ? 'bg-red-900/30 border-red-800/50 shadow-lg'
+                          : 'hover:bg-gray-700/40 border-gray-700/30'
                       }`}
                     >
                       <div className="w-14 h-14 bg-gradient-to-br from-red-600 to-red-700 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
@@ -622,11 +621,11 @@ Como posso te ajudar hoje?`,
                       
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-0.5">
-                          <h3 className={`font-semibold text-base truncate pr-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          <h3 className="font-semibold text-base truncate pr-2 text-white">
                             {usuarioItem.nome}
                           </h3>
                           {isConversaAtiva && ultimaMensagem && (
-                            <span className={`text-xs flex-shrink-0 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                            <span className="text-xs flex-shrink-0 text-gray-400">
                               {formatarHora(ultimaMensagem.createdAt)}
                             </span>
                           )}
@@ -634,12 +633,12 @@ Como posso te ajudar hoje?`,
                         
                         <div className="flex items-center gap-2">
                           {isConversaAtiva && ultimaMensagem ? (
-                            <p className={`text-xs truncate flex-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            <p className="text-xs truncate flex-1 text-gray-400">
                               {isMinhaMensagem && <span className="mr-1">{ultimaMensagem.lida ? '✓✓' : '✓'}</span>}
                               {ultimaMensagem.conteudo}
                             </p>
                           ) : (
-                            <p className={`text-xs flex-1 truncate transition-colors duration-300 ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>
+                            <p className="text-xs flex-1 truncate text-red-400">
                               {usuarioItem.curso?.nome || 'Sem curso'}
                             </p>
                           )}
@@ -656,7 +655,7 @@ Como posso te ajudar hoje?`,
                 })}
                 
                 {listaUnificada.length === 1 && ( 
-                  <div className={`text-center p-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                  <div className="text-center p-8 transition-colors duration-300 text-gray-400">
                     <div className="text-4xl mb-4">💬</div>
                     <p className="text-sm">Nenhuma conversa iniciada ainda.</p>
                   </div>
@@ -664,7 +663,7 @@ Como posso te ajudar hoje?`,
               </div>
               
               {/* Botão Nova Conversa na Sidebar */}
-              <div className={`p-3 border-t transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+              <div className="p-3 border-t border-gray-700">
                 <button
                   onClick={() => setMostrarModalNovaConversa(true)}
                   className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition-colors font-semibold flex items-center justify-center gap-2 text-sm"
@@ -684,7 +683,7 @@ Como posso te ajudar hoje?`,
                     <div className="flex items-center gap-4">
                       <button 
                         onClick={fecharChat} 
-                        className="lg:hidden bg-red-600 hover:bg-red-700 text-white transition-all duration-200 text-2xl font-bold p-2.5 rounded-xl shadow-lg hover:scale-110 active:scale-95"
+                        className="lg:hidden bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white transition-all duration-200 text-2xl font-bold p-2.5 rounded-xl shadow-lg hover:scale-110 active:scale-95"
                       >
                         ←
                       </button>
@@ -706,7 +705,7 @@ Como posso te ajudar hoje?`,
                               {destinatario.nome.charAt(0).toUpperCase()}
                             </span>
                           </div>
-                          <h3 className={`font-bold text-lg transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          <h3 className="font-bold text-lg text-white">
                             {destinatario.nome}
                           </h3>
                         </>
@@ -719,7 +718,7 @@ Como posso te ajudar hoje?`,
                         onClick={resetarConversaNexus}
                         title="Resetar conversa"
                         className={`p-2.5 rounded-xl transition-all duration-200 hover:scale-110 active:scale-95 ${
-                          isDarkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                            'bg-gray-700 hover:bg-gray-600 text-white'
                         } shadow-lg`}
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -735,7 +734,7 @@ Como posso te ajudar hoje?`,
                       <div className="space-y-4 min-h-full flex flex-col justify-end">
                         {nexusMensagens.map((mensagem) => (
                           <div key={mensagem.id} className={`flex ${mensagem.isNexus ? 'justify-start' : 'justify-end'}`}>
-                            <div className={`max-w-md lg:max-w-xl xl:max-w-2xl px-5 py-3 rounded-2xl shadow-lg ${mensagem.isNexus ? (isDarkMode ? 'bg-gradient-to-br from-red-600 to-red-700 text-white' : 'bg-gradient-to-br from-red-500 to-red-600 text-white') : 'bg-gray-700 text-white'}`}>
+                            <div className="max-w-md lg:max-w-xl xl:max-w-2xl px-5 py-3 rounded-2xl shadow-lg bg-gradient-to-br from-red-600 to-red-700 text-white">
                               <p className="text-base break-words whitespace-pre-wrap leading-relaxed">{mensagem.conteudo}</p>
                               <p className={`text-xs mt-2 ${mensagem.isNexus ? 'text-red-200' : 'text-gray-300'}`}>{formatarHora(mensagem.createdAt)}</p>
                             </div>
@@ -745,7 +744,7 @@ Como posso te ajudar hoje?`,
                         {/* Mensagem sendo digitada */}
                         {isDigitando && textoDigitando && (
                           <div className="flex justify-start">
-                            <div className={`max-w-md lg:max-w-xl xl:max-w-2xl px-5 py-3 rounded-2xl shadow-lg ${isDarkMode ? 'bg-gradient-to-br from-red-600 to-red-700 text-white' : 'bg-gradient-to-br from-red-500 to-red-600 text-white'}`}>
+                            <div className="max-w-md lg:max-w-xl xl:max-w-2xl px-5 py-3 rounded-2xl shadow-lg bg-gradient-to-br from-red-600 to-red-700 text-white">
                               <p className="text-base break-words whitespace-pre-wrap leading-relaxed">
                                 {textoDigitando}
                                 <span className="inline-block w-1 h-4 ml-1 bg-red-200 animate-pulse"></span>
@@ -756,7 +755,7 @@ Como posso te ajudar hoje?`,
                         
                         {nexusTyping && !isDigitando && (
                           <div className="flex justify-start">
-                            <div className={`max-w-md px-5 py-3 rounded-2xl shadow-lg ${isDarkMode ? 'bg-gradient-to-br from-red-600 to-red-700 text-white' : 'bg-gradient-to-br from-red-500 to-red-600 text-white'}`}>
+                            <div className="max-w-md px-5 py-3 rounded-2xl shadow-lg bg-gradient-to-br from-red-600 to-red-700 text-white">
                               <div className="flex items-center space-x-3">
                                 <div className="flex space-x-1.5">
                                   <div className="w-2.5 h-2.5 bg-red-200 rounded-full animate-bounce"></div>
@@ -772,7 +771,7 @@ Como posso te ajudar hoje?`,
                       </div>
                     ) : (
                       mensagensConversa.length === 0 ? (
-                        <div className={`h-full flex items-center justify-center transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                        <div className="h-full flex items-center justify-center transition-colors duration-300 text-gray-400">
                           <div className="text-center">
                             <div className="text-6xl mb-4">👋</div>
                             <p className="text-lg">Comece uma conversa!</p>
@@ -785,7 +784,7 @@ Como posso te ajudar hoje?`,
                             
                             return (
                               <div key={mensagem.id} className={`flex ${isRemetente ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-md lg:max-w-xl xl:max-w-2xl px-5 py-3 rounded-2xl shadow-lg ${isRemetente ? 'bg-gradient-to-br from-red-600 to-red-700 text-white' : (isDarkMode ? 'bg-gray-700/80 text-white' : 'bg-gray-200 text-gray-800')}`}>
+                                <div className={`max-w-md lg:max-w-xl xl:max-w-2xl px-5 py-3 rounded-2xl shadow-lg ${isRemetente ? 'bg-gradient-to-br from-red-600 to-red-700 text-white' : 'bg-gray-700/80 text-white'}`}>
                                   <p className="text-base break-words leading-relaxed">{mensagem.conteudo}</p>
                                   <div className={`text-xs mt-2 flex items-center justify-end gap-1.5 ${isRemetente ? 'text-red-200' : (isDarkMode ? 'text-gray-400' : 'text-gray-500')}`}>
                                     <span>{formatarHora(mensagem.createdAt)}</span>
@@ -832,7 +831,7 @@ Como posso te ajudar hoje?`,
                 </>
               ) : (
                 // Mensagem de boas-vindas quando nenhum chat está selecionado (Desktop)
-                <div className={`h-full flex items-center justify-center transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                <div className="h-full flex items-center justify-center transition-colors duration-300 text-gray-400">
                   <div className="text-center">
                     <div className="text-8xl mb-6">💬</div>
                     <h2 className="text-2xl font-semibold mb-2">Nexus Conversas</h2>

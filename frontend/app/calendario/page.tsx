@@ -22,7 +22,6 @@ const CalendarioPage = () => {
   const [diaSelecionado, setDiaSelecionado] = useState<number | null>(null);
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
-  const { isDarkMode } = useDarkMode();
   const { isSidebarOpen } = useSidebar();
 
   const meses = [
@@ -77,7 +76,7 @@ const CalendarioPage = () => {
     // Dias do mês anterior
     for (let i = primeiroDiaSemana - 1; i >= 0; i--) {
         dias.push(
-            <div key={`vazio-${i}`} className={`p-1 sm:p-2 md:p-3 lg:p-4 text-center transition-colors duration-300 text-lg sm:text-xl md:text-2xl lg:text-3xl min-h-[40px] sm:min-h-[50px] md:min-h-[55px] lg:min-h-[60px] flex items-center justify-center font-bold ${isDarkMode ? 'text-gray-500/50' : 'text-white/30'}`}>
+            <div key={`vazio-${i}`} className="p-1 sm:p-2 md:p-3 lg:p-4 text-center transition-colors duration-300 text-lg sm:text-xl md:text-2xl lg:text-3xl min-h-[40px] sm:min-h-[50px] md:min-h-[55px] lg:min-h-[60px] flex items-center justify-center font-bold text-gray-500/50">
                 {ultimoDiaMesAnterior - i}
             </div>
         );
@@ -92,11 +91,11 @@ const CalendarioPage = () => {
       });
       const isSelecionado = diaSelecionado === i;
       const classes = `p-1 sm:p-2 md:p-3 lg:p-4 rounded-lg sm:rounded-xl text-center cursor-pointer transition-all duration-300 relative text-lg sm:text-xl md:text-2xl lg:text-3xl min-h-[40px] sm:min-h-[50px] md:min-h-[55px] lg:min-h-[60px] flex items-center justify-center font-bold
-        ${isDarkMode ? 'text-gray-200' : 'text-white'}
+        text-white
         ${isSelecionado ? 'bg-gradient-to-br from-red-600 to-red-700 text-white font-bold shadow-2xl scale-110 ring-4 ring-red-500/50' : ''}
         ${isHoje && !isSelecionado ? 'border-2 border-blue-500 font-bold bg-blue-500/10 shadow-lg' : ''}
         ${temEvento && !isSelecionado ? 'text-red-500 font-bold' : ''}
-        ${!isSelecionado && !isHoje ? (isDarkMode ? 'hover:bg-gradient-to-br hover:from-gray-700/30 hover:to-gray-800/30 hover:shadow-lg hover:scale-105' : 'hover:bg-gradient-to-br hover:from-white/10 hover:to-white/5 hover:shadow-lg hover:scale-105') : ''}
+        ${!isSelecionado && !isHoje ? 'hover:bg-gradient-to-br hover:from-gray-700/30 hover:to-gray-800/30 hover:shadow-lg hover:scale-105' : ''}
         active:scale-95
       `;
 
@@ -120,7 +119,7 @@ const CalendarioPage = () => {
     const diasRestantes = 42 - dias.length;
     for (let i = 1; i <= diasRestantes; i++) {
       dias.push(
-          <div key={`proximo-${i}`} className={`p-1 sm:p-2 md:p-3 lg:p-4 text-center cursor-pointer transition-colors duration-300 text-lg sm:text-xl md:text-2xl lg:text-3xl min-h-[40px] sm:min-h-[50px] md:min-h-[55px] lg:min-h-[60px] flex items-center justify-center font-bold ${isDarkMode ? 'text-gray-500/50' : 'text-white/30'}`}>
+          <div key={`proximo-${i}`} className="p-1 sm:p-2 md:p-3 lg:p-4 text-center cursor-pointer transition-colors duration-300 text-lg sm:text-xl md:text-2xl lg:text-3xl min-h-[40px] sm:min-h-[50px] md:min-h-[55px] lg:min-h-[60px] flex items-center justify-center font-bold text-gray-500/50">
               {i}
           </div>
       );
@@ -145,7 +144,7 @@ const CalendarioPage = () => {
         
         {/* Título Mobile - Visível apenas no mobile */}
         <div className="lg:hidden pt-16 pb-3">
-          <h1 className={`text-2xl font-bold text-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+            <h1 className="text-2xl font-bold text-center transition-colors duration-300 text-white">
             Calendário
           </h1>
         </div>
@@ -154,7 +153,7 @@ const CalendarioPage = () => {
           isSidebarOpen ? 'lg:ml-80' : 'lg:ml-0'
         }`}>
         {/* Título Principal - Oculto no mobile */}
-        <h1 className={`hidden lg:block text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-center m-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+        <h1 className="hidden lg:block text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-center m-3 transition-colors duration-300 text-white">
           Calendário
         </h1>
 
@@ -168,11 +167,7 @@ const CalendarioPage = () => {
           <div className="flex justify-between items-center mb-3 sm:mb-4 md:mb-5 gap-2">
             <button 
               onClick={() => setDataAtual(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
-              className={`p-2 sm:p-3 text-xl sm:text-2xl md:text-3xl font-bold rounded-full transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 hover:scale-110 ${
-                isDarkMode 
-                  ? 'text-white hover:bg-red-600/30 bg-gray-800/50' 
-                  : 'text-gray-700 hover:bg-red-500/20 bg-white/30'
-              }`}
+              className="p-2 sm:p-3 text-xl sm:text-2xl md:text-3xl font-bold rounded-full transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 hover:scale-110 text-white hover:bg-red-600/30 bg-gray-800/50"
               disabled={carregando || (
                 dataAtual.getFullYear() === new Date().getFullYear() && dataAtual.getMonth() === 0
               )}
@@ -186,11 +181,7 @@ const CalendarioPage = () => {
 
             <button 
               onClick={() => setDataAtual(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))}
-              className={`p-2 sm:p-3 text-xl sm:text-2xl md:text-3xl font-bold rounded-full transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 hover:scale-110 ${
-                isDarkMode 
-                  ? 'text-white hover:bg-red-600/30 bg-gray-800/50' 
-                  : 'text-gray-700 hover:bg-red-500/20 bg-white/30'
-              }`}
+              className="p-2 sm:p-3 text-xl sm:text-2xl md:text-3xl font-bold rounded-full transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 hover:scale-110 text-white hover:bg-red-600/30 bg-gray-800/50"
               disabled={carregando || (
                 dataAtual.getFullYear() === new Date().getFullYear() && dataAtual.getMonth() === 11
               )}
@@ -202,7 +193,7 @@ const CalendarioPage = () => {
 
           {carregando && (
             <div className="text-center mb-3 sm:mb-4">
-              <div className={`text-xs sm:text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Carregando eventos...</div>
+              <div className="text-xs sm:text-sm transition-colors duration-300 text-gray-400">Carregando eventos...</div>
             </div>
           )}
 
@@ -222,21 +213,21 @@ const CalendarioPage = () => {
 
           {/* Seção de Eventos */}
           <div className="mt-3 sm:mt-4 md:mt-5">
-            <h3 className={`text-sm sm:text-base md:text-lg lg:text-xl font-bold text-center mb-2 sm:mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+            <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-center mb-2 sm:mb-3 transition-colors duration-300 text-white">
               {diaSelecionado ? `Eventos do dia ${diaSelecionado}` : 'Selecione um dia para ver os eventos'}
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
               {eventosDoDia.length > 0 ? (
                 eventosDoDia.map(evento => (
-                  <div key={evento.id} className={`p-3 sm:p-4 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border backdrop-blur-sm hover:scale-105 ${isDarkMode ? 'bg-black/30 hover:bg-black/40 border-white/20' : 'bg-black/20 hover:bg-black/30 border-white/20'}`}>
+                  <div key={evento.id} className="p-3 sm:p-4 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border backdrop-blur-sm hover:scale-105 bg-black/30 hover:bg-black/40 border-white/20">
                     <p className="text-base sm:text-lg md:text-xl font-bold text-red-500 break-words">
                       {evento.titulo}
                     </p>
-                    <p className={`text-xs sm:text-sm mt-1 sm:mt-2 break-words transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-white/90'}`}>{evento.descricao}</p>
+                    <p className="text-xs sm:text-sm mt-1 sm:mt-2 break-words transition-colors duration-300 text-gray-300">{evento.descricao}</p>
                   </div>
                 ))
               ) : (
-                <p className={`col-span-full text-center text-sm sm:text-base py-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                <p className="col-span-full text-center text-sm sm:text-base py-4 transition-colors duration-300 text-gray-400">
                   {diaSelecionado ? 'Nenhum evento para este dia.' : 'Clique em um dia para ver os eventos.'}
                 </p>
               )}

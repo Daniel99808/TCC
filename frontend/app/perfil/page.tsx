@@ -22,7 +22,7 @@ export default function PerfilPage() {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
-  const { isDarkMode, toggleDarkMode } = useDarkMode();
+  const { toggleDarkMode } = useDarkMode();
   const { isSidebarOpen } = useSidebar();
 
   useEffect(() => {
@@ -74,7 +74,7 @@ export default function PerfilPage() {
           <div className="lg:ml-80 flex-1 flex items-center justify-center p-4">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto"></div>
-              <p className={`mt-2 text-sm sm:text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Carregando perfil...</p>
+              <p className="mt-2 text-sm sm:text-base transition-colors duration-300 text-gray-300">Carregando perfil...</p>
             </div>
           </div>
         </div>
@@ -84,8 +84,8 @@ export default function PerfilPage() {
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
               <div className="text-red-600 text-6xl mb-4">!</div>
-              <h2 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Erro ao carregar perfil</h2>
-              <p className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{error || 'Usuário não encontrado'}</p>
+              <h2 className="text-xl font-semibold mb-2 transition-colors duration-300 text-white">Erro ao carregar perfil</h2>
+              <p className="mb-4 transition-colors duration-300 text-gray-300">{error || 'Usuário não encontrado'}</p>
               <button 
                 onClick={() => window.location.href = '/login'}
                 className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
@@ -115,10 +115,10 @@ export default function PerfilPage() {
               
               {/* Header com título */}
               <div className="text-center mb-4 sm:mb-6 lg:mb-8">
-                <h1 className={`text-2xl sm:text-4xl lg:text-5xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold transition-colors duration-300 text-white">
                   Meu Perfil
                 </h1>
-                <p className={`mt-1 sm:mt-2 text-xs sm:text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className="mt-1 sm:mt-2 text-xs sm:text-base transition-colors duration-300 text-gray-400">
                   Gerencie suas informações e configurações
                 </p>
               </div>
@@ -140,10 +140,10 @@ export default function PerfilPage() {
                   <div className="flex-1 w-full space-y-3 sm:space-y-4">
                     {/* Nome */}
                     <div className="p-3 sm:p-4 lg:p-5 rounded-lg sm:rounded-xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm border border-white/20 shadow-md sm:shadow-lg">
-                      <p className={`text-xs sm:text-sm font-medium mb-1 sm:mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      <p className="text-xs sm:text-sm font-medium mb-1 sm:mb-2 transition-colors duration-300 text-gray-300">
                         Nome Completo
                       </p>
-                      <p className={`text-base sm:text-xl lg:text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <p className="text-base sm:text-xl lg:text-2xl font-bold text-white">
                         {usuario?.nome}
                       </p>
                     </div>
@@ -151,7 +151,7 @@ export default function PerfilPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       {/* Curso */}
                       <div className="p-3 sm:p-4 lg:p-5 rounded-lg sm:rounded-xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm border border-white/20 shadow-md sm:shadow-lg">
-                        <p className={`text-xs sm:text-sm font-medium mb-1 sm:mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                        <p className="text-xs sm:text-sm font-medium mb-1 sm:mb-2 transition-colors duration-300 text-gray-300">
                           Curso
                         </p>
                         <p className={`text-sm sm:text-lg lg:text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -161,7 +161,7 @@ export default function PerfilPage() {
 
                       {/* Turma */}
                       <div className="p-3 sm:p-4 lg:p-5 rounded-lg sm:rounded-xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm border border-white/20 shadow-md sm:shadow-lg">
-                        <p className={`text-xs sm:text-sm font-medium mb-1 sm:mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                        <p className="text-xs sm:text-sm font-medium mb-1 sm:mb-2 transition-colors duration-300 text-gray-300">
                           Turma
                         </p>
                         <p className={`text-sm sm:text-lg lg:text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -198,7 +198,7 @@ export default function PerfilPage() {
           
               {/* Seção de Configurações */}
               <div className="rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl p-4 sm:p-6 lg:p-8 bg-white/10 backdrop-blur-lg border border-white/20">
-                <h2 className={`text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 flex items-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 flex items-center transition-colors duration-300 text-white">
                   <svg className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 mr-2 sm:mr-3 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -214,11 +214,11 @@ export default function PerfilPage() {
                         <svg className="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
-                        <span className={`font-bold text-base sm:text-lg transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                        <span className="font-bold text-base sm:text-lg text-white">
                           Alterar senha
                         </span>
                       </div>
-                      <svg className={`w-6 h-6 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </div>
