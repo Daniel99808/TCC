@@ -71,6 +71,7 @@ export default function ConversasPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const { isSidebarOpen } = useSidebar();
+  const { isDarkMode } = useDarkMode();
 
   const scrollToBottom = (smooth = true) => {
     if (messagesEndRef.current) {
