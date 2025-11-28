@@ -55,4 +55,51 @@ de informações e na visualização do desempenho escolar. Com isso, espera-se 
 aprimorar a comunicação dentro das instituições.
 
 ### IMPACTO
+O impacto do projeto se enquadra na otimização de processos internos, na criação de novas soluções para problemas enfrentados pela instituição e na possível geração de empregos. Dessa forma, trata-se de uma ideia promissora e viável para ser colocada em prática.
+___
+# _RESOLUÇÃO DE PROBLEMAS_
+### . Falta de comunicação rápida entre alunos e docentes
 
+- Problema: Hoje em dia, muitos alunos têm dificuldade em tirar dúvidas rápidas com professores, principalmente fora do horário de aula.
+- Solução: O app oferece um chat direto com professores e monitores, facilitando o aprendizado e resolvendo questões em tempo real.
+
+### 2. Desorganização com calendários e prazos
+
+- Problema: Alunos frequentemente perdem datas importantes (provas, TCC, eventos, feriados letivos).
+- Solução: O app tem uma área de calendário unificada, com alertas e notificações evitando esquecimentos.
+
+### 3.Falta de um canal oficial e dinâmico de notícias
+
+- Problema Muitos alunos só descobrem eventos ou comunicados por cartazes físicos ou e-mails ignorados.
+- Solução: O app funciona como uma timeline (tipo Twitter) onde a escola posta novidades, eventos e avisos de forma rápida e acessível.
+
+### 4. Distância entre alunos e a coordenação/superiores
+
+- Problema: Dificuldade em falar diretamente com a coordenação para resolver problemas (disciplinas, notas, comportamento).
+- Solução: O app oferece uma mensageria privada com setores responsáveis, com opção de chat ou agendamento de atendimento.
+
+### 5. Falta de integração entre os próprios alunos
+
+- **Problema**: Alunos de diferentes turmas ou períodos não se conectam facilmente, dificultando o networking.
+- **Solução**: Com posts públicos, grupos por turma/curso e curtidas/comentários, o app cria uma comunidade digital no estilo de rede social.
+
+### 6. Experiência digital desorganizada
+
+- Problema: Os sistemas atuais do SENAI são espalhados em vários lugares (calendário no site, comunicados no mural, chats no WhatsApp, etc).
+- Solução: O app centraliza tudo em um único lugar com ótima organização e UX moderna, facilitando a vida do aluno
+___
+
+# RESOLUÇÃO
+- Notebook e mouse
+- Carregadores
+- Internet
+- FIGMA
+- TRELLO
+- VSCODE
+- NOTION
+- CLASSROOM
+- YOUTUBE
+- CANVA
+- MIRO
+- python/flutter/dart/node.js/javascript./django
+___
