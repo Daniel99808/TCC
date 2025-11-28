@@ -24,7 +24,7 @@ export default function CalendarioAdm() {
   const [message, setMessage] = useState('');
   const [eventos, setEventos] = useState<CalendarioEvento[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // Sidebar removido para evitar bug de deslocamento lateral
+  const { isSidebarOpen } = useSidebar();
 
   // Carregar eventos existentes
   useEffect(() => {
@@ -142,7 +142,7 @@ export default function CalendarioAdm() {
           </p>
         </div>
         
-        <main className="flex-1 container mx-auto p-2 sm:p-3 md:p-4 lg:p-6 py-3 sm:py-4 md:py-6 lg:py-8 animate-fade-in transition-all duration-300">
+        <main className={`flex-1 container mx-auto p-2 sm:p-3 md:p-4 lg:p-6 py-3 sm:py-4 md:py-6 lg:py-8 animate-fade-in transition-all duration-300 ${isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'}`}>
         <div className="max-w-4xl mx-auto">
           {/* Cabeçalho da página - Oculto no mobile */}
           <div className="hidden lg:block rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6 lg:mb-8 bg-white/10 backdrop-blur-lg border border-white/20">

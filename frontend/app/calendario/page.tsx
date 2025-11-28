@@ -150,7 +150,7 @@ const CalendarioPage = () => {
         </div>
         
         <main className={`transition-all duration-300 flex-1 p-3 sm:p-4 md:p-5 lg:p-6 relative z-0 animate-fade-in ${
-          isSidebarOpen ? 'lg:ml-80' : 'lg:ml-0'
+          isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'
         }`}>
         {/* Título Principal - Oculto no mobile */}
         <h1 className="hidden lg:block text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-center m-3 transition-colors duration-300 text-white">

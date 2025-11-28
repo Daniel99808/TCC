@@ -146,7 +146,7 @@ export default function InicioPage() {
         <DynamicHeader />
         
         <main className={`transition-all duration-300 pt-16 lg:pt-20 pb-8 px-4 sm:px-6 lg:px-8 animate-fade-in relative z-0 ${
-          isSidebarOpen ? 'lg:ml-80' : 'lg:ml-0'
+          isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'
         }`}>
           <div className="max-w-7xl mx-auto">
             {/* Header da Dashboard */}

@@ -547,7 +547,7 @@ Como posso te ajudar hoje?`,
         <DynamicHeader />
         
         <main className={`flex-1 pt-16 overflow-hidden transition-all duration-300 ${
-          isSidebarOpen ? 'lg:ml-80' : 'lg:ml-0'
+          isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'
         }`}>
           {/* Container com padding/margin responsivo */}
           <div className="h-full w-full px-2 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-3 md:py-4" style={{ height: 'calc(100vh - 64px)' }}>

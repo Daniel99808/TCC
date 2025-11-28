@@ -22,7 +22,7 @@ export default function PerfilPage() {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
-  const { toggleDarkMode } = useDarkMode();
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   const { isSidebarOpen } = useSidebar();
 
   useEffect(() => {
@@ -109,7 +109,7 @@ export default function PerfilPage() {
           <DynamicHeader />
           
           <main className={`transition-all duration-300 flex-1 p-3 sm:p-6 lg:p-8 animate-fade-in pt-16 sm:pt-20 ${
-            isSidebarOpen ? 'lg:ml-80' : 'lg:ml-0'
+            isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'
           }`}>
             <div className="max-w-5xl mx-auto">
               

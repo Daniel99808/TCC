@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -9,7 +9,7 @@ interface Usuario {
   tipo: string;
 }
 
-export default function Header() {
+export default function Sidebar() {
   const router = useRouter();
   const [usuarioLogado, setUsuarioLogado] = useState<Usuario | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -199,8 +199,6 @@ export default function Header() {
           </button>
         </div>
       </aside>
-
-      <div className="hidden lg:block lg:w-[360px]" />
     </>
   );
 }

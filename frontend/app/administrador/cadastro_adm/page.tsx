@@ -187,7 +187,7 @@ export default function CadastroAdmPage() {
         </p>
       </div>
       
-      <main className={`flex-1 flex items-center justify-center p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in transition-all duration-300 ${isSidebarOpen ? 'lg:ml-80' : 'lg:ml-0'}`}>
+      <main className={`flex-1 flex items-center justify-center p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in transition-all duration-300 ${isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'}`}>
         <div className="p-4 sm:p-6 md:p-8 lg:p-10 rounded-2xl shadow-2xl w-full max-w-md bg-white/10 backdrop-blur-lg border border-white/20">
           {/* Cabeçalho - Oculto no mobile */}
           <div className="text-center mb-4 sm:mb-6 md:mb-8 hidden lg:block">

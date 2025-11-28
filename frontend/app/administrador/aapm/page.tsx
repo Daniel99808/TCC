@@ -145,7 +145,7 @@ export default function AAPMPage() {
           </p>
         </div>
         
-        <main className={`flex-1 p-2 sm:p-4 md:p-6 lg:p-8 animate-fade-in transition-all duration-300 ${isSidebarOpen ? 'lg:ml-80' : 'lg:ml-0'}`}>
+        <main className={`flex-1 p-2 sm:p-4 md:p-6 lg:p-8 animate-fade-in transition-all duration-300 ${isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'}`}>
           <div className="max-w-7xl mx-auto">
             {/* Cabeçalho Melhorado - Oculto no mobile */}
             <div className="mb-6 sm:mb-8 hidden lg:block">

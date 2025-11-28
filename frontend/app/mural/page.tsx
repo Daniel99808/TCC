@@ -127,7 +127,7 @@ export default function MuralDeAvisos() {
         
         {/* Main agora usa 'overflow-auto' para gerenciar o scroll de todo o conteúdo */}
         <main className={`transition-all duration-300 flex-1 p-2 sm:p-4 md:p-6 lg:p-8 flex flex-col items-center overflow-auto animate-fade-in ${
-          isSidebarOpen ? 'lg:ml-80' : 'lg:ml-0'
+          isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'
         }`}>
         {/* Bem-vindo section - Oculto no mobile */}
         <div className="text-center mb-3 sm:mb-4 md:mb-6 px-2 hidden lg:block">

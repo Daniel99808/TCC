@@ -185,7 +185,7 @@ export default function MuralProfessor() {
         <HeaderProfessor />
       
       <main className={`transition-all duration-300 flex-1 p-3 sm:p-4 md:p-6 lg:p-8 flex flex-col items-center overflow-auto animate-fade-in ${
-        isSidebarOpen ? 'lg:ml-80' : 'lg:ml-0'
+        isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'
       }`}>
         {/* Bem-vindo section */}
         <div className="text-center mb-6 sm:mb-8">
