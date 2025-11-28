@@ -40,7 +40,7 @@ o progresso das tarefas de forma clara e intuitiva. Cada quadro representa um pr
 “A Fazer”, “Fazendo” e “Concluído”. Os cartões funcionam como tarefas individuais, que podem conter descrições, checklists, prazos, arquivos e responsáveis.
 ___
 
-# **ETAPA 3##
+# **ETAPA 3**
 
 ## RESULTADO FINAL ESPERADO
 
@@ -53,4 +53,6 @@ importantes e ao contato direto com os coordenadores.
 - O principal benefício esperado após a conclusão do projeto é a facilitação do contato e do acesso entre alunos e docentes, além de melhorias na pontualidade
 de informações e na visualização do desempenho escolar. Com isso, espera-se que outras redes de ensino se inspirem nesse projeto e também adotem soluções semelhantes para
 aprimorar a comunicação dentro das instituições.
+
+### IMPACTO
 
