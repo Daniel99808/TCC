@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import DynamicHeader from '../components/DynamicHeader';
+import Footer from '../components/footer';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import { useSidebar } from '../contexts/SidebarContext';
 import ProtectedRoute from '../components/ProtectedRoute';
@@ -23,6 +24,7 @@ const CalendarioPage = () => {
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const { isSidebarOpen } = useSidebar();
+  const { isDarkMode } = useDarkMode();
 
   const meses = [
     'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
@@ -143,28 +145,38 @@ const CalendarioPage = () => {
         <DynamicHeader />
         
         {/* Título Mobile - Visível apenas no mobile */}
-        <div className="lg:hidden pt-16 pb-3">
-            <h1 className="text-2xl font-bold text-center transition-colors duration-300 text-white">
+        <div className="lg:hidden pt-16 pb-4 px-4">
+          <p className="text-sm text-red-600 text-center mb-1 font-semibold">Comunidade</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-center transition-colors duration-300 text-white">
             Calendário
           </h1>
+          <p className="text-center text-sm mt-2 transition-colors duration-300 text-gray-200">
+            Visualize os próximos eventos
+          </p>
         </div>
         
-        <main className={`transition-all duration-300 flex-1 p-3 sm:p-4 md:p-5 lg:p-6 relative z-0 animate-fade-in ${
+        <main className={`transition-all duration-300 flex-1 p-2 sm:p-4 md:p-6 lg:p-8 relative z-0 animate-fade-in ${
           isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'
         }`}>
         {/* Título Principal - Oculto no mobile */}
-        <h1 className="hidden lg:block text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-center m-3 transition-colors duration-300 text-white">
-          Calendário
-        </h1>
+        <div className="hidden lg:block text-center mb-6 sm:mb-8">
+          <p className="text-sm text-red-600 font-semibold">Comunidade</p>
+          <h1 className="text-3xl lg:text-4xl font-bold transition-colors duration-300 text-white">
+            Calendário
+          </h1>
+          <p className="mt-2 text-base lg:text-lg transition-colors duration-300 text-gray-200">
+            Visualize os próximos eventos da comunidade
+          </p>
+        </div>
 
         {erro && (
-          <div className="max-w-6xl mx-auto mb-2 sm:mb-4 p-2 sm:p-3 md:p-4 bg-red-100 border border-red-400 text-red-700 rounded text-xs sm:text-sm md:text-base">
+          <div className="max-w-6xl mx-auto mb-4 p-3 sm:p-4 bg-red-600/20 border border-red-500/30 text-red-200 rounded-lg text-xs sm:text-sm md:text-base backdrop-blur-sm">
             {erro}
           </div>
         )}
         
-        <div className="max-w-7xl mx-auto p-3 sm:p-4 md:p-5 lg:p-6 rounded-2xl shadow-2xl bg-black/20 backdrop-blur-sm border border-white/10">
-          <div className="flex justify-between items-center mb-3 sm:mb-4 md:mb-5 gap-2">
+        <div className="max-w-6xl mx-auto p-3 sm:p-4 md:p-6 lg:p-8 rounded-2xl shadow-2xl bg-white/10 backdrop-blur-lg border border-white/20">
+          <div className="flex justify-between items-center mb-4 sm:mb-6 gap-2">
             <button 
               onClick={() => setDataAtual(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
               className="p-2 sm:p-3 text-xl sm:text-2xl md:text-3xl font-bold rounded-full transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 hover:scale-110 text-white hover:bg-red-600/30 bg-gray-800/50"
@@ -192,12 +204,12 @@ const CalendarioPage = () => {
           </div>
 
           {carregando && (
-            <div className="text-center mb-3 sm:mb-4">
+            <div className="text-center mb-4">
               <div className="text-xs sm:text-sm transition-colors duration-300 text-gray-400">Carregando eventos...</div>
             </div>
           )}
 
-          <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center text-red-500 font-extrabold text-sm sm:text-base md:text-lg lg:text-xl mb-2 sm:mb-3">
+          <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center text-red-500 font-extrabold text-sm sm:text-base md:text-lg lg:text-xl mb-3 sm:mb-4">
             <div className="py-1">D</div>
             <div className="py-1">S</div>
             <div className="py-1">T</div>
@@ -207,27 +219,30 @@ const CalendarioPage = () => {
             <div className="py-1">S</div>
           </div>
 
-          <div className="grid grid-cols-7 gap-1 sm:gap-2">
+          <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-6 sm:mb-8">
             {renderizarDias()}
           </div>
 
           {/* Seção de Eventos */}
-          <div className="mt-3 sm:mt-4 md:mt-5">
-            <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-center mb-2 sm:mb-3 transition-colors duration-300 text-white">
-              {diaSelecionado ? `Eventos do dia ${diaSelecionado}` : 'Selecione um dia para ver os eventos'}
+          <div className="border-t border-white/20 pt-6 sm:pt-8">
+            <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-center mb-4 sm:mb-6 transition-colors duration-300 text-white">
+              {diaSelecionado ? `Eventos do dia ${diaSelecionado} de ${meses[dataAtual.getMonth()]}` : 'Selecione um dia para ver os eventos'}
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {eventosDoDia.length > 0 ? (
                 eventosDoDia.map(evento => (
-                  <div key={evento.id} className="p-3 sm:p-4 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border backdrop-blur-sm hover:scale-105 bg-black/30 hover:bg-black/40 border-white/20">
-                    <p className="text-base sm:text-lg md:text-xl font-bold text-red-500 break-words">
+                  <div key={evento.id} className="p-4 sm:p-5 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border backdrop-blur-sm hover:scale-105 bg-gradient-to-br from-white/20 to-white/10 border-white/20">
+                    <p className="text-base sm:text-lg md:text-xl font-bold text-red-400 break-words mb-2">
                       {evento.titulo}
                     </p>
-                    <p className="text-xs sm:text-sm mt-1 sm:mt-2 break-words transition-colors duration-300 text-gray-300">{evento.descricao}</p>
+                    <p className="text-xs sm:text-sm break-words transition-colors duration-300 text-gray-300">{evento.descricao}</p>
+                    <p className="text-xs mt-3 text-gray-400">
+                      {new Date(evento.data).toLocaleString('pt-BR')}
+                    </p>
                   </div>
                 ))
               ) : (
-                <p className="col-span-full text-center text-sm sm:text-base py-4 transition-colors duration-300 text-gray-400">
+                <p className="col-span-full text-center text-sm sm:text-base py-8 transition-colors duration-300 text-gray-400">
                   {diaSelecionado ? 'Nenhum evento para este dia.' : 'Clique em um dia para ver os eventos.'}
                 </p>
               )}
@@ -235,6 +250,8 @@ const CalendarioPage = () => {
           </div>
         </div>
       </main>
+      
+      <Footer />
       </div>
     </ProtectedRoute>
   );

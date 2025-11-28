@@ -1,12 +1,12 @@
 ﻿'use client';
 
 import React from 'react';
-import Sidebar from './Sidebar';
+import SidebarAdm from './SidebarAdm';
 
 export default function HeaderAdm() {
   return (
     <>
-      <Sidebar />
+      <SidebarAdm />
     </>
   );
 }
