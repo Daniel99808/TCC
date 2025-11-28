@@ -57,36 +57,25 @@ export default function InicioPage() {
 
   const carregarDashboard = async (usuario: Usuario) => {
     try {
-      // Buscar avisos novos (últimas 24h)
-      const resAvisos = await fetch(apiUrl('/mensagens'));
+      // Buscar todos os avisos
+      const resAvisos = await fetch(apiUrl('/mural'));
       if (resAvisos.ok) {
         const avisos: Mensagem[] = await resAvisos.json();
-        const agora = new Date();
-        const ultimoDia = new Date(agora.getTime() - 24 * 60 * 60 * 1000);
-        const novos = avisos.filter(a => new Date(a.createdAt) > ultimoDia);
-        setAvisosNovos(novos.length);
-        
-        // Adicionar às atividades recentes
-        const atividadesAvisos = novos.slice(0, 3).map(aviso => ({
-          tipo: 'aviso',
-          titulo: 'Novo aviso da Administração',
-          descricao: aviso.conteudo.substring(0, 60) + '...',
-          tempo: calcularTempoDecorrido(aviso.createdAt)
-        }));
-        setUltimasAtividades(prev => [...prev, ...atividadesAvisos]);
+        setAvisosNovos(avisos.length);
       }
 
-      // Buscar eventos próximos (próxima semana)
+      // Buscar eventos deste mês
       const resEventos = await fetch(apiUrl('/eventos'));
       if (resEventos.ok) {
         const eventos: Evento[] = await resEventos.json();
         const agora = new Date();
-        const proximaSemana = new Date(agora.getTime() + 7 * 24 * 60 * 60 * 1000);
-        const proximos = eventos.filter(e => {
+        const primeiroDiaDoMes = new Date(agora.getFullYear(), agora.getMonth(), 1);
+        const ultimoDiaDoMes = new Date(agora.getFullYear(), agora.getMonth() + 1, 0);
+        const mesAtual = eventos.filter(e => {
           const dataEvento = new Date(e.dataEvento);
-          return dataEvento > agora && dataEvento < proximaSemana;
+          return dataEvento >= primeiroDiaDoMes && dataEvento <= ultimoDiaDoMes;
         });
-        setEventosProximos(proximos.length);
+        setEventosProximos(mesAtual.length);
       }
 
       // Buscar conversas não lidas
@@ -94,14 +83,37 @@ export default function InicioPage() {
       if (resConversas.ok) {
         const conversas: Conversa[] = await resConversas.json();
         let naoLidas = 0;
+        const atividadesMensagens: any[] = [];
+        
         conversas.forEach(conversa => {
           conversa.mensagens.forEach(msg => {
             if (!msg.lida && msg.remetente.id !== usuario.id) {
               naoLidas++;
             }
+            // Adicionar às atividades recentes (últimas 3)
+            if (msg.remetente.id !== usuario.id) {
+              atividadesMensagens.push({
+                tipo: 'mensagem',
+                titulo: 'Nova mensagem recebida',
+                descricao: msg.conteudo.substring(0, 60) + '...',
+                tempo: calcularTempoDecorrido(new Date().toISOString())
+              });
+            }
           });
         });
         setMensagensNaoLidas(naoLidas);
+        setUltimasAtividades(prev => [...atividadesMensagens.slice(0, 3), ...prev]);
+      }
+
+      // Buscar atividades do localStorage (alteração de senha, etc)
+      const atividadesLocal = localStorage.getItem('ultimasAtividades');
+      if (atividadesLocal) {
+        try {
+          const atividades = JSON.parse(atividadesLocal);
+          setUltimasAtividades(prev => [...atividades.slice(0, 2), ...prev]);
+        } catch (error) {
+          console.error('Erro ao carregar atividades locais:', error);
+        }
       }
 
 
@@ -207,7 +219,7 @@ export default function InicioPage() {
                   {eventosProximos}
                 </h3>
                 <p className="text-sm lg:text-base font-medium text-gray-400">
-                  Eventos Esta Semana
+                  Eventos Este Mês
                 </p>
               </div>
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
@@ -332,29 +344,66 @@ export default function InicioPage() {
                   </h2>
                   {ultimasAtividades.length > 0 ? (
                     <div className="space-y-3">
-                      {ultimasAtividades.slice(0, 5).map((atividade, index) => (
-                        <div
-                          key={index}
-                          className="p-3 lg:p-4 rounded-xl transition-all duration-300 hover:scale-[1.02] bg-gray-700/50 hover:bg-gray-700 border border-gray-600"
-                        >
-                          <div className="flex items-start gap-3">
-                            <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                              <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                              </svg>
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h3 className="font-semibold text-sm lg:text-base mb-1 text-white">
-                                {atividade.titulo}
-                              </h3>
-                              <p className="text-xs lg:text-sm mb-1 line-clamp-2 text-gray-400">
-                                {atividade.descricao}
-                              </p>
-                              <p className="text-xs text-red-500 font-medium">{atividade.tempo}</p>
+                      {ultimasAtividades.slice(0, 5).map((atividade, index) => {
+                        const getIconeECor = (tipo: string) => {
+                          switch (tipo) {
+                            case 'mensagem':
+                              return {
+                                bg: 'from-purple-500 to-purple-600',
+                                texto: 'text-purple-500',
+                                icone: (
+                                  <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                  </svg>
+                                )
+                              };
+                            case 'senha':
+                              return {
+                                bg: 'from-green-500 to-green-600',
+                                texto: 'text-green-500',
+                                icone: (
+                                  <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                  </svg>
+                                )
+                              };
+                            default:
+                              return {
+                                bg: 'from-red-500 to-red-600',
+                                texto: 'text-red-500',
+                                icone: (
+                                  <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                  </svg>
+                                )
+                              };
+                          }
+                        };
+
+                        const { bg, texto } = getIconeECor(atividade.tipo);
+
+                        return (
+                          <div
+                            key={index}
+                            className="p-3 lg:p-4 rounded-xl transition-all duration-300 hover:scale-[1.02] bg-gray-700/50 hover:bg-gray-700 border border-gray-600"
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className={`w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br ${bg} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                                {getIconeECor(atividade.tipo).icone}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h3 className="font-semibold text-sm lg:text-base mb-1 text-white">
+                                  {atividade.titulo}
+                                </h3>
+                                <p className="text-xs lg:text-sm mb-1 line-clamp-2 text-gray-400">
+                                  {atividade.descricao}
+                                </p>
+                                <p className={`text-xs font-medium ${texto}`}>{atividade.tempo}</p>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center h-64">

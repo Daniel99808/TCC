@@ -621,6 +621,35 @@ app.get('/calendario', async (req, res) => {
   }
 });
 
+// Endpoint para obter todos os eventos
+app.get('/eventos', async (req, res) => {
+  try {
+    const eventos = await prisma.calendario.findMany({
+      select: {
+        id: true,
+        titulo: true,
+        descricao: true,
+        data: true,
+      },
+      orderBy: {
+        data: 'asc',
+      },
+    });
+
+    // Converter o campo 'data' para 'dataEvento' para manter compatibilidade com frontend
+    const eventosFormatados = eventos.map(evento => ({
+      id: evento.id,
+      titulo: evento.titulo,
+      dataEvento: evento.data,
+    }));
+
+    res.json(eventosFormatados);
+  } catch (error) {
+    console.error('Error fetching all events:', error);
+    res.status(500).json({ error: 'Failed to fetch events' });
+  }
+});
+
 app.post('/calendario', async (req, res) => {
   try {
     const { titulo, descricao, data } = req.body;
@@ -644,6 +673,63 @@ app.post('/calendario', async (req, res) => {
   }
 });
 
+
+// Rota para alterar senha
+app.put('/alterar-senha', async (req, res) => {
+  try {
+    const { userId, senhaAtual, novaSenha } = req.body;
+
+    if (!userId || !senhaAtual || !novaSenha) {
+      return res.status(400).json({ 
+        error: 'Missing required fields', 
+        message: 'User ID, senha atual e nova senha são obrigatórios' 
+      });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId }
+    });
+
+    if (!user) {
+      return res.status(404).json({ 
+        error: 'User not found', 
+        message: 'Usuário não encontrado' 
+      });
+    }
+
+    // Verificar se a senha atual está correta
+    const isPasswordValid = await bcrypt.compare(senhaAtual, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ 
+        error: 'Invalid current password', 
+        message: 'Senha atual incorreta' 
+      });
+    }
+
+    // Criptografar a nova senha
+    const hashedPassword = await bcrypt.hash(novaSenha, 10);
+
+    // Atualizar a senha no banco de dados
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        password: hashedPassword
+      }
+    });
+
+    res.json({
+      message: 'Senha alterada com sucesso',
+      success: true
+    });
+  } catch (error) {
+    console.error('Error changing password:', error);
+    res.status(500).json({ 
+      error: 'Failed to change password',
+      message: 'Erro interno do servidor'
+    });
+  }
+});
 
 // Socket.IO configuration
 io.on('connection', (socket) => {

@@ -208,7 +208,9 @@ export default function PerfilPage() {
 
                 <div className="space-y-3 sm:space-y-4">
                   {/* Alterar Senha */}
-                  <button className="w-full text-left p-3 sm:p-4 lg:p-5 rounded-lg sm:rounded-xl border border-white/20 transition-all duration-300 hover:shadow-xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm hover:from-white/20 hover:to-white/10 hover:scale-[1.02]">
+                  <button 
+                    onClick={() => window.location.href = '/alterar-senha'}
+                    className="w-full text-left p-3 sm:p-4 lg:p-5 rounded-lg sm:rounded-xl border border-white/20 transition-all duration-300 hover:shadow-xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm hover:from-white/20 hover:to-white/10 hover:scale-[1.02]">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3 sm:gap-4">
                         <svg className="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
