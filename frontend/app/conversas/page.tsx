@@ -67,6 +67,7 @@ export default function ConversasPage() {
   const [mostrarModalNovaConversa, setMostrarModalNovaConversa] = useState(false);
   const [textoDigitando, setTextoDigitando] = useState('');
   const [isDigitando, setIsDigitando] = useState(false);
+  const [buscaUsuario, setBuscaUsuario] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const { isDarkMode } = useDarkMode();
@@ -660,12 +661,23 @@ Como posso te ajudar hoje?`,
               </div>
               
               {/* Botão Nova Conversa na Sidebar */}
-              <div className="p-3 border-t border-gray-700">
+              <div className="p-2.5 sm:p-3 md:p-4 border-t border-white/10 bg-gradient-to-t from-gray-900/95 via-gray-900/80 to-transparent backdrop-blur-xl shrink-0">
+                {/* Linha de brilho sutil */}
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                
                 <button
                   onClick={() => setMostrarModalNovaConversa(true)}
-                  className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition-colors font-semibold flex items-center justify-center gap-2 text-sm"
+                  className="flex items-center gap-2.5 sm:gap-3 md:gap-4 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-3 rounded-lg transition-all duration-300 w-full group relative overflow-hidden text-sm sm:text-base text-red-500 hover:text-red-400 bg-gradient-to-r from-red-900/30 to-red-800/20 hover:from-red-900/50 hover:to-red-800/40 border border-red-700/40 hover:border-red-600/60 shadow-lg hover:shadow-xl hover:shadow-red-500/20"
                 >
-                  <span className="text-xl">+</span> Nova Conversa
+                  {/* Efeito de brilho ao hover */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                  </div>
+                  
+                  <svg className="w-4.5 h-4.5 sm:w-5 sm:h-5 md:w-6 md:h-6 flex-shrink-0 relative z-10 transition-all duration-300 group-hover:scale-110 group-hover:-rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span className="font-bold relative z-10 transition-transform duration-300 group-hover:translate-x-1">Nova Conversa</span>
                 </button>
               </div>
             </div>
@@ -844,61 +856,93 @@ Como posso te ajudar hoje?`,
 
         {/* Modal de Nova Conversa */}
         {mostrarModalNovaConversa && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className={`rounded-lg shadow-2xl max-w-md w-full max-h-[80vh] flex flex-col transition-colors duration-300 border-2 border-white/80 ${isDarkMode ? 'bg-gray-800/20 backdrop-blur-md' : 'bg-white/20 backdrop-blur-md'}`}>
-              <div className={`p-4 border-b flex items-center justify-between transition-colors duration-300 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
-                <h2 className={`text-xl font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Nova Conversa</h2>
+          <div className="fixed inset-0 bg-black/75 backdrop-blur-2xl flex items-center justify-center z-50 p-4 transition-all duration-300">
+            <div className="rounded-2xl shadow-2xl max-w-md w-full max-h-[85vh] flex flex-col transition-all duration-300 border-2 border-white/40 bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-3xl overflow-hidden shadow-2xl shadow-black/60">
+              {/* Header */}
+              <div className="p-5 sm:p-6 border-b border-white/30 bg-gradient-to-r from-white/15 via-white/10 to-white/15 backdrop-blur-2xl flex items-center justify-between">
+                <h2 className="text-lg sm:text-xl font-bold text-white">Nova Conversa</h2>
                 <button
-                  onClick={() => setMostrarModalNovaConversa(false)}
-                  className={`text-2xl transition-colors duration-300 ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-800'}`}
+                  onClick={() => {
+                    setMostrarModalNovaConversa(false);
+                    setBuscaUsuario('');
+                  }}
+                  className="text-2xl text-gray-400 hover:text-white transition-colors duration-300 hover:rotate-90"
                 >
                   ×
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-4">
+              {/* Barra de Busca com Lupa */}
+              <div className="p-4 sm:p-5 border-b border-white/30 bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-2xl">
+                <div className="relative">
+                  <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <input
+                    type="text"
+                    placeholder="Buscar usuário..."
+                    value={buscaUsuario}
+                    onChange={(e) => setBuscaUsuario(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm text-white placeholder-gray-300 bg-white/20 backdrop-blur-lg border border-white/40 focus:border-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all duration-300 hover:bg-white/25"
+                  />
+                </div>
+              </div>
+
+              {/* Lista de Usuários */}
+              <div className="flex-1 overflow-y-auto p-3 sm:p-4 bg-gradient-to-b from-white/10 via-white/5 to-transparent">
                 {usuarios.length === 0 ? (
-                  <div className={`text-center py-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                    <p>Nenhum usuário disponível</p>
+                  <div className="text-center py-8 text-gray-300">
+                    <p className="text-sm">Nenhum usuário disponível</p>
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    {usuarios.map((usuario) => {
-                      const jaTemConversa = conversas.some(c => 
-                        (c.usuario1.id === usuario.id && c.usuario2.id === usuarioLogado?.id) || 
-                        (c.usuario1.id === usuarioLogado?.id && c.usuario2.id === usuario.id)
-                      );
+                    {usuarios
+                      .filter(usuario => 
+                        usuario.nome.toLowerCase().includes(buscaUsuario.toLowerCase()) &&
+                        usuario.id !== usuarioLogado?.id
+                      )
+                      .map((usuario) => {
+                        const jaTemConversa = conversas.some(c => 
+                          (c.usuario1.id === usuario.id && c.usuario2.id === usuarioLogado?.id) || 
+                          (c.usuario1.id === usuarioLogado?.id && c.usuario2.id === usuario.id)
+                        );
 
-                      return (
-                        <div
-                          key={usuario.id}
-                          onClick={() => {
-                            iniciarConversa(usuario);
-                            setMostrarModalNovaConversa(false);
-                          }}
-                          className={`p-3 rounded-lg cursor-pointer transition-colors duration-300 flex items-center gap-3 ${
-                            isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'
-                          }`}
-                        >
-                          <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
-                            <span className="text-white font-semibold text-lg">
-                              {usuario.nome.charAt(0).toUpperCase()}
-                            </span>
+                        return (
+                          <div
+                            key={usuario.id}
+                            onClick={() => {
+                              iniciarConversa(usuario);
+                              setMostrarModalNovaConversa(false);
+                              setBuscaUsuario('');
+                            }}
+                            className="p-3 sm:p-4 rounded-lg cursor-pointer transition-all duration-300 flex items-center gap-3 bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/40 hover:border-white/60 group"
+                          >
+                            <div className="w-10 h-10 bg-gradient-to-br from-orange-600 to-orange-700 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                              <span className="text-white font-semibold text-sm">
+                                {usuario.nome.charAt(0).toUpperCase()}
+                              </span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-semibold truncate text-white text-sm sm:text-base">
+                                {usuario.nome}
+                              </h3>
+                              <p className="text-xs sm:text-sm truncate text-gray-400">
+                                {usuario.curso?.nome || 'Sem curso'}
+                              </p>
+                            </div>
+                            {jaTemConversa && (
+                              <span className="text-xs font-bold px-2 py-1 rounded-full bg-orange-600/30 text-orange-400 border border-orange-500/30 flex-shrink-0">
+                                Ativa
+                              </span>
+                            )}
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className={`font-semibold truncate transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                              {usuario.nome}
-                            </h3>
-                            <p className={`text-sm truncate transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                              {usuario.curso?.nome || 'Sem curso'}
-                            </p>
-                          </div>
-                          {jaTemConversa && (
-                            <span className="text-xs text-red-600 font-semibold">Ativa</span>
-                          )}
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    {usuarios.filter(u => u.nome.toLowerCase().includes(buscaUsuario.toLowerCase()) && u.id !== usuarioLogado?.id).length === 0 && buscaUsuario && (
+                      <div className="text-center py-8 text-gray-400">
+                        <p className="text-sm">Nenhum usuário encontrado</p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
