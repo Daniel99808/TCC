@@ -815,7 +815,7 @@ Como posso te ajudar hoje?`,
                   
                   {/* Campo de Envio */}
                   <div 
-                    className={`px-6 py-4 border-t border-white/20 flex items-center gap-3 transition-colors duration-300 bg-white/10 backdrop-blur-md shadow-lg ${
+                    className={`px-6 py-4 border-t border-white/30 flex items-center gap-3 transition-colors duration-300 bg-white/10 backdrop-blur-lg shadow-lg ${
                       isDarkMode ? 'border-gray-700' : 'border-gray-200'
                     }`}
                   >
@@ -826,12 +826,12 @@ Como posso te ajudar hoje?`,
                         onChange={(e) => setNovaMensagem(e.target.value)} 
                         placeholder={isNexusChat ? "Faça uma pergunta para a NEXUS IA..." : "Digite sua mensagem..."}
                         disabled={isSending || nexusTyping || isDigitando}
-                        className={`flex-1 px-5 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 text-base shadow-inner ${isDarkMode ? 'bg-gray-700/80 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-gray-300 text-black placeholder-gray-500'}`} 
+                        className={`flex-1 px-5 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 text-base shadow-inner backdrop-blur-md ${isDarkMode ? 'bg-white/20 border-white/40 text-white placeholder-white/60 hover:bg-white/25' : 'bg-white/20 border-white/40 text-white placeholder-white/60 hover:bg-white/25'}`} 
                       />
                       <button 
                         type="submit" 
                         disabled={!novaMensagem.trim() || isSending || nexusTyping || isDigitando}
-                        className="bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-2xl hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-bold text-xl shadow-lg hover:shadow-xl hover:scale-105"
+                        className="bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-2xl hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-bold text-xl hover:shadow-xl hover:scale-105"
                       >
                         {isSending || nexusTyping || isDigitando ? '...' : '➤'}
                       </button>
