@@ -657,6 +657,8 @@ app.post('/calendario', async (req, res) => {
   try {
     const { titulo, descricao, data, tipoPublico = 'TODOS', cursoId, turma } = req.body;
 
+    console.log('Recebido POST /calendario:', { titulo, descricao, data, tipoPublico, cursoId, turma });
+
     if (!titulo || !data) {
       return res.status(400).json({ error: 'Os campos "titulo" e "data" são obrigatórios.' });
     }
@@ -678,8 +680,9 @@ app.post('/calendario', async (req, res) => {
 
     // Validar se o curso existe (se informado)
     if (tipoPublico !== 'TODOS') {
+      const cursoIdNum = parseInt(cursoId);
       const cursoExiste = await prisma.curso.findUnique({
-        where: { id: parseInt(cursoId) }
+        where: { id: cursoIdNum }
       });
 
       if (!cursoExiste) {
@@ -690,7 +693,7 @@ app.post('/calendario', async (req, res) => {
     const novoEvento = await prisma.calendario.create({
       data: {
         titulo,
-        descricao,
+        descricao: descricao || '',
         data: new Date(data),
         tipoPublico,
         cursoId: tipoPublico !== 'TODOS' ? parseInt(cursoId) : null,
@@ -698,10 +701,11 @@ app.post('/calendario', async (req, res) => {
       },
     });
 
+    console.log('Evento criado com sucesso:', novoEvento);
     res.status(201).json(novoEvento);
   } catch (error) {
     console.error('Error creating calendar event:', error);
-    res.status(500).json({ error: 'Failed to create event' });
+    res.status(500).json({ error: 'Failed to create event', details: String(error) });
   }
 });
 
