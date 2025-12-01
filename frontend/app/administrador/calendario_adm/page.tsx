@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/header_adm';
 import Footer from '../../components/footer';
-import Image from 'next/image';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { useDarkMode } from '../../contexts/DarkModeContext';
 import { useSidebar } from '../../contexts/SidebarContext';
@@ -24,6 +23,7 @@ export default function CalendarioAdm() {
   const [message, setMessage] = useState('');
   const [eventos, setEventos] = useState<CalendarioEvento[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isDarkMode } = useDarkMode();
   const { isSidebarOpen } = useSidebar();
   const { isDarkMode } = useDarkMode();
 
@@ -175,7 +175,7 @@ export default function CalendarioAdm() {
                       <h3 className="font-bold text-sm sm:text-base md:text-lg text-white">
                         {evento.titulo}
                       </h3>
-                      <span className="text-xs sm:text-sm bg-blue-600/80 text-white px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full font-semibold shadow-md w-fit whitespace-nowrap">
+                      <span className="text-xs sm:text-sm bg-amber-600/80 text-white px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full font-semibold shadow-md w-fit whitespace-nowrap">
                         {formatarData(evento.data)}
                       </span>
                     </div>
@@ -202,11 +202,11 @@ export default function CalendarioAdm() {
           {/* Informações adicionais */}
           <div className={`border rounded-lg p-3 sm:p-4 md:p-5 mt-4 sm:mt-5 md:mt-6 ${
             isDarkMode 
-              ? 'bg-blue-900/20 border-blue-700/50' 
-              : 'bg-blue-50 border-blue-200'
+              ? 'bg-amber-900/20 border-amber-700/50' 
+              : 'bg-amber-50 border-amber-200'
           }`}>
-            <h3 className="text-xs sm:text-sm font-bold mb-2 text-blue-300">Dicas:</h3>
-            <ul className="text-xs sm:text-sm space-y-0.5 sm:space-y-1 text-blue-200">
+            <h3 className="text-xs sm:text-sm font-bold mb-2 text-amber-300">Dicas:</h3>
+            <ul className="text-xs sm:text-sm space-y-0.5 sm:space-y-1 text-amber-200">
               <li>• Use títulos claros e descritivos</li>
               <li>• Inclua: horário, local, o que trazer</li>
               <li>• Para eventos recorrentes, crie um para cada data</li>
@@ -219,16 +219,12 @@ export default function CalendarioAdm() {
       {/* Botão flutuante para adicionar evento */}
       <button
         onClick={openModal}
-        className="fixed bottom-5 sm:bottom-6 md:bottom-8 right-5 sm:right-6 md:right-8 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white p-4 sm:p-5 hover:cursor-pointer rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-40 transform hover:scale-110 active:scale-95"
+        className="fixed bottom-5 sm:bottom-6 md:bottom-8 right-5 sm:right-6 md:right-8 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 z-50 flex items-center justify-center hover:scale-110 active:scale-95 group"
         title="Adicionar novo evento"
       >
-        <Image 
-          src="/lapis.png" 
-          alt="Adicionar evento" 
-          width={24} 
-          height={24}
-          className="w-6 h-6 sm:w-7 sm:h-7"
-        />
+        <svg className="w-6 h-6 sm:w-7 sm:h-7 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+        </svg>
       </button>
 
       {/* Modal para adicionar evento */}
@@ -322,7 +318,7 @@ export default function CalendarioAdm() {
                   <button
                     type="submit"
                     disabled={loading || !titulo.trim() || !descricao.trim() || !data}
-                    className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg text-sm sm:text-base font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="flex-1 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg text-sm sm:text-base font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
                     {loading ? 'Criando...' : 'Criar'}
                   </button>

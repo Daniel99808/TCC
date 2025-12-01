@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import HeaderProfessor from '../../components/header_professor';
 import Footer from '../../components/footer';
-import Image from 'next/image';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { useDarkMode } from '../../contexts/DarkModeContext';
 import { useSidebar } from '../../contexts/SidebarContext';

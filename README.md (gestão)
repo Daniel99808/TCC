@@ -1,0 +1,134 @@
+﻿# TCC - Sistema de Gestão Acadêmica
+
+Sistema web completo para gestão acadêmica com painéis administrativos e de usuário.
+
+## TECNOLOGIAS UTILIZADAS
+
+### Frontend
+- **Next.js 15** - Framework React para produção
+- **TypeScript** - Linguagem tipada
+- **Tailwind CSS** - Framework CSS utilitário
+- **React Hooks** - Gerenciamento de estado
+
+### Backend
+- **Node.js** - Runtime JavaScript
+- **Express.js** - Framework web
+- **Prisma ORM** - Object-Relational Mapping
+- **SQLite** - Banco de dados
+- **Socket.IO** - Comunicação em tempo real
+- **bcrypt** - Hash de senhas
+
+## Estrutura do Projeto
+
+# TCC - Sistema de Gestão Acadêmica
+
+Sistema web completo para gestão acadêmica, com painéis administrativos e de usuário, desenvolvido como Trabalho de Conclusão de Curso (TCC).
+
+## TECNOLOGIAS UTILIZADAS
+
+### Frontend
+- **Next.js** (React)
+- **TypeScript**
+- **Tailwind CSS**
+- **React Hooks**
+- **Socket.IO Client**
+- **Autenticação NextAuth**
+
+### Backend
+- **Node.js**
+- **Express.js**
+- **Prisma ORM** (PostgreSQL)
+- **Socket.IO**
+- **bcrypt**
+- **Supabase**
+
+## ESTRUTURA DO PROJETO
+
+```
+TCC/
+├── backend/
+│   ├── src/
+│   ├── prisma/
+│   └── ...
+├── frontend/
+│   ├── app/
+│   ├── components/
+│   ├── contexts/
+│   ├── lib/
+│   ├── public/
+│   └── ...
+```
+
+## FUNCIONALIDADES
+
+### Usuário
+- Cadastro e login (CPF único, senha criptografada)
+- Visualização de calendário de eventos acadêmicos
+- Mural de avisos
+- Perfil do usuário
+- Seleção e associação a cursos técnicos
+- Conversas privadas (chat)
+
+### Administrador
+- Painel administrativo exclusivo
+- Cadastro e gestão de usuários
+- Criação e edição de eventos do calendário
+- Publicação de avisos no mural
+- Visualização de dados dos usuários
+
+## Banco de Dados
+
+Modelos principais:
+- **User**: nome, CPF, senha, curso, turma, role
+- **Curso**: nome, alunos, murais
+- **Mural**: avisos, público alvo (todos, curso, turma)
+- **Calendario**: eventos acadêmicos
+- **Conversa/Mensagem**: chat privado entre usuários
+
+# INSTALAÇÃO E EXECUÇÃO
+
+### Pré-requisitos
+- Node.js 
+- npm
+
+### BACKEND
+```bash
+cd backend
+npm install
+npx prisma generate
+npx prisma db push
+npm run dev
+```
+
+### FRONTEND
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### URLs DE ACESSO
+- Frontend: http://localhost:3000
+- Backend: http://localhost:3001
+- Prisma Studio: http://localhost:5555
+
+## AUTENTICAÇÃO
+- CPF único por usuário
+- Senhas criptografadas (bcrypt)
+- Sessões persistentes
+- Validação de CPF
+
+## COMUNICAÇÃO EM TEMPO REAL
+- Socket.IO para atualizações instantâneas (mural, calendário, chat)
+- Sincronização entre múltiplos clientes
+
+## DESENVOLVIMENTO
+Projeto desenvolvido para demonstrar habilidades em:
+- Desenvolvimento Full Stack
+- Arquitetura de aplicações web
+- Gerenciamento de banco de dados
+- Interface de usuário responsiva
+- Sistemas de autenticação
+- Comunicação em tempo real
+
+---

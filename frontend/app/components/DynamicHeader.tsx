@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Header from './header';
-import HeaderProfessor from './header_professor';
-import HeaderAdm from './header_adm';
+import SidebarEstudante from './SidebarEstudante';
+import SidebarProfessor from './SidebarProfessor';
+import SidebarAdm from './SidebarAdm';
 
 export default function DynamicHeader() {
   const [userRole, setUserRole] = useState<string | null>(null);
@@ -12,7 +12,8 @@ export default function DynamicHeader() {
     const usuarioLogado = localStorage.getItem('usuarioLogado');
     if (usuarioLogado) {
       const user = JSON.parse(usuarioLogado);
-      setUserRole(user.role);
+      // Tenta usar 'tipo' primeiro, depois 'role' como fallback
+      setUserRole(user.tipo || user.role);
     }
   }, []);
 
@@ -20,14 +21,17 @@ export default function DynamicHeader() {
     return null; // Ou um loader
   }
 
-  if (userRole === 'PROFESSOR') {
-    return <HeaderProfessor />;
+  // Normaliza o tipo para lowercase para comparação
+  const normalizedRole = userRole.toLowerCase();
+
+  if (normalizedRole === 'professor') {
+    return <SidebarProfessor />;
   }
 
-  if (userRole === 'ADMIN') {
-    return <HeaderAdm />;
+  if (normalizedRole === 'administrador' || normalizedRole === 'admin') {
+    return <SidebarAdm />;
   }
 
   // Default para ESTUDANTE
-  return <Header />;
+  return <SidebarEstudante />;
 }
