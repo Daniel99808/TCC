@@ -1,12 +1,12 @@
 ﻿'use client';
 
 import React from 'react';
-import Sidebar from './Sidebar';
+import SidebarProfessor from './SidebarProfessor';
 
 export default function HeaderProfessor() {
   return (
     <>
-      <Sidebar />
+      <SidebarProfessor />
     </>
   );
 }
