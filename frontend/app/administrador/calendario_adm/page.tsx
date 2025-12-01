@@ -12,22 +12,54 @@ interface CalendarioEvento {
   titulo: string;
   descricao: string;
   data: string;
+  tipoPublico?: string;
+  cursoId?: number;
+  turma?: string;
+}
+
+interface Curso {
+  id: number;
+  nome: string;
 }
 
 export default function CalendarioAdm() {
   const [titulo, setTitulo] = useState('');
   const [descricao, setDescricao] = useState('');
   const [data, setData] = useState('');
+  const [tipoPublico, setTipoPublico] = useState('TODOS');
+  const [cursoId, setCursoId] = useState('');
+  const [turma, setTurma] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [eventos, setEventos] = useState<CalendarioEvento[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [cursos, setCursos] = useState<Curso[]>([]);
+  const [loadingCursos, setLoadingCursos] = useState(false);
   const { isDarkMode } = useDarkMode();
 
-  // Carregar eventos existentes
+  // Turmas padrão
+  const turmas = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+  // Carregar eventos e cursos existentes
   useEffect(() => {
     fetchEventos();
+    fetchCursos();
   }, []);
+
+  const fetchCursos = async () => {
+    try {
+      setLoadingCursos(true);
+      const response = await fetch(apiUrl('/cursos'));
+      if (response.ok) {
+        const data = await response.json();
+        setCursos(data);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar cursos:', error);
+    } finally {
+      setLoadingCursos(false);
+    }
+  };
 
   const fetchEventos = async () => {
     try {
@@ -50,7 +82,17 @@ export default function CalendarioAdm() {
     e.preventDefault();
     
     if (!titulo.trim() || !descricao.trim() || !data) {
-      setMessage('Por favor, preencha todos os campos.');
+      setMessage('Por favor, preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    if (tipoPublico !== 'TODOS' && !cursoId) {
+      setMessage('Selecione um curso para este tipo de evento.');
+      return;
+    }
+
+    if (tipoPublico === 'TURMA' && !turma) {
+      setMessage('Selecione uma turma para este tipo de evento.');
       return;
     }
 
@@ -58,36 +100,45 @@ export default function CalendarioAdm() {
     setMessage('');
 
     try {
-      // Converter a data para o formato correto, mantendo o fuso horário local
-      // O input date retorna YYYY-MM-DD, precisamos criar a data corretamente
       const [ano, mes, dia] = data.split('-').map(Number);
-      const dataEvento = new Date(ano, mes - 1, dia, 12, 0, 0); // Meio-dia para evitar problemas de fuso horário
+      const dataEvento = new Date(ano, mes - 1, dia, 12, 0, 0);
+
+      const payload: any = {
+        titulo,
+        descricao,
+        data: dataEvento.toISOString(),
+        tipoPublico,
+      };
+
+      if (tipoPublico !== 'TODOS') {
+        payload.cursoId = parseInt(cursoId);
+      }
+
+      if (tipoPublico === 'TURMA') {
+        payload.turma = turma;
+      }
 
       const response = await fetch(apiUrl('/calendario'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          titulo,
-          descricao,
-          data: dataEvento.toISOString(),
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
-        const novoEvento = await response.json();
         setMessage('Evento criado com sucesso!');
         setTitulo('');
         setDescricao('');
         setData('');
-        // Fechar modal após 1 segundo
+        setTipoPublico('TODOS');
+        setCursoId('');
+        setTurma('');
         setTimeout(() => {
           setIsModalOpen(false);
           setMessage('');
         }, 1000);
         
-        // Recarregar eventos
         fetchEventos();
       } else {
         const errorData = await response.json();
@@ -99,12 +150,16 @@ export default function CalendarioAdm() {
     } finally {
       setLoading(false);
     }
+    }
   };
 
   const handleClear = () => {
     setTitulo('');
     setDescricao('');
     setData('');
+    setTipoPublico('TODOS');
+    setCursoId('');
+    setTurma('');
     setMessage('');
   };
 
@@ -122,6 +177,19 @@ export default function CalendarioAdm() {
     return new Date(dataString).toLocaleDateString('pt-BR');
   };
 
+  const getPublicoLabel = (evento: CalendarioEvento) => {
+    if (evento.tipoPublico === 'TODOS') {
+      return 'Todos';
+    } else if (evento.tipoPublico === 'CURSO') {
+      const curso = cursos.find(c => c.id === evento.cursoId);
+      return `Curso: ${curso?.nome || 'N/A'}`;
+    } else if (evento.tipoPublico === 'TURMA') {
+      const curso = cursos.find(c => c.id === evento.cursoId);
+      return `${curso?.nome || 'N/A'} - Turma ${evento.turma}`;
+    }
+    return evento.tipoPublico;
+  };
+
   // Data mínima é hoje
   const dataMinima = new Date().toISOString().split('T')[0];
 
@@ -131,208 +199,247 @@ export default function CalendarioAdm() {
         <Header />
         
         {/* Título Mobile - Visível apenas no mobile */}
-        <div className="lg:hidden pt-16 pb-4 px-4">
-          <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 transition-colors duration-300 text-white">
+        <div className="lg:hidden pt-16 pb-3 px-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-center mb-1 transition-colors duration-300 text-white">
             Calendário ADM
           </h1>
-          <p className="text-center text-sm transition-colors duration-300 text-gray-200">
-            Gerencie eventos do calendário
+          <p className="text-center text-xs sm:text-sm transition-colors duration-300 text-gray-200">
+            Gerencie eventos
           </p>
         </div>
         
-        <main className="flex-1 container mx-auto p-2 sm:p-3 md:p-4 lg:p-6 py-3 sm:py-4 md:py-6 lg:py-8 animate-fade-in transition-all duration-300 lg:ml-[360px]">
-        <div className="max-w-4xl mx-auto">
+        <main className="flex-1 container mx-auto p-2 sm:p-3 md:p-4 lg:p-6 py-2 sm:py-3 md:py-4 lg:py-6 animate-fade-in transition-all duration-300 lg:ml-[360px]">
+        <div className="max-w-5xl mx-auto">
           {/* Cabeçalho da página - Oculto no mobile */}
-          <div className="hidden lg:block rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6 lg:mb-8 bg-white/10 backdrop-blur-lg border border-white/20">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-center transition-colors duration-300 text-white">
+          <div className="hidden lg:block rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-6 mb-4 sm:mb-6 lg:mb-6 bg-white/10 backdrop-blur-lg border border-white/20">
+            <h1 className="text-2xl sm:text-3xl lg:text-3xl font-bold mb-1 text-center transition-colors duration-300 text-white">
               Calendário - Painel ADM
             </h1>
-            <p className="text-xs sm:text-sm lg:text-base text-center transition-colors duration-300 text-gray-200">
-              Gerencie eventos da comunidade
+            <p className="text-xs sm:text-sm lg:text-sm text-center transition-colors duration-300 text-gray-200">
+              Gerencie eventos para alunos, professores e turmas
             </p>
           </div>
 
-          {/* Lista de eventos */}
-          <div className="rounded-2xl shadow-2xl p-3 sm:p-4 md:p-6 lg:p-8 bg-white/10 backdrop-blur-lg border border-white/20">
-            <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-3 sm:mb-4 md:mb-6 transition-colors duration-300 text-white">
-              Próximos Eventos
-            </h2>
-            
-            <div className="space-y-2.5 sm:space-y-3 md:space-y-4">
-              {eventos.length === 0 ? (
-                <div className="text-center py-6 sm:py-8 md:py-10 text-gray-300">
-                  <div className="text-3xl sm:text-4xl md:text-5xl mb-2.5 sm:mb-3 md:mb-4">📅</div>
-                  <p className="text-sm sm:text-base md:text-lg font-semibold">Nenhum evento encontrado</p>
-                  <p className="text-xs sm:text-sm mt-1.5 sm:mt-2">Clique no botão &quot;+&quot; para criar o primeiro evento!</p>
-                </div>
-              ) : (
-                eventos.slice(0, 8).map((evento) => (
-                  <div key={evento.id} className="p-3 sm:p-4 md:p-5 rounded-xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01]">
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1.5 sm:gap-2 md:gap-3 mb-2 sm:mb-3">
-                      <h3 className="font-bold text-sm sm:text-base md:text-lg text-white">
-                        {evento.titulo}
-                      </h3>
-                      <span className="text-xs sm:text-sm bg-amber-600/80 text-white px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full font-semibold shadow-md w-fit whitespace-nowrap">
-                        {formatarData(evento.data)}
-                      </span>
+          {/* Layout em grid para desktop */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
+            {/* Coluna esquerda - Formulário (desktop) */}
+            <div className="lg:col-span-1 order-2 lg:order-1">
+              <div className="rounded-2xl shadow-2xl p-3 sm:p-4 md:p-5 lg:p-5 bg-white/10 backdrop-blur-lg border border-white/20 sticky top-24">
+                <h2 className="text-base sm:text-lg md:text-lg lg:text-lg font-bold mb-3 sm:mb-4 transition-colors duration-300 text-white">
+                  Novo Evento
+                </h2>
+                
+                <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-3">
+                  <div>
+                    <label htmlFor="titulo" className="block text-xs sm:text-xs font-bold mb-1 text-white">
+                      Título *
+                    </label>
+                    <input
+                      type="text"
+                      id="titulo"
+                      value={titulo}
+                      onChange={(e) => setTitulo(e.target.value)}
+                      className="w-full px-2.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all duration-300 bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400"
+                      placeholder="Ex: Reunião"
+                      maxLength={100}
+                    />
+                    <div className="text-xs mt-0.5 font-semibold text-gray-300">
+                      {titulo.length}/100
                     </div>
-                    <p className="text-xs sm:text-sm md:text-base whitespace-pre-wrap text-gray-200">
-                      {evento.descricao}
-                    </p>
                   </div>
-                ))
-              )}
-            </div>
-            
-            {eventos.length > 8 && (
-              <div className="text-center mt-4 sm:mt-5 md:mt-6">
-                <a 
-                  href="/calendario" 
-                  className="text-blue-400 hover:text-blue-300 text-xs sm:text-sm md:text-base font-bold hover:underline transition-all duration-300 inline-block"
-                >
-                  Ver todos os eventos →
-                </a>
+
+                  <div>
+                    <label htmlFor="descricao" className="block text-xs sm:text-xs font-bold mb-1 text-white">
+                      Descrição *
+                    </label>
+                    <textarea
+                      id="descricao"
+                      value={descricao}
+                      onChange={(e) => setDescricao(e.target.value)}
+                      rows={2}
+                      className="w-full px-2.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-medium transition-all duration-300 bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400"
+                      placeholder="Detalhes..."
+                      maxLength={300}
+                    />
+                    <div className="text-xs mt-0.5 font-semibold text-gray-300">
+                      {descricao.length}/300
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="data" className="block text-xs sm:text-xs font-bold mb-1 text-white">
+                      Data *
+                    </label>
+                    <input
+                      type="date"
+                      id="data"
+                      value={data}
+                      onChange={(e) => setData(e.target.value)}
+                      min={new Date().toISOString().split('T')[0]}
+                      className="w-full px-2.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all duration-300 bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="tipoPublico" className="block text-xs sm:text-xs font-bold mb-1 text-white">
+                      Público *
+                    </label>
+                    <select
+                      id="tipoPublico"
+                      value={tipoPublico}
+                      onChange={(e) => {
+                        setTipoPublico(e.target.value);
+                        setCursoId('');
+                        setTurma('');
+                      }}
+                      className="w-full px-2.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all duration-300 bg-gray-800 border-2 border-gray-600 text-white"
+                    >
+                      <option value="TODOS">Todos</option>
+                      <option value="CURSO">Curso Específico</option>
+                      <option value="TURMA">Turma Específica</option>
+                    </select>
+                  </div>
+
+                  {tipoPublico !== 'TODOS' && (
+                    <div>
+                      <label htmlFor="cursoId" className="block text-xs sm:text-xs font-bold mb-1 text-white">
+                        Curso *
+                      </label>
+                      <select
+                        id="cursoId"
+                        value={cursoId}
+                        onChange={(e) => {
+                          setCursoId(e.target.value);
+                          setTurma('');
+                        }}
+                        className="w-full px-2.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all duration-300 bg-gray-800 border-2 border-gray-600 text-white"
+                        disabled={loadingCursos}
+                      >
+                        <option value="">Selecione um curso</option>
+                        {cursos.map((curso) => (
+                          <option key={curso.id} value={curso.id}>
+                            {curso.nome}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  {tipoPublico === 'TURMA' && (
+                    <div>
+                      <label htmlFor="turma" className="block text-xs sm:text-xs font-bold mb-1 text-white">
+                        Turma *
+                      </label>
+                      <select
+                        id="turma"
+                        value={turma}
+                        onChange={(e) => setTurma(e.target.value)}
+                        className="w-full px-2.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all duration-300 bg-gray-800 border-2 border-gray-600 text-white"
+                      >
+                        <option value="">Selecione uma turma</option>
+                        {turmas.map((t) => (
+                          <option key={t} value={t}>
+                            Turma {t}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  {message && (
+                    <div className={`p-2 rounded-lg text-xs font-semibold shadow-lg ${
+                      message.includes('sucesso') 
+                        ? 'bg-green-600/20 text-green-100 border-2 border-green-500/30' 
+                        : 'bg-red-600/20 text-red-100 border-2 border-red-500/30'
+                    }`}>
+                      {message}
+                    </div>
+                  )}
+
+                  <div className="flex gap-1.5 pt-1">
+                    <button
+                      type="submit"
+                      disabled={loading || !titulo.trim() || !descricao.trim() || !data || (tipoPublico !== 'TODOS' && !cursoId) || (tipoPublico === 'TURMA' && !turma)}
+                      className="flex-1 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white py-2 px-2.5 rounded-lg text-xs sm:text-sm font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    >
+                      {loading ? 'Criando...' : 'Criar'}
+                    </button>
+                    
+                    <button
+                      type="button"
+                      onClick={handleClear}
+                      className="px-2.5 py-2 border-2 rounded-lg text-xs sm:text-sm font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] border-white/30 text-white hover:bg-white/10"
+                    >
+                      Limpar
+                    </button>
+                  </div>
+                </form>
               </div>
-            )}
+            </div>
+
+            {/* Coluna direita - Lista de eventos */}
+            <div className="lg:col-span-2 order-1 lg:order-2">
+              <div className="rounded-2xl shadow-2xl p-3 sm:p-4 md:p-5 lg:p-5 bg-white/10 backdrop-blur-lg border border-white/20">
+                <h2 className="text-base sm:text-lg md:text-lg lg:text-lg font-bold mb-3 sm:mb-4 transition-colors duration-300 text-white">
+                  Próximos Eventos
+                </h2>
+                
+                <div className="space-y-2">
+                  {eventos.length === 0 ? (
+                    <div className="text-center py-6 sm:py-8 text-gray-300">
+                      <div className="text-3xl sm:text-4xl mb-2">📅</div>
+                      <p className="text-sm sm:text-base font-semibold">Nenhum evento encontrado</p>
+                      <p className="text-xs sm:text-sm mt-1">Crie um novo evento no formulário ao lado</p>
+                    </div>
+                  ) : (
+                    eventos.slice(0, 15).map((evento) => (
+                      <div key={evento.id} className="p-2.5 sm:p-3 rounded-lg bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01]">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1.5 mb-1.5">
+                          <h3 className="font-bold text-sm sm:text-base text-white">
+                            {evento.titulo}
+                          </h3>
+                          <div className="flex gap-1.5 flex-wrap">
+                            <span className="text-xs bg-amber-600/80 text-white px-2 py-0.5 rounded-full font-semibold whitespace-nowrap">
+                              {formatarData(evento.data)}
+                            </span>
+                            <span className="text-xs bg-blue-600/80 text-white px-2 py-0.5 rounded-full font-semibold whitespace-nowrap">
+                              {getPublicoLabel(evento)}
+                            </span>
+                          </div>
+                        </div>
+                        <p className="text-xs sm:text-sm whitespace-pre-wrap text-gray-200 line-clamp-2">
+                          {evento.descricao}
+                        </p>
+                      </div>
+                    ))
+                  )}
+                </div>
+                
+                {eventos.length > 15 && (
+                  <div className="text-center mt-3">
+                    <a 
+                      href="/calendario" 
+                      className="text-blue-400 hover:text-blue-300 text-xs sm:text-sm font-bold hover:underline transition-all duration-300 inline-block"
+                    >
+                      Ver todos os {eventos.length} eventos →
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
-          {/* Informações adicionais */}
-          <div className={`border rounded-lg p-3 sm:p-4 md:p-5 mt-4 sm:mt-5 md:mt-6 ${
-            isDarkMode 
-              ? 'bg-amber-900/20 border-amber-700/50' 
-              : 'bg-amber-50 border-amber-200'
-          }`}>
-            <h3 className="text-xs sm:text-sm font-bold mb-2 text-amber-300">Dicas:</h3>
-            <ul className="text-xs sm:text-sm space-y-0.5 sm:space-y-1 text-amber-200">
-              <li>• Use títulos claros e descritivos</li>
-              <li>• Inclua: horário, local, o que trazer</li>
-              <li>• Para eventos recorrentes, crie um para cada data</li>
-              <li>• Seja claro e objetivo</li>
+          {/* Dicas - Mobile */}
+          <div className="lg:hidden rounded-2xl shadow-2xl p-3 sm:p-4 mt-3 sm:mt-4 bg-amber-900/30 backdrop-blur-lg border border-amber-700/50">
+            <h3 className="text-xs font-bold mb-2 text-amber-300">Dicas:</h3>
+            <ul className="text-xs space-y-0.5 text-amber-200">
+              <li>• Use títulos claros</li>
+              <li>• Selecione o público alvo</li>
+              <li>• Para turmas, escolha curso + turma</li>
             </ul>
           </div>
         </div>
       </main>
-
-      {/* Botão flutuante para adicionar evento */}
-      <button
-        onClick={openModal}
-        className="fixed bottom-5 sm:bottom-6 md:bottom-8 right-5 sm:right-6 md:right-8 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 z-50 flex items-center justify-center hover:scale-110 active:scale-95 group"
-        title="Adicionar novo evento"
-      >
-        <svg className="w-6 h-6 sm:w-7 sm:h-7 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
-        </svg>
-      </button>
-
-      {/* Modal para adicionar evento */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
-          <div className="rounded-2xl shadow-2xl max-w-lg w-full max-h-[95vh] overflow-y-auto border bg-gray-900/95 backdrop-blur-xl border-gray-700">
-            {/* Header da modal */}
-            <div className="flex justify-between items-center p-3 sm:p-4 md:p-6 border-b border-gray-700">
-              <div>
-                <h2 className="text-base sm:text-lg md:text-2xl font-bold text-white">
-                  Adicionar Evento
-                </h2>
-                <p className="text-xs sm:text-sm mt-0.5 sm:mt-1 text-gray-400">Preencha os detalhes</p>
-              </div>
-              <button
-                onClick={closeModal}
-                className="p-1.5 sm:p-2 rounded-full transition-all duration-300 flex-shrink-0 hover:bg-white/10 text-white"
-              >
-                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Conteúdo da modal */}
-            <div className="p-3 sm:p-4 md:p-6">
-              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
-                <div>
-                  <label htmlFor="titulo" className="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 text-white">
-                    Título *
-                  </label>
-                  <input
-                    type="text"
-                    id="titulo"
-                    value={titulo}
-                    onChange={(e) => setTitulo(e.target.value)}
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all duration-300 bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400"
-                    placeholder="Ex: Reunião..."
-                    maxLength={100}
-                  />
-                  <div className="text-xs mt-1 font-semibold text-gray-300">
-                    {titulo.length}/100
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="descricao" className="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 text-white">
-                    Descrição *
-                  </label>
-                  <textarea
-                    id="descricao"
-                    value={descricao}
-                    onChange={(e) => setDescricao(e.target.value)}
-                    rows={3}
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-medium transition-all duration-300 bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400"
-                    placeholder="Detalhes do evento..."
-                    maxLength={500}
-                  />
-                  <div className="text-xs mt-1 font-semibold text-gray-300">
-                    {descricao.length}/500
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="data" className="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 text-white">
-                    Data *
-                  </label>
-                  <input
-                    type="date"
-                    id="data"
-                    value={data}
-                    onChange={(e) => setData(e.target.value)}
-                    min={dataMinima}
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all duration-300 bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]"
-                  />
-                </div>
-
-                {/* Mensagem de feedback */}
-                {message && (
-                  <div className={`p-2.5 sm:p-3 md:p-4 rounded-lg text-xs sm:text-sm font-semibold shadow-lg ${
-                    message.includes('sucesso') 
-                      ? 'bg-green-600/20 text-green-100 border-2 border-green-500/30' 
-                      : 'bg-red-600/20 text-red-100 border-2 border-red-500/30'
-                  }`}>
-                    {message}
-                  </div>
-                )}
-
-                {/* Botões */}
-                <div className="flex gap-2 pt-2">
-                  <button
-                    type="submit"
-                    disabled={loading || !titulo.trim() || !descricao.trim() || !data}
-                    className="flex-1 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg text-sm sm:text-base font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                  >
-                    {loading ? 'Criando...' : 'Criar'}
-                  </button>
-                  
-                  <button
-                    type="button"
-                    onClick={closeModal}
-                    className="px-3 sm:px-4 py-2.5 sm:py-3 border-2 rounded-lg text-sm sm:text-base font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] border-white/30 text-white hover:bg-white/10"
-                  >
-                    Cancelar
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
 
       <Footer />
       </div>

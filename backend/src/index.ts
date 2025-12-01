@@ -608,6 +608,9 @@ app.get('/calendario', async (req, res) => {
         titulo: true,
         descricao: true,
         data: true,
+        tipoPublico: true,
+        cursoId: true,
+        turma: true,
       },
       orderBy: {
         data: 'asc',
@@ -652,10 +655,36 @@ app.get('/eventos', async (req, res) => {
 
 app.post('/calendario', async (req, res) => {
   try {
-    const { titulo, descricao, data } = req.body;
+    const { titulo, descricao, data, tipoPublico = 'TODOS', cursoId, turma } = req.body;
 
     if (!titulo || !data) {
       return res.status(400).json({ error: 'Os campos "titulo" e "data" são obrigatórios.' });
+    }
+
+    // Validar tipoPublico
+    if (!['TODOS', 'CURSO', 'TURMA'].includes(tipoPublico)) {
+      return res.status(400).json({ error: 'tipoPublico deve ser TODOS, CURSO ou TURMA' });
+    }
+
+    // Se não for para todos, validar cursoId
+    if (tipoPublico !== 'TODOS' && !cursoId) {
+      return res.status(400).json({ error: 'cursoId é obrigatório quando tipoPublico não é TODOS' });
+    }
+
+    // Se for para turma, validar turma
+    if (tipoPublico === 'TURMA' && !turma) {
+      return res.status(400).json({ error: 'turma é obrigatório quando tipoPublico é TURMA' });
+    }
+
+    // Validar se o curso existe (se informado)
+    if (tipoPublico !== 'TODOS') {
+      const cursoExiste = await prisma.curso.findUnique({
+        where: { id: parseInt(cursoId) }
+      });
+
+      if (!cursoExiste) {
+        return res.status(400).json({ error: 'Curso especificado não existe' });
+      }
     }
 
     const novoEvento = await prisma.calendario.create({
@@ -663,6 +692,9 @@ app.post('/calendario', async (req, res) => {
         titulo,
         descricao,
         data: new Date(data),
+        tipoPublico,
+        cursoId: tipoPublico !== 'TODOS' ? parseInt(cursoId) : null,
+        turma: tipoPublico === 'TURMA' ? turma : null,
       },
     });
 
