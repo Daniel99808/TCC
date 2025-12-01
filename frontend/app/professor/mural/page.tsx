@@ -5,7 +5,6 @@ import HeaderProfessor from '../../components/header_professor';
 import Footer from '../../components/footer';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { useDarkMode } from '../../contexts/DarkModeContext';
-import { useSidebar } from '../../contexts/SidebarContext';
 import { apiUrl } from '@/lib/api';
 
 interface Curso {
@@ -34,7 +33,6 @@ export default function MuralProfessor() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const { isDarkMode } = useDarkMode();
-  const { isSidebarOpen } = useSidebar();
 
   useEffect(() => {
     fetchMessages();
@@ -184,9 +182,7 @@ export default function MuralProfessor() {
       >
         <HeaderProfessor />
       
-      <main className={`transition-all duration-300 flex-1 p-3 sm:p-4 md:p-6 lg:p-8 flex flex-col items-center overflow-auto animate-fade-in ${
-        isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'
-      }`}>
+      <main className="transition-all duration-300 flex-1 p-3 sm:p-4 md:p-6 lg:p-8 flex flex-col items-center overflow-auto animate-fade-in lg:ml-[360px]">
         {/* Bem-vindo section */}
         <div className="text-center mb-6 sm:mb-8">
           <p className="text-sm sm:text-base text-red-600 font-semibold">Painel do Professor</p>

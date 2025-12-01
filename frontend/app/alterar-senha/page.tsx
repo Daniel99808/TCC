@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import DynamicHeader from '../components/DynamicHeader';
 import { useDarkMode } from '../contexts/DarkModeContext';
-import { useSidebar } from '../contexts/SidebarContext';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { apiUrl } from '@/lib/api';
 
@@ -76,7 +75,6 @@ export default function AlterarSenhaPage() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { isDarkMode } = useDarkMode();
-  const { isSidebarOpen } = useSidebar();
 
   const showToast = (message: string, type: 'success' | 'error') => {
     setToast({ message, type, visible: true });
@@ -182,9 +180,7 @@ export default function AlterarSenhaPage() {
       >
         <DynamicHeader />
 
-        <main className={`transition-all duration-300 flex-1 p-4 sm:p-6 lg:p-8 animate-fade-in pt-16 sm:pt-20 ${
-          isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'
-        }`}>
+        <main className="transition-all duration-300 flex-1 p-4 sm:p-6 lg:p-8 animate-fade-in pt-16 sm:pt-20 lg:ml-[360px]">
           <div className="max-w-2xl mx-auto">
             {/* Header da Página */}
             <div className="text-center mb-8 lg:mb-10">

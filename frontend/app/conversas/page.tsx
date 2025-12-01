@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import DynamicHeader from '../components/DynamicHeader';
 import { io } from 'socket.io-client';
 import { useDarkMode } from '../contexts/DarkModeContext';
-import { useSidebar } from '../contexts/SidebarContext';
 import Image from 'next/image';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { API_URL, apiUrl } from '@/lib/api';
@@ -70,7 +69,6 @@ export default function ConversasPage() {
   const [isDigitando, setIsDigitando] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const { isSidebarOpen } = useSidebar();
   const { isDarkMode } = useDarkMode();
 
   const scrollToBottom = (smooth = true) => {
@@ -546,9 +544,7 @@ Como posso te ajudar hoje?`,
       >
         <DynamicHeader />
         
-        <main className={`flex-1 pt-16 overflow-hidden transition-all duration-300 ${
-          isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'
-        }`}>
+        <main className="flex-1 pt-16 overflow-hidden transition-all duration-300 lg:ml-[360px]">
           {/* Container com padding/margin responsivo */}
           <div className="h-full w-full px-2 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-3 md:py-4" style={{ height: 'calc(100vh - 64px)' }}>
             <div className="h-full w-full max-w-[1800px] mx-auto flex relative z-10 rounded-2xl overflow-hidden shadow-2xl" style={{

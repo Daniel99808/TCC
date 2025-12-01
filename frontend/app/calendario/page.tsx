@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 import DynamicHeader from '../components/DynamicHeader';
 import Footer from '../components/footer';
 import { useDarkMode } from '../contexts/DarkModeContext';
-import { useSidebar } from '../contexts/SidebarContext';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { apiUrl } from '@/lib/api';
 
@@ -23,7 +22,6 @@ const CalendarioPage = () => {
   const [diaSelecionado, setDiaSelecionado] = useState<number | null>(null);
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
-  const { isSidebarOpen } = useSidebar();
   const { isDarkMode } = useDarkMode();
 
   const meses = [
@@ -156,9 +154,7 @@ const CalendarioPage = () => {
           </p>
         </div>
         
-        <main className={`transition-all duration-300 flex-1 p-2 sm:p-4 md:p-6 lg:p-8 relative z-0 animate-fade-in ${
-          isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'
-        }`}>
+        <main className="transition-all duration-300 flex-1 p-2 sm:p-4 md:p-6 lg:p-8 relative z-0 animate-fade-in lg:ml-[360px]">
         {/* Título Principal - Oculto no mobile */}
         <div className="hidden lg:block text-center mb-6 sm:mb-8">
           <p className="text-sm text-red-600 font-semibold">Comunidade</p>

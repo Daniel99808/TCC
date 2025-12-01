@@ -5,7 +5,6 @@ import Header from '../../components/header_adm';
 import Footer from '../../components/footer';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { useDarkMode } from '../../contexts/DarkModeContext';
-import { useSidebar } from '../../contexts/SidebarContext';
 import { apiUrl } from '@/lib/api';
 
 interface CalendarioEvento {
@@ -23,8 +22,6 @@ export default function CalendarioAdm() {
   const [message, setMessage] = useState('');
   const [eventos, setEventos] = useState<CalendarioEvento[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { isDarkMode } = useDarkMode();
-  const { isSidebarOpen } = useSidebar();
   const { isDarkMode } = useDarkMode();
 
   // Carregar eventos existentes
@@ -143,7 +140,7 @@ export default function CalendarioAdm() {
           </p>
         </div>
         
-        <main className={`flex-1 container mx-auto p-2 sm:p-3 md:p-4 lg:p-6 py-3 sm:py-4 md:py-6 lg:py-8 animate-fade-in transition-all duration-300 ${isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'}`}>
+        <main className="flex-1 container mx-auto p-2 sm:p-3 md:p-4 lg:p-6 py-3 sm:py-4 md:py-6 lg:py-8 animate-fade-in transition-all duration-300 lg:ml-[360px]">
         <div className="max-w-4xl mx-auto">
           {/* Cabeçalho da página - Oculto no mobile */}
           <div className="hidden lg:block rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6 lg:mb-8 bg-white/10 backdrop-blur-lg border border-white/20">

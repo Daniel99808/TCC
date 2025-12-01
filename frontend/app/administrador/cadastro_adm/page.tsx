@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Header from '../../components/header_adm';
 import Footer from '../../components/footer';
 import { useDarkMode } from '../../contexts/DarkModeContext';
-import { useSidebar } from '../../contexts/SidebarContext';
 import { apiUrl } from '@/lib/api';
 
 interface CadastroData {
@@ -52,7 +51,6 @@ export default function CadastroAdmPage() {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const router = useRouter();
   const { isDarkMode } = useDarkMode();
-  const { isSidebarOpen } = useSidebar();
 
   // Buscar cursos disponíveis
   useEffect(() => {
@@ -187,7 +185,7 @@ export default function CadastroAdmPage() {
         </p>
       </div>
       
-      <main className={`flex-1 flex items-center justify-center p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in transition-all duration-300 ${isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'}`}>
+      <main className="flex-1 flex items-center justify-center p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in transition-all duration-300 lg:ml-[360px]">
         <div className="p-4 sm:p-6 md:p-8 lg:p-10 rounded-2xl shadow-2xl w-full max-w-md bg-white/10 backdrop-blur-lg border border-white/20">
           {/* Cabeçalho - Oculto no mobile */}
           <div className="text-center mb-4 sm:mb-6 md:mb-8 hidden lg:block">

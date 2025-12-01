@@ -5,7 +5,6 @@ import Header from '../../components/header_adm';
 import Footer from '../../components/footer';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { useDarkMode } from '../../contexts/DarkModeContext';
-import { useSidebar } from '../../contexts/SidebarContext';
 import { apiUrl } from '@/lib/api';
 
 interface Usuario {
@@ -31,7 +30,6 @@ export default function AAPMPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
   const { isDarkMode } = useDarkMode();
-  const { isSidebarOpen } = useSidebar();
 
   const turmas = ['Geral', 'A', 'B'];
   const cursos = ['Téc. Plástico', 'Téc. Logística', 'Téc. Mecânica Industrial', 'Téc. Análise e Desenvolvimento de Sistemas', 'Téc. Eletroeletrônica'];
@@ -145,7 +143,7 @@ export default function AAPMPage() {
           </p>
         </div>
         
-        <main className={`flex-1 p-2 sm:p-4 md:p-6 lg:p-8 animate-fade-in transition-all duration-300 ${isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'}`}>
+        <main className="flex-1 p-2 sm:p-4 md:p-6 lg:p-8 animate-fade-in transition-all duration-300 lg:ml-[360px]">
           <div className="max-w-7xl mx-auto">
             {/* Cabeçalho Melhorado - Oculto no mobile */}
             <div className="mb-6 sm:mb-8 hidden lg:block">

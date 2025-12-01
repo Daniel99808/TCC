@@ -5,7 +5,6 @@ import Header from '../../components/header_adm';
 import Footer from '../../components/footer';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { useDarkMode } from '../../contexts/DarkModeContext';
-import { useSidebar } from '../../contexts/SidebarContext';
 import { apiUrl } from '@/lib/api';
 
 interface Curso {
@@ -34,7 +33,6 @@ export default function MuralAdm() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const { isDarkMode } = useDarkMode();
-  const { isSidebarOpen } = useSidebar();
 
   useEffect(() => {
     fetchMessages();
@@ -195,7 +193,7 @@ export default function MuralAdm() {
       </div>
       
       {/* Main agora usa 'overflow-auto' para gerenciar o scroll de todo o conteúdo */}
-      <main className={`flex-1 p-2 sm:p-4 md:p-6 lg:p-8 flex flex-col items-center overflow-y-auto overflow-x-hidden animate-fade-in transition-all duration-300 ${isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'}`}>
+      <main className="flex-1 p-2 sm:p-4 md:p-6 lg:p-8 flex flex-col items-center overflow-y-auto overflow-x-hidden animate-fade-in transition-all duration-300 lg:ml-[360px]">
         {/* Bem-vindo section - Oculto no mobile */}
         <div className="text-center mb-6 sm:mb-8 hidden lg:block">
           <p className="text-sm text-red-600 font-semibold">Painel Administrativo</p>

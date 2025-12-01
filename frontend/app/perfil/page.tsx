@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import DynamicHeader from '../components/DynamicHeader';
 import { useDarkMode } from '../contexts/DarkModeContext';
-import { useSidebar } from '../contexts/SidebarContext';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { apiUrl } from '@/lib/api';
 
@@ -23,7 +22,6 @@ export default function PerfilPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
   const { isDarkMode, toggleDarkMode } = useDarkMode();
-  const { isSidebarOpen } = useSidebar();
 
   useEffect(() => {
     const buscarPerfilUsuario = async () => {
@@ -108,9 +106,7 @@ export default function PerfilPage() {
         >
           <DynamicHeader />
           
-          <main className={`transition-all duration-300 flex-1 p-3 sm:p-6 lg:p-8 animate-fade-in pt-16 sm:pt-20 ${
-            isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'
-          }`}>
+          <main className="transition-all duration-300 flex-1 p-3 sm:p-6 lg:p-8 animate-fade-in pt-16 sm:pt-20 lg:ml-[360px]">
             <div className="max-w-5xl mx-auto">
               
               {/* Header com título */}

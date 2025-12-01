@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import DynamicHeader from '../components/DynamicHeader';
 import { useDarkMode } from '../contexts/DarkModeContext';
-import { useSidebar } from '../contexts/SidebarContext';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { apiUrl } from '@/lib/api';
 
@@ -44,7 +43,6 @@ export default function InicioPage() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [ultimasAtividades, setUltimasAtividades] = useState<any[]>([]);
-  const { isSidebarOpen } = useSidebar();
 
   useEffect(() => {
     const dadosUsuario = localStorage.getItem('usuarioLogado');
@@ -157,9 +155,7 @@ export default function InicioPage() {
       >
         <DynamicHeader />
         
-        <main className={`transition-all duration-300 pt-16 lg:pt-20 pb-8 px-4 sm:px-6 lg:px-8 animate-fade-in relative z-0 ${
-          isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'
-        }`}>
+        <main className="transition-all duration-300 pt-16 lg:pt-20 pb-8 px-4 sm:px-6 lg:px-8 animate-fade-in relative z-0 lg:ml-[360px]">
           <div className="max-w-7xl mx-auto">
             {/* Header da Dashboard */}
             <div className="mb-6 lg:mb-8">

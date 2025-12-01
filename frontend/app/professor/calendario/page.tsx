@@ -5,7 +5,6 @@ import HeaderProfessor from '../../components/header_professor';
 import Footer from '../../components/footer';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { useDarkMode } from '../../contexts/DarkModeContext';
-import { useSidebar } from '../../contexts/SidebarContext';
 import { apiUrl } from '@/lib/api';
 
 interface CalendarioEvento {
@@ -24,7 +23,6 @@ export default function CalendarioProfessor() {
   const [eventos, setEventos] = useState<CalendarioEvento[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { isDarkMode } = useDarkMode();
-  const { isSidebarOpen } = useSidebar();
 
   // Carregar eventos existentes
   useEffect(() => {
@@ -131,7 +129,7 @@ export default function CalendarioProfessor() {
       <div className="min-h-screen flex flex-col pt-16 lg:pt-0" style={{backgroundImage: 'url(/fundo.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed'}}>
         <HeaderProfessor />
         
-        <main className={`flex-1 container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 animate-fade-in transition-all duration-300 ${isSidebarOpen ? 'lg:ml-[360px]' : 'lg:ml-0'}`}>
+        <main className="flex-1 container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 animate-fade-in transition-all duration-300 lg:ml-[360px]">
         <div className="max-w-4xl mx-auto">
           {/* Cabeçalho da página */}
           <div className="rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6 bg-white/10 backdrop-blur-lg border border-white/20">
