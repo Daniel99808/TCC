@@ -27,6 +27,7 @@ model User {
   conversasUsuario1 Conversa[] @relation("ConversasUsuario1")
   conversasUsuario2 Conversa[] @relation("ConversasUsuario2")
   mensagensEnviadas Mensagem[]
+  atividades        Atividade[]
   curso             Curso?     @relation(fields: [cursoId], references: [id])
   
 }
@@ -82,4 +83,14 @@ model Mensagem {
   conversaId  Int
   conversa    Conversa @relation(fields: [conversaId], references: [id])
   remetente   User     @relation(fields: [remetenteId], references: [id])
+}
+
+model Atividade {
+  id          Int      @id @default(autoincrement())
+  usuarioId   Int
+  usuario     User     @relation(fields: [usuarioId], references: [id])
+  tipo        String   // 'mensagem', 'senha', 'aviso', 'evento', 'login', 'perfil'
+  titulo      String
+  descricao   String
+  createdAt   DateTime @default(now())
 }

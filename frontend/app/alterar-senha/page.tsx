@@ -5,6 +5,7 @@ import DynamicHeader from '../components/DynamicHeader';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { apiUrl } from '@/lib/api';
+import { registrarAtividade } from '@/lib/atividades';
 
 type Toast = {
   message: string;
@@ -138,29 +139,28 @@ export default function AlterarSenhaPage() {
       if (response.ok) {
         showToast('Senha alterada com sucesso!', 'success');
         
-        // Registrar atividade
-        const atividade = {
-          tipo: 'senha',
-          titulo: 'Senha alterada',
-          descricao: 'Você alterou sua senha com sucesso',
-          tempo: 'Agora'
-        };
-        const atividadesExistentes = JSON.parse(localStorage.getItem('ultimasAtividades') || '[]');
-        localStorage.setItem('ultimasAtividades', JSON.stringify([atividade, ...atividadesExistentes].slice(0, 5)));
+        // Registrar atividade no servidor
+        await registrarAtividade(
+          usuario.id,
+          'senha',
+          'Senha alterada',
+          'Você alterou sua senha com sucesso'
+        );
         
         setSenhaAtual('');
         setNovaSenha('');
         setConfirmarSenha('');
+        
         setTimeout(() => {
-          window.location.href = '/perfil';
+          window.location.href = '/inicio';
         }, 2000);
       } else {
-        const data = await response.json();
-        showToast(data.error || 'Erro ao alterar senha', 'error');
+        const error = await response.json();
+        showToast(error.message || 'Erro ao alterar senha', 'error');
       }
     } catch (error) {
       console.error('Erro:', error);
-      showToast('Erro na conexão com o servidor', 'error');
+      showToast('Erro ao alterar senha', 'error');
     } finally {
       setIsLoading(false);
     }

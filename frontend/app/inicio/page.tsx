@@ -81,40 +81,23 @@ export default function InicioPage() {
       if (resConversas.ok) {
         const conversas: Conversa[] = await resConversas.json();
         let naoLidas = 0;
-        const atividadesMensagens: any[] = [];
         
         conversas.forEach(conversa => {
           conversa.mensagens.forEach(msg => {
             if (!msg.lida && msg.remetente.id !== usuario.id) {
               naoLidas++;
             }
-            // Adicionar às atividades recentes (últimas 3)
-            if (msg.remetente.id !== usuario.id) {
-              atividadesMensagens.push({
-                tipo: 'mensagem',
-                titulo: 'Nova mensagem recebida',
-                descricao: msg.conteudo.substring(0, 60) + '...',
-                tempo: calcularTempoDecorrido(new Date().toISOString())
-              });
-            }
           });
         });
         setMensagensNaoLidas(naoLidas);
-        setUltimasAtividades(prev => [...atividadesMensagens.slice(0, 3), ...prev]);
       }
 
-      // Buscar atividades do localStorage (alteração de senha, etc)
-      const atividadesLocal = localStorage.getItem('ultimasAtividades');
-      if (atividadesLocal) {
-        try {
-          const atividades = JSON.parse(atividadesLocal);
-          setUltimasAtividades(prev => [...atividades.slice(0, 2), ...prev]);
-        } catch (error) {
-          console.error('Erro ao carregar atividades locais:', error);
-        }
+      // Buscar atividades recentes do servidor
+      const resAtividades = await fetch(apiUrl(`/atividades/${usuario.id}`));
+      if (resAtividades.ok) {
+        const atividades = await resAtividades.json();
+        setUltimasAtividades(atividades);
       }
-
-
 
     } catch (error) {
       console.error('Erro ao carregar dashboard:', error);
@@ -125,12 +108,15 @@ export default function InicioPage() {
     const agora = new Date();
     const dataPassada = new Date(data);
     const diff = agora.getTime() - dataPassada.getTime();
+    const minutos = Math.floor(diff / (1000 * 60));
     const horas = Math.floor(diff / (1000 * 60 * 60));
+    const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
     
-    if (horas < 1) return 'Há poucos minutos';
-    if (horas < 24) return `Há ${horas} hora${horas > 1 ? 's' : ''}`;
-    const dias = Math.floor(horas / 24);
-    return `Há ${dias} dia${dias > 1 ? 's' : ''}`;
+    if (minutos < 1) return 'Agora mesmo';
+    if (minutos < 60) return `Há ${minutos} min`;
+    if (horas < 24) return `Há ${horas}h`;
+    if (dias < 7) return `Há ${dias}d`;
+    return `Há ${Math.floor(dias / 7)}s`;
   };
 
   if (!usuarioLogado) {
@@ -146,7 +132,7 @@ export default function InicioPage() {
       <div 
         className="min-h-screen relative"
         style={{
-          backgroundImage: 'url(/fundo.png)',
+          backgroundImage: `url(/fundo.png)`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -172,97 +158,95 @@ export default function InicioPage() {
             {/* Cards de Estatísticas - Estilo Moderno */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-6 lg:mb-8">
               {/* Card Avisos */}
-              <div className="bg-gradient-to-br from-red-900/40 to-red-950/40 backdrop-blur-md border border-red-800/50 group relative overflow-hidden rounded-2xl p-5 lg:p-6 transition-all duration-300 hover:scale-[1.02] shadow-xl hover:shadow-2xl">
+              <a href="/mural" className="bg-gradient-to-br from-red-900/40 to-red-950/40 backdrop-blur-md border border-red-800/50 group relative overflow-hidden rounded-2xl p-5 lg:p-6 transition-all duration-300 hover:scale-[1.02] shadow-xl hover:shadow-2xl hover:shadow-red-500/20 cursor-pointer">
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center bg-red-500/20 group-hover:scale-110 transition-transform">
+                      <svg className="w-6 h-6 lg:w-7 lg:h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                      </svg>
+                    </div>
+                    {avisosNovos > 0 && (
+                      <span className="px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full">
+                        Novo
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="text-3xl lg:text-4xl font-bold mb-2 text-white">
+                    {avisosNovos}
+                  </h3>
+                  <p className="text-sm lg:text-base font-medium text-gray-400">
+                    Avisos Novos
+                  </p>
+                </div>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+              </a>
+
+              {/* Card Eventos */}
+              <a href="/calendario" className="bg-gradient-to-br from-blue-900/40 to-blue-950/40 backdrop-blur-md border border-blue-800/50 group relative overflow-hidden rounded-2xl p-5 lg:p-6 transition-all duration-300 hover:scale-[1.02] shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 cursor-pointer">
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center bg-blue-500/20 group-hover:scale-110 transition-transform">
+                      <svg className="w-6 h-6 lg:w-7 lg:h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    {eventosProximos > 0 && (
+                      <span className="px-3 py-1 bg-blue-500 text-white text-xs font-bold rounded-full">
+                        {eventosProximos}
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="text-3xl lg:text-4xl font-bold mb-2 text-white">
+                    {eventosProximos}
+                  </h3>
+                  <p className="text-sm lg:text-base font-medium text-gray-400">
+                    Eventos Este Mês
+                  </p>
+                </div>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+              </a>
+
+              {/* Card Mensagens */}
+              <a href="/conversas" className="bg-gradient-to-br from-purple-900/40 to-purple-950/40 backdrop-blur-md border border-purple-800/50 group relative overflow-hidden rounded-2xl p-5 lg:p-6 transition-all duration-300 hover:scale-[1.02] shadow-xl hover:shadow-2xl hover:shadow-purple-500/20 cursor-pointer">
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center bg-purple-500/20 group-hover:scale-110 transition-transform">
+                      <svg className="w-6 h-6 lg:w-7 lg:h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                    </div>
+                    {mensagensNaoLidas > 0 && (
+                      <span className="px-3 py-1 bg-purple-500 text-white text-xs font-bold rounded-full animate-pulse">
+                        {mensagensNaoLidas}
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="text-3xl lg:text-4xl font-bold mb-2 text-white">
+                    {mensagensNaoLidas}
+                  </h3>
+                  <p className="text-sm lg:text-base font-medium text-gray-400">
+                    Mensagens Não Lidas
+                  </p>
+                </div>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+              </a>
+            </div>
+
+            {/* Grid de Conteúdo Principal */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+              {/* Acesso Rápido - 2 colunas */}
+              <div className="lg:col-span-2">
+                <div className="bg-gray-800/50 backdrop-blur-md border border-gray-700 rounded-2xl p-5 lg:p-6 shadow-xl">
+                  <h2 className="text-xl lg:text-2xl font-bold mb-5 flex items-center gap-2 text-white">
                     <svg className="w-6 h-6 lg:w-7 lg:h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                    </svg>
-                  </div>
-                  {avisosNovos > 0 && (
-                    <span className="px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full">
-                      Novo
-                    </span>
-                  )}
-                </div>
-                <h3 className="text-3xl lg:text-4xl font-bold mb-2 text-white">
-                  {avisosNovos}
-                </h3>
-                <p className="text-sm lg:text-base font-medium text-gray-400">
-                  Avisos Novos
-                </p>
-              </div>
-              <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-            </div>
-
-            {/* Card Eventos */}
-            <div className="bg-gradient-to-br from-blue-900/40 to-blue-950/40 backdrop-blur-md border border-blue-800/50 group relative overflow-hidden rounded-2xl p-5 lg:p-6 transition-all duration-300 hover:scale-[1.02] shadow-xl hover:shadow-2xl">
-              <div className="relative z-10">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center bg-blue-500/20 group-hover:scale-110 transition-transform">
-                    <svg className="w-6 h-6 lg:w-7 lg:h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  {eventosProximos > 0 && (
-                    <span className="px-3 py-1 bg-blue-500 text-white text-xs font-bold rounded-full">
-                      {eventosProximos}
-                    </span>
-                  )}
-                </div>
-                <h3 className="text-3xl lg:text-4xl font-bold mb-2 text-white">
-                  {eventosProximos}
-                </h3>
-                <p className="text-sm lg:text-base font-medium text-gray-400">
-                  Eventos Este Mês
-                </p>
-              </div>
-              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-            </div>
-
-            {/* Card Mensagens */}
-            <div className="bg-gradient-to-br from-purple-900/40 to-purple-950/40 backdrop-blur-md border border-purple-800/50 group relative overflow-hidden rounded-2xl p-5 lg:p-6 transition-all duration-300 hover:scale-[1.02] shadow-xl hover:shadow-2xl">
-              <div className="relative z-10">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center bg-purple-500/20 group-hover:scale-110 transition-transform">
-                    <svg className="w-6 h-6 lg:w-7 lg:h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                  </div>
-                  {mensagensNaoLidas > 0 && (
-                    <span className="px-3 py-1 bg-purple-500 text-white text-xs font-bold rounded-full animate-pulse">
-                      {mensagensNaoLidas}
-                    </span>
-                  )}
-                </div>
-                <h3 className="text-3xl lg:text-4xl font-bold mb-2 text-white">
-                  {mensagensNaoLidas}
-                </h3>
-                <p className="text-sm lg:text-base font-medium text-gray-400">
-                  Mensagens Não Lidas
-                </p>
-              </div>
-              <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
-            {/* Acesso Rápido - 2 colunas */}
-            <div className="lg:col-span-2">
-              <div className="bg-gray-800/50 backdrop-blur-md border border-gray-700 rounded-2xl p-5 lg:p-6 shadow-xl">
-                <h2 className="text-xl lg:text-2xl font-bold mb-5 flex items-center gap-2 text-white">
-                  <svg className="w-6 h-6 lg:w-7 lg:h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                     Acesso Rápido
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4">
-                    <a
-                      href="/mural"
-                      className="group p-4 lg:p-5 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600"
-                  >
-                    <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-2 bg-red-500/20 group-hover:scale-110 transition-transform">
+                    <a href="/mural" className="group p-4 lg:p-5 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600">
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-2 bg-red-500/20 group-hover:scale-110 transition-transform">
                         <svg className="w-5 h-5 lg:w-6 lg:h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                         </svg>
@@ -275,59 +259,38 @@ export default function InicioPage() {
                       </p>
                     </a>
 
-                  <a
-                    href="/calendario"
-                    className="group p-4 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600"
-                  >
-                    <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 bg-blue-500/20 group-hover:scale-110 transition-transform">
-                      <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    <h3 className="font-semibold mb-1 text-white">
-                      Calendário
-                    </h3>
-                    <p className="text-sm text-gray-400">
-                      Eventos e datas importantes
-                    </p>
-                  </a>
+                    <a href="/calendario" className="group p-4 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600">
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 bg-blue-500/20 group-hover:scale-110 transition-transform">
+                        <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                      <h3 className="font-semibold mb-1 text-white">Calendário</h3>
+                      <p className="text-sm text-gray-400">Eventos e datas importantes</p>
+                    </a>
 
-                  <a
-                    href="/conversas"
-                    className="group p-4 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600"
-                  >
-                    <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 bg-purple-500/20 group-hover:scale-110 transition-transform">
-                      <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                      </svg>
-                    </div>
-                    <h3 className="font-semibold mb-1 text-white">
-                      Conversas
-                    </h3>
-                    <p className="text-sm text-gray-400">
-                      Mensagens e chat
-                    </p>
-                  </a>
+                    <a href="/conversas" className="group p-4 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600">
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 bg-purple-500/20 group-hover:scale-110 transition-transform">
+                        <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                      </div>
+                      <h3 className="font-semibold mb-1 text-white">Conversas</h3>
+                      <p className="text-sm text-gray-400">Mensagens e chat</p>
+                    </a>
 
-                  <a
-                    href="/perfil"
-                    className="group p-4 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600"
-                  >
-                    <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 bg-green-500/20 group-hover:scale-110 transition-transform">
-                      <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                    </div>
-                    <h3 className="font-semibold mb-1 text-white">
-                      Meu Perfil
-                    </h3>
-                    <p className="text-sm text-gray-400">
-                      Configurações e dados
-                    </p>
-                  </a>
+                    <a href="/perfil" className="group p-4 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600">
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 bg-green-500/20 group-hover:scale-110 transition-transform">
+                        <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                      </div>
+                      <h3 className="font-semibold mb-1 text-white">Meu Perfil</h3>
+                      <p className="text-sm text-gray-400">Configurações e dados</p>
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
 
               {/* Atividades Recentes - 1 coluna */}
               <div className="lg:col-span-1">
@@ -363,13 +326,43 @@ export default function InicioPage() {
                                   </svg>
                                 )
                               };
+                            case 'login':
+                              return {
+                                bg: 'from-blue-500 to-blue-600',
+                                texto: 'text-blue-500',
+                                icone: (
+                                  <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                                  </svg>
+                                )
+                              };
+                            case 'aviso':
+                              return {
+                                bg: 'from-yellow-500 to-yellow-600',
+                                texto: 'text-yellow-500',
+                                icone: (
+                                  <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                  </svg>
+                                )
+                              };
+                            case 'evento':
+                              return {
+                                bg: 'from-cyan-500 to-cyan-600',
+                                texto: 'text-cyan-500',
+                                icone: (
+                                  <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                  </svg>
+                                )
+                              };
                             default:
                               return {
                                 bg: 'from-red-500 to-red-600',
                                 texto: 'text-red-500',
                                 icone: (
                                   <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                   </svg>
                                 )
                               };
@@ -379,10 +372,7 @@ export default function InicioPage() {
                         const { bg, texto } = getIconeECor(atividade.tipo);
 
                         return (
-                          <div
-                            key={index}
-                            className="p-3 lg:p-4 rounded-xl transition-all duration-300 hover:scale-[1.02] bg-gray-700/50 hover:bg-gray-700 border border-gray-600"
-                          >
+                          <div key={index} className="p-3 lg:p-4 rounded-xl transition-all duration-300 hover:scale-[1.02] bg-gray-700/50 hover:bg-gray-700 border border-gray-600">
                             <div className="flex items-start gap-3">
                               <div className={`w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br ${bg} rounded-lg flex items-center justify-center flex-shrink-0`}>
                                 {getIconeECor(atividade.tipo).icone}
@@ -394,7 +384,7 @@ export default function InicioPage() {
                                 <p className="text-xs lg:text-sm mb-1 line-clamp-2 text-gray-400">
                                   {atividade.descricao}
                                 </p>
-                                <p className={`text-xs font-medium ${texto}`}>{atividade.tempo}</p>
+                                <p className={`text-xs font-medium ${texto}`}>{calcularTempoDecorrido(atividade.createdAt)}</p>
                               </div>
                             </div>
                           </div>

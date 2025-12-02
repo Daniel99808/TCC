@@ -31,6 +31,14 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Mapa para armazenar atividades em memória (usuarioId -> atividades[])
+const atividadesMemoria = new Map<number, Array<{
+  tipo: string;
+  titulo: string;
+  descricao: string;
+  createdAt: string;
+}>>();
+
 // Rota inicial
 app.get('/', (req, res) => {
   res.send('Servidor rodando!');
@@ -193,6 +201,19 @@ app.post('/login', async (req, res) => {
     }
 
     const { password: _, ...userResponse } = user;
+
+    // Registrar atividade de login
+    const atividade = {
+      tipo: 'login',
+      titulo: 'Login realizado',
+      descricao: `Você fez login no sistema`,
+      createdAt: new Date().toISOString()
+    };
+    
+    if (!atividadesMemoria.has(user.id)) {
+      atividadesMemoria.set(user.id, []);
+    }
+    atividadesMemoria.get(user.id)!.unshift(atividade);
 
     res.json({
       message: 'Login realizado com sucesso',
@@ -764,6 +785,58 @@ app.put('/alterar-senha', async (req, res) => {
       error: 'Failed to change password',
       message: 'Erro interno do servidor'
     });
+  }
+});
+
+// Rota para registrar uma atividade
+app.post('/atividades/:usuarioId', async (req, res) => {
+  try {
+    const { usuarioId } = req.params;
+    const { tipo, titulo, descricao } = req.body;
+
+    if (!tipo || !titulo || !descricao) {
+      return res.status(400).json({ error: 'Campos obrigatórios faltando' });
+    }
+
+    const id = parseInt(usuarioId);
+    const atividade = {
+      tipo,
+      titulo,
+      descricao,
+      createdAt: new Date().toISOString()
+    };
+
+    // Adicionar à memória
+    if (!atividadesMemoria.has(id)) {
+      atividadesMemoria.set(id, []);
+    }
+    
+    const atividades = atividadesMemoria.get(id)!;
+    atividades.unshift(atividade); // Adicionar no início
+    
+    // Manter apenas as últimas 50 atividades
+    if (atividades.length > 50) {
+      atividades.pop();
+    }
+
+    res.json({ success: true, atividade });
+  } catch (error) {
+    console.error('Error registering activity:', error);
+    res.status(500).json({ error: 'Failed to register activity' });
+  }
+});
+
+// Rota para buscar atividades do usuário
+app.get('/atividades/:usuarioId', async (req, res) => {
+  try {
+    const { usuarioId } = req.params;
+    const id = parseInt(usuarioId);
+
+    const atividades = atividadesMemoria.get(id) || [];
+    res.json(atividades.slice(0, 5)); // Retorna as 5 mais recentes
+  } catch (error) {
+    console.error('Error fetching activities:', error);
+    res.status(500).json({ error: 'Failed to fetch activities' });
   }
 });
 
