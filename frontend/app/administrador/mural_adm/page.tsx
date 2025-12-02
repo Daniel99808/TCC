@@ -32,6 +32,8 @@ export default function MuralAdm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const { isDarkMode } = useDarkMode();
 
   useEffect(() => {
@@ -113,49 +115,89 @@ export default function MuralAdm() {
         payload.turma = turmaSelecionada;
       }
       
-      console.log('Enviando payload:', payload);
+      const method = editingId ? 'PATCH' : 'POST';
+      const endpoint = editingId ? `/mural/${editingId}` : '/mural';
       
-      const response = await fetch(apiUrl('/mural'), {
-        method: 'POST',
+      const response = await fetch(apiUrl(endpoint), {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
       });
 
-      console.log('Response status:', response.status);
-      console.log('Response ok:', response.ok);
-
       if (response.ok) {
         const data = await response.json();
-        console.log('Mensagem criada:', data);
-        setMessage('Mensagem publicada com sucesso!');
+        setMessage(editingId ? 'Mensagem atualizada com sucesso!' : 'Mensagem publicada com sucesso!');
         setNewMessage('');
         setTipoPublico('TODOS');
         setCursoSelecionado('');
         setTurmaSelecionada('');
+        setEditingId(null);
         setIsModalOpen(false);
         
         // Recarregar mensagens
         await fetchMessages();
       } else {
         const responseText = await response.text();
-        console.error('Response text:', responseText);
         try {
           const errorData = JSON.parse(responseText);
-          console.error('Erro na resposta:', errorData);
           setMessage(`Erro ao publicar: ${errorData.error || 'Erro desconhecido'}`);
         } catch (e) {
-          console.error('Resposta não é JSON válido');
           setMessage(`Erro ao publicar: Status ${response.status}`);
         }
       }
     } catch (error) {
       console.error('Erro ao publicar mensagem:', error);
-      console.error('Erro ao publicar mensagem:', error);
       setMessage('Erro de conexão com o servidor.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleEdit = (msg: Message) => {
+    console.log('Editando mensagem:', msg);
+    setNewMessage(msg.conteudo);
+    setTipoPublico(msg.tipoPublico as 'TODOS' | 'CURSO' | 'TURMA');
+    setCursoSelecionado(msg.cursoId?.toString() || '');
+    setTurmaSelecionada(msg.turma || '');
+    setEditingId(msg.id);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteMessage = async (id: number) => {
+    console.log('Deletando mensagem com ID:', id);
+    if (!window.confirm('Tem certeza que deseja deletar esta mensagem?')) return;
+    
+    setDeletingId(id);
+    try {
+      const url = apiUrl(`/mural/${id}`);
+      console.log('URL da requisição DELETE:', url);
+      
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('Status da resposta:', response.status);
+      console.log('Response ok:', response.ok);
+
+      if (response.ok) {
+        setMessages(prev => prev.filter(m => m.id !== id));
+        setMessage('Mensagem deletada com sucesso!');
+        setTimeout(() => setMessage(''), 3000);
+      } else {
+        const text = await response.text();
+        console.error('Erro na resposta:', text);
+        setMessage('Erro ao deletar mensagem');
+      }
+    } catch (error) {
+      console.error('Erro ao deletar mensagem:', error);
+      setMessage('Erro de conexão com o servidor.');
+    } finally {
+      setDeletingId(null);
     }
   };
   
@@ -205,9 +247,15 @@ export default function MuralAdm() {
         <div className="w-full max-w-3xl mb-3 sm:mb-4 md:mb-6 px-2 sm:px-0">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 rounded-xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] text-sm sm:text-base md:text-lg"
+            className="flex items-center justify-center gap-2.5 sm:gap-3 px-4 sm:px-6 py-2.5 sm:py-3 md:py-4 rounded-lg transition-all duration-300 w-full group relative overflow-hidden text-sm sm:text-base md:text-lg text-red-500 hover:text-red-400 bg-gradient-to-r from-red-900/30 to-red-800/20 hover:from-red-900/50 hover:to-red-800/40 border border-red-700/40 hover:border-red-600/60 shadow-lg hover:shadow-xl hover:shadow-red-500/20 font-bold"
           >
-            📝 Adicionar Mensagem
+            {/* Efeito de brilho ao hover */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+            </div>
+            
+            <span className="text-xl sm:text-2xl relative z-10 transition-all duration-300 group-hover:scale-110">+</span>
+            <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-1">Adicionar Mensagem</span>
           </button>
         </div>
 
@@ -225,7 +273,7 @@ export default function MuralAdm() {
           {/* Mural Card com altura máxima controlada */}
           <div className="w-full max-w-3xl px-2 sm:px-0 rounded-2xl shadow-2xl p-3 sm:p-4 md:p-6 lg:p-8 bg-white/10 backdrop-blur-lg border border-white/20">
           {/* A div interna é o painel de scroll */}
-          <div className="flex-1 overflow-y-auto space-y-3 sm:space-y-4 md:space-y-6 max-h-[60vh] sm:max-h-[70vh]">
+          <div className="flex-1 overflow-y-auto space-y-2 sm:space-y-2.5 md:space-y-3 max-h-[60vh] sm:max-h-[70vh] scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style]:none [overflow-y-scroll]:scrollbar-none">
             {messages.length === 0 ? (
               <div className="text-center py-6 sm:py-8 transition-colors duration-300 text-gray-300">
                 <div className="text-4xl sm:text-5xl mb-3 sm:mb-4">📭</div>
@@ -234,21 +282,40 @@ export default function MuralAdm() {
               </div>
             ) : (
               messages.map((message) => (
-                <div key={message.id} className="p-3 sm:p-4 md:p-5 rounded-xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01]">
-                  <div className="flex items-center mb-2.5 sm:mb-3">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center bg-red-600/20 flex-shrink-0">
-                      <i className="bi bi-person-circle text-xl sm:text-2xl md:text-3xl text-red-600"></i> 
+                <div key={message.id} className="group p-2.5 sm:p-3 md:p-4 rounded-lg bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-sm border border-white/15 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.005] cursor-pointer hover:from-white/20 hover:to-white/10">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center mb-1.5 sm:mb-2 flex-1">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center bg-red-600/20 flex-shrink-0">
+                        <i className="bi bi-person-circle text-lg sm:text-xl md:text-2xl text-red-600"></i> 
+                      </div>
+                      <div className="ml-2 sm:ml-2.5">
+                        <h3 className="font-bold text-xs sm:text-sm md:text-base transition-colors duration-300 text-white">Administração</h3>
+                      </div>
                     </div>
-                    <div className="ml-2 sm:ml-3">
-                      <h3 className="font-bold text-xs sm:text-sm md:text-base transition-colors duration-300 text-white">Administração</h3>
+                    <div className="flex gap-1">
+                      <button
+                        onClick={() => handleEdit(message)}
+                        className="p-1.5 sm:p-2 rounded-lg bg-blue-600/40 hover:bg-blue-600/60 border border-blue-400/40 hover:border-blue-400/60 text-blue-200 hover:text-blue-100 transition-all duration-200 flex items-center justify-center"
+                        title="Editar mensagem"
+                      >
+                        <span className="text-sm sm:text-base">✎</span>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteMessage(message.id)}
+                        disabled={deletingId === message.id}
+                        className="p-1.5 sm:p-2 rounded-lg bg-red-600/40 hover:bg-red-600/60 border border-red-400/40 hover:border-red-400/60 text-red-200 hover:text-red-100 transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                        title="Deletar mensagem"
+                      >
+                        <span className="text-sm sm:text-base">{deletingId === message.id ? '...' : '🗑'}</span>
+                      </button>
                     </div>
                   </div>
-                  <p className="text-xs sm:text-sm md:text-base whitespace-pre-line mb-2.5 sm:mb-3 transition-colors duration-300 text-gray-200">{message.conteudo}</p>
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 sm:gap-2">
-                    <span className="text-xs transition-colors duration-300 text-white">
+                  <p className="text-xs sm:text-sm md:text-base whitespace-pre-line mb-1.5 sm:mb-2 transition-colors duration-300 text-gray-200">{message.conteudo}</p>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2">
+                    <span className="text-xs transition-colors duration-300 text-white opacity-80">
                       {new Date(message.createdAt).toLocaleString('pt-BR')}
                     </span>
-                    <span className="text-xs bg-blue-600/80 text-white px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full font-semibold shadow-md w-fit">
+                    <span className="text-xs bg-blue-600/70 text-white px-2 sm:px-2.5 py-0.5 rounded-full font-semibold shadow-md w-fit">
                       {getTipoPublicoLabel(message)}
                     </span>
                   </div>
@@ -261,49 +328,94 @@ export default function MuralAdm() {
 
       {/* Modal para adicionar mensagem */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
-          <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl w-full max-w-md p-4 sm:p-6 md:p-8 max-h-[95vh] overflow-y-auto">
-            <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-5 md:mb-6 transition-colors duration-300 text-white">Adicionar Mensagem</h3>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-2xl flex items-center justify-center z-50 p-3 sm:p-4 animate-fade-in">
+          <div className="bg-white/10 backdrop-blur-3xl border-2 border-white/30 rounded-3xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto relative overflow-hidden group hover:border-white/40 transition-all duration-500">
+            {/* Elemento decorativo de vidro com gradiente */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5 pointer-events-none" />
             
-            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
-              {/* Tipo de Público */}
-              <div>
-                <label htmlFor="tipoPublico" className="block text-xs sm:text-sm font-bold mb-2 text-white">
-                  Publicar para *
-                </label>
-                <select
-                  id="tipoPublico"
-                  value={tipoPublico}
-                  onChange={(e) => {
-                    setTipoPublico(e.target.value as 'TODOS' | 'CURSO' | 'TURMA');
+            {/* Efeito de brilho */}
+            <div className="absolute -inset-px bg-gradient-to-r from-red-500/0 via-red-500/10 to-red-500/0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            
+            {/* Header com glassmorphismo avançado */}
+            <div className="sticky top-0 bg-gradient-to-r from-red-600/70 to-red-700/70 backdrop-blur-2xl p-4 sm:p-6 border-b-2 border-white/20 rounded-t-3xl relative z-50">
+              <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-t-3xl" />
+              <div className="flex items-center justify-between relative z-50">
+                <div>
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white flex items-center gap-2 drop-shadow-lg">
+                    <span className="text-2xl">{editingId ? '✎' : '📝'}</span> {editingId ? 'Editar' : 'Nova'} Mensagem
+                  </h3>
+                  <p className="text-red-100/95 text-xs sm:text-sm mt-1">{editingId ? 'Atualizar aviso para a comunidade' : 'Publicar aviso para a comunidade'}</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    setNewMessage('');
+                    setTipoPublico('TODOS');
                     setCursoSelecionado('');
                     setTurmaSelecionada('');
+                    setMessage('');
                   }}
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 font-medium transition-all duration-300 bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]"
+                  className="text-white hover:bg-white/30 rounded-full p-2 transition-all hover:scale-110 backdrop-blur-md"
                 >
-                  <option value="TODOS">Todos os usuários</option>
-                  <option value="CURSO">Curso específico</option>
-                  <option value="TURMA">Turma específica</option>
-                </select>
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="p-4 sm:p-6 md:p-8 space-y-5 sm:space-y-6 relative z-0">
+              {/* Informações de quem está publicando */}
+              <div className="bg-blue-600/30 backdrop-blur-lg border-2 border-blue-400/40 rounded-xl p-3 sm:p-4 flex items-start gap-3 hover:bg-blue-600/40 hover:border-blue-400/60 transition-all duration-300">
+                <span className="text-xl mt-0.5">ℹ️</span>
+                <div>
+                  <p className="font-bold text-white text-sm sm:text-base drop-shadow">Você está publicando como Administrador</p>
+                  <p className="text-blue-100/90 text-xs sm:text-sm mt-1">Esta mensagem será visível para todos os usuários selecionados</p>
+                </div>
+              </div>
+
+              {/* Tipo de Público */}
+              <div className="space-y-3">
+                <label className="block text-sm sm:text-base font-bold text-white flex items-center gap-2 drop-shadow">
+                  <span className="text-red-400">★</span> Publicar para
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  {['TODOS', 'CURSO', 'TURMA'].map((tipo) => (
+                    <button
+                      key={tipo}
+                      type="button"
+                      onClick={() => {
+                        setTipoPublico(tipo as 'TODOS' | 'CURSO' | 'TURMA');
+                        setCursoSelecionado('');
+                        setTurmaSelecionada('');
+                      }}
+                      className={`py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg font-bold text-sm sm:text-base transition-all duration-300 border-2 backdrop-blur-md ${
+                        tipoPublico === tipo
+                          ? 'bg-red-600/50 border-red-400/70 text-white shadow-lg shadow-red-500/30 hover:bg-red-600/60'
+                          : 'bg-white/10 border-white/30 text-gray-200 hover:bg-white/20 hover:border-red-400/50'
+                      }`}
+                    >
+                      {tipo === 'TODOS' ? '👥 Todos' : tipo === 'CURSO' ? '📚 Curso' : '👨‍🎓 Turma'}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Seleção de Curso */}
               {(tipoPublico === 'CURSO' || tipoPublico === 'TURMA') && (
-                <div>
-                  <label htmlFor="curso" className="block text-xs sm:text-sm font-bold mb-2 text-white">
-                    Curso *
+                <div className="space-y-3 animate-fade-in">
+                  <label htmlFor="curso" className="block text-sm sm:text-base font-bold text-white flex items-center gap-2 drop-shadow">
+                    <span className="text-red-400">★</span> Selecionar Curso
                   </label>
                   <select
                     id="curso"
                     value={cursoSelecionado}
                     onChange={(e) => setCursoSelecionado(e.target.value)}
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 font-medium transition-all duration-300 bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]"
+                    className="w-full px-4 py-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-400/80 font-medium transition-all duration-300 bg-gray-900/70 backdrop-blur-lg border-2 border-white/40 text-white [color-scheme:dark] hover:bg-gray-900/80 hover:border-white/50 focus:bg-gray-900/90"
                     required
                   >
-                    <option value="">Selecione um curso</option>
+                    <option value="">🔍 Selecione um curso...</option>
                     {cursos.map((curso) => (
                       <option key={curso.id} value={curso.id}>
-                        {curso.nome}
+                        📖 {curso.nome}
                       </option>
                     ))}
                   </select>
@@ -312,70 +424,93 @@ export default function MuralAdm() {
 
               {/* Seleção de Turma */}
               {tipoPublico === 'TURMA' && (
-                <div>
-                  <label htmlFor="turma" className="block text-xs sm:text-sm font-bold mb-2 text-white">
-                    Turma *
+                <div className="space-y-3 animate-fade-in">
+                  <label htmlFor="turma" className="block text-sm sm:text-base font-bold text-white flex items-center gap-2 drop-shadow">
+                    <span className="text-red-400">★</span> Selecionar Turma
                   </label>
-                  <select
-                    id="turma"
-                    value={turmaSelecionada}
-                    onChange={(e) => setTurmaSelecionada(e.target.value)}
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 font-medium transition-all duration-300 bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]"
-                    required
-                  >
-                    <option value="">Selecione uma turma</option>
-                    <option value="A">Turma A</option>
-                    <option value="B">Turma B</option>
-                  </select>
+                  <div className="grid grid-cols-2 gap-2">
+                    {['A', 'B'].map((turma) => (
+                      <button
+                        key={turma}
+                        type="button"
+                        onClick={() => setTurmaSelecionada(turma)}
+                        className={`py-2.5 px-4 rounded-lg font-bold text-sm transition-all duration-300 border-2 backdrop-blur-md ${
+                          turmaSelecionada === turma
+                            ? 'bg-red-600/50 border-red-400/70 text-white shadow-lg shadow-red-500/30 hover:bg-red-600/60'
+                            : 'bg-white/10 border-white/30 text-gray-200 hover:bg-white/20 hover:border-red-400/50'
+                        }`}
+                      >
+                        Turma {turma}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
-              
-              <div>
-                <label htmlFor="mensagem" className="block text-xs sm:text-sm font-bold mb-2 text-white">
-                  Mensagem *
+
+              {/* Mensagem */}
+              <div className="space-y-3">
+                <label htmlFor="mensagem" className="block text-sm sm:text-base font-bold text-white flex items-center justify-between drop-shadow">
+                  <span className="flex items-center gap-2">
+                    <span className="text-red-400">★</span> Mensagem
+                  </span>
+                  <span className={`text-xs font-semibold ${newMessage.length > 400 ? 'text-yellow-300' : newMessage.length > 450 ? 'text-red-400' : 'text-gray-300'}`}>
+                    {newMessage.length}/500
+                  </span>
                 </label>
                 <textarea
                   id="mensagem"
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
-                  rows={3}
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 resize-vertical font-medium transition-all duration-300 bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400"
-                  placeholder="Digite a mensagem..."
+                  rows={4}
+                  className="w-full px-4 py-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-400/80 resize-vertical font-medium transition-all duration-300 bg-white/15 backdrop-blur-lg border-2 border-white/30 text-white placeholder-gray-400 hover:bg-white/20 hover:border-white/40 focus:bg-white/25"
+                  placeholder="Digite sua mensagem aqui... Seja claro e conciso!"
                   maxLength={500}
                 />
-                <div className="text-xs mt-1.5 font-semibold text-gray-300">
-                  {newMessage.length}/500 caracteres
-                </div>
               </div>
 
               {/* Preview da mensagem */}
-              {newMessage && (
-                <div className={`rounded-lg p-3 sm:p-4 border-2 text-xs sm:text-sm ${isDarkMode ? 'bg-gray-800 border-gray-600' : 'bg-gray-50 border-gray-300'}`}>
-                  <h4 className={`text-xs sm:text-sm font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Preview:</h4>
-                  <div className={`whitespace-pre-line ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                    {newMessage}
+              {newMessage.trim() && (
+                <div className="bg-white/10 backdrop-blur-lg border-2 border-white/30 rounded-xl p-4 sm:p-5 animate-fade-in hover:bg-white/15 hover:border-white/40 transition-all duration-300">
+                  <h4 className="text-xs sm:text-sm font-bold text-red-300 mb-3 flex items-center gap-2 drop-shadow">
+                    <span>👁️</span> Preview
+                  </h4>
+                  <div className="bg-white/10 backdrop-blur-md rounded-lg p-3 sm:p-4 border border-white/20">
+                    <p className="text-white text-sm sm:text-base whitespace-pre-wrap leading-relaxed">
+                      {newMessage}
+                    </p>
                   </div>
-                  <div className="text-xs text-blue-400 mt-2 font-bold">
-                    Para: {
-                      tipoPublico === 'TODOS' ? 'Todos' :
-                      tipoPublico === 'CURSO' && cursoSelecionado ? 
-                        cursos.find(c => c.id.toString() === cursoSelecionado)?.nome || 'Curso' :
-                      tipoPublico === 'TURMA' && cursoSelecionado && turmaSelecionada ?
-                        `${cursos.find(c => c.id.toString() === cursoSelecionado)?.nome || 'Curso'} - Turma ${turmaSelecionada}` :
-                      'Selecione'
-                    }
+                  <div className="mt-3 text-xs sm:text-sm font-semibold text-blue-200 flex items-center gap-2 drop-shadow">
+                    <span>📤</span> Será enviado para:{' '}
+                    <span className="text-white font-bold">
+                      {tipoPublico === 'TODOS' 
+                        ? 'Todos os usuários' 
+                        : tipoPublico === 'CURSO' && cursoSelecionado 
+                          ? cursos.find(c => c.id.toString() === cursoSelecionado)?.nome || 'Curso selecionado'
+                          : tipoPublico === 'TURMA' && cursoSelecionado && turmaSelecionada
+                            ? `${cursos.find(c => c.id.toString() === cursoSelecionado)?.nome} - Turma ${turmaSelecionada}`
+                            : 'Selecione os filtros'
+                      }
+                    </span>
                   </div>
                 </div>
               )}
 
               {/* Botões */}
-              <div className="flex gap-2 pt-2">
+              <div className="flex gap-2 sm:gap-3 pt-4 border-t-2 border-white/20">
                 <button
                   type="submit"
-                  disabled={loading || !newMessage.trim()}
-                  className="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg text-sm sm:text-base font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  disabled={loading || !newMessage.trim() || (tipoPublico !== 'TODOS' && !cursoSelecionado) || (tipoPublico === 'TURMA' && !turmaSelecionada)}
+                  className="flex-1 px-4 py-2.5 sm:py-3 border-2 border-red-400/60 hover:border-red-400/80 disabled:border-gray-500/40 text-white disabled:text-gray-400 rounded-lg text-sm sm:text-base font-bold shadow-lg hover:shadow-xl disabled:shadow-none transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:scale-100 hover:bg-red-600/20 disabled:bg-gray-600/10 backdrop-blur-md flex items-center justify-center gap-2 disabled:cursor-not-allowed"
                 >
-                  {loading ? 'Publicando...' : 'Publicar'}
+                  {loading ? (
+                    <>
+                      <span className="animate-spin">⚙️</span> {editingId ? 'Atualizando...' : 'Publicando...'}
+                    </>
+                  ) : (
+                    <>
+                      <span>{editingId ? '✓' : '✓'}</span> {editingId ? 'Atualizar' : 'Publicar'}
+                    </>
+                  )}
                 </button>
                 
                 <button
@@ -386,15 +521,12 @@ export default function MuralAdm() {
                     setTipoPublico('TODOS');
                     setCursoSelecionado('');
                     setTurmaSelecionada('');
+                    setEditingId(null);
                     setMessage('');
                   }}
-                  className={`px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg text-sm sm:text-base font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] ${
-                    isDarkMode 
-                      ? 'border-white/30 text-white hover:bg-white/10' 
-                      : 'border-gray-300 text-gray-700 hover:bg-white/50'
-                  }`}
+                  className="px-4 sm:px-6 py-2.5 sm:py-3 border-2 border-white/40 hover:border-white/60 text-gray-200 hover:text-white rounded-lg text-sm sm:text-base font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] hover:bg-white/20 backdrop-blur-md"
                 >
-                  Cancelar
+                  ✕ Cancelar
                 </button>
               </div>
             </form>

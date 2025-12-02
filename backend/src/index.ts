@@ -601,6 +601,59 @@ app.post('/mural', async (req, res) => {
   }
 });
 
+// PATCH /mural/:id - Atualizar mensagem
+app.patch('/mural/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { conteudo, tipoPublico, cursoId, turma } = req.body;
+
+    if (!conteudo) {
+      return res.status(400).json({ error: 'Missing required field: conteudo' });
+    }
+
+    const updatedMessage = await prisma.mural.update({
+      where: { id: parseInt(id) },
+      data: {
+        conteudo,
+        tipoPublico: tipoPublico || 'TODOS',
+        cursoId: cursoId ? parseInt(cursoId) : null,
+        turma: turma || null,
+      },
+      include: {
+        curso: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    });
+
+    io.emit('mensagemAtualizada', updatedMessage);
+    res.json(updatedMessage);
+  } catch (error) {
+    console.error('Error updating message:', error);
+    res.status(500).json({ error: 'Failed to update message', details: error instanceof Error ? error.message : 'Unknown error' });
+  }
+});
+
+// DELETE /mural/:id - Deletar mensagem
+app.delete('/mural/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedMessage = await prisma.mural.delete({
+      where: { id: parseInt(id) }
+    });
+
+    io.emit('mensagemDeletada', { id: parseInt(id) });
+    res.json({ success: true, message: 'Message deleted successfully', id: parseInt(id) });
+  } catch (error) {
+    console.error('Error deleting message:', error);
+    res.status(500).json({ error: 'Failed to delete message', details: error instanceof Error ? error.message : 'Unknown error' });
+  }
+});
+
 // Rotas do Calendário
 app.get('/calendario', async (req, res) => {
   try {
