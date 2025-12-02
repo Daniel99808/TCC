@@ -109,8 +109,14 @@ export default function CadastroAdmPage() {
     setMessage(null);
     
     // Validações
-    if (!formData.nome || !formData.cpf || !formData.password || !formData.confirmPassword || !formData.cursoId || !formData.role) {
+    if (!formData.nome || !formData.cpf || !formData.password || !formData.confirmPassword || !formData.role) {
       setMessage({ type: 'error', text: 'Todos os campos obrigatórios devem ser preenchidos' });
+      return;
+    }
+
+    // Curso é obrigatório apenas se não for ADMIN
+    if (formData.role !== 'ADMIN' && !formData.cursoId) {
+      setMessage({ type: 'error', text: 'Curso é obrigatório para Professor e Estudante' });
       return;
     }
 
@@ -180,7 +186,7 @@ export default function CadastroAdmPage() {
         <h1 className="text-2xl sm:text-3xl font-bold text-center transition-colors duration-300 text-white">
           Cadastro de Usuário
         </h1>
-        <p className={`text-center mt-2 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+        <p className="text-center mt-2 text-sm transition-colors duration-300 text-white">
           Painel Administrativo
         </p>
       </div>
@@ -190,7 +196,7 @@ export default function CadastroAdmPage() {
           {/* Cabeçalho - Oculto no mobile */}
           <div className="text-center mb-4 sm:mb-6 md:mb-8 hidden lg:block">
             <h1 className="text-xl md:text-2xl lg:text-3xl font-bold transition-colors duration-300 text-white">Cadastro de Usuário</h1>
-            <p className={`mt-1.5 sm:mt-2 text-xs sm:text-sm md:text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>Painel Administrativo</p>
+            <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm md:text-base transition-colors duration-300 text-white">Painel Administrativo</p>
             <div className="w-12 h-1 bg-gradient-to-r from-orange-600 to-orange-700 mx-auto mt-2 sm:mt-3 rounded-full shadow-lg"></div>
           </div>
 
@@ -208,7 +214,7 @@ export default function CadastroAdmPage() {
           <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
             {/* Campo Nome */}
             <div>
-              <label htmlFor="nome" className={`block text-xs sm:text-sm font-bold mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+              <label htmlFor="nome" className={`block text-xs sm:text-sm font-bold mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-white'}`}>
                 Nome Completo *
               </label>
               <input
@@ -218,14 +224,14 @@ export default function CadastroAdmPage() {
                 value={formData.nome}
                 onChange={handleInputChange}
                 placeholder="Nome completo"
-                className={`w-full p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500'}`}
+                className="w-full p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 bg-white/15 backdrop-blur-lg border-2 border-white/30 text-white placeholder-white/60 hover:bg-white/20 hover:border-white/40 focus:bg-white/25"
                 disabled={isLoading}
               />
             </div>
 
             {/* Campo CPF */}
             <div>
-              <label htmlFor="cpf" className={`block text-xs sm:text-sm font-bold mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+              <label htmlFor="cpf" className={`block text-xs sm:text-sm font-bold mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-white'}`}>
                 CPF *
               </label>
               <input
@@ -236,51 +242,68 @@ export default function CadastroAdmPage() {
                 onChange={handleInputChange}
                 placeholder="000.000.000-00"
                 maxLength={14}
-                className={`w-full p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500'}`}
+                className="w-full p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 bg-white/15 backdrop-blur-lg border-2 border-white/30 text-white placeholder-white/60 hover:bg-white/20 hover:border-white/40 focus:bg-white/25"
                 disabled={isLoading}
               />
             </div>
 
-            {/* Campo Curso */}
-            <div>
-              <label htmlFor="cursoId" className={`block text-xs sm:text-sm font-bold mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                Curso *
-              </label>
-              <select
-                id="cursoId"
-                name="cursoId"
-                value={formData.cursoId}
-                onChange={(e) => setFormData(prev => ({ ...prev, cursoId: e.target.value }))}
-                className={`w-full p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]' : 'bg-white border-2 border-gray-300 text-gray-900'}`}
-                disabled={isLoading}
-              >
-                <option value="">Selecione o curso</option>
-                {cursos.map((curso) => (
-                  <option key={curso.id} value={curso.id}>
-                    {curso.nome}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {/* Campo Curso - Não aparece se for ADMIN */}
+            {formData.role !== 'ADMIN' && (
+              <div>
+                <label htmlFor="cursoId" className={`block text-xs sm:text-sm font-bold mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-white'}`}>
+                  Curso *
+                </label>
+                <select
+                  id="cursoId"
+                  name="cursoId"
+                  value={formData.cursoId}
+                  onChange={(e) => setFormData(prev => ({ ...prev, cursoId: e.target.value }))}
+                  className="w-full p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 bg-gray-900/70 backdrop-blur-lg border-2 border-white/30 text-white hover:bg-gray-900/80 hover:border-white/40 focus:bg-gray-900/90"
+                  disabled={isLoading}
+                  style={{
+                    colorScheme: 'dark',
+                    backgroundColor: 'rgb(17 24 39 / 0.7)'
+                  }}
+                >
+                  <option value="">Selecione o curso</option>
+                  {cursos.map((curso) => (
+                    <option key={curso.id} value={curso.id}>
+                      {curso.nome}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             {/* Campo Cargo (Role) */}
             <div>
-              <label htmlFor="role" className={`block text-xs sm:text-sm font-bold mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+              <label htmlFor="role" className={`block text-xs sm:text-sm font-bold mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-white'}`}>
                 Cargo *
               </label>
               <select
                 id="role"
                 name="role"
                 value={formData.role}
-                onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
-                className={`w-full p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]' : 'bg-white border-2 border-gray-300 text-gray-900'}`}
+                onChange={(e) => {
+                  const newRole = e.target.value;
+                  if (newRole === 'ADMIN') {
+                    setFormData(prev => ({ ...prev, role: newRole, cursoId: '', turma: '' }));
+                  } else {
+                    setFormData(prev => ({ ...prev, role: newRole }));
+                  }
+                }}
+                className="w-full p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 bg-gray-900/70 backdrop-blur-lg border-2 border-white/30 text-white hover:bg-gray-900/80 hover:border-white/40 focus:bg-gray-900/90"
                 disabled={isLoading}
+                style={{
+                  colorScheme: 'dark',
+                  backgroundColor: 'rgb(17 24 39 / 0.7)'
+                }}
               >
                 <option value="ESTUDANTE">Estudante</option>
                 <option value="PROFESSOR">Professor</option>
                 <option value="ADMIN">Administrador</option>
               </select>
-              <p className={`text-xs mt-1 font-medium ${isDarkMode ? 'text-white' : 'text-white'}`}>
+              <p className="text-xs mt-1 font-medium text-white">
                 Nível de acesso do usuário
               </p>
             </div>
@@ -288,7 +311,7 @@ export default function CadastroAdmPage() {
             {/* Campo Turma - Apenas para Professor e Estudante */}
             {(formData.role === 'PROFESSOR' || formData.role === 'ESTUDANTE') && (
               <div>
-                <label htmlFor="turma" className={`block text-xs sm:text-sm font-bold mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                <label htmlFor="turma" className={`block text-xs sm:text-sm font-bold mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-white'}`}>
                   Turma *
                 </label>
                 <select
@@ -296,14 +319,18 @@ export default function CadastroAdmPage() {
                   name="turma"
                   value={formData.turma}
                   onChange={(e) => setFormData(prev => ({ ...prev, turma: e.target.value }))}
-                  className={`w-full p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white [color-scheme:dark]' : 'bg-white border-2 border-gray-300 text-gray-900'}`}
+                  className="w-full p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 bg-gray-900/70 backdrop-blur-lg border-2 border-white/30 text-white hover:bg-gray-900/80 hover:border-white/40 focus:bg-gray-900/90"
                   disabled={isLoading}
+                  style={{
+                    colorScheme: 'dark',
+                    backgroundColor: 'rgb(17 24 39 / 0.7)'
+                  }}
                 >
                   <option value="">Selecione a turma</option>
                   <option value="A">Turma A</option>
                   <option value="B">Turma B</option>
                 </select>
-                <p className={`text-xs mt-1 font-medium ${isDarkMode ? 'text-white' : 'text-white'}`}>
+                <p className="text-xs mt-1 font-medium text-white">
                   Obrigatório para Professor e Estudante
                 </p>
               </div>
@@ -314,10 +341,10 @@ export default function CadastroAdmPage() {
               <div className="rounded-lg p-3 sm:p-4 bg-white/10 backdrop-blur-sm border border-white/20">
                 <div className="flex items-center justify-between gap-2">
                   <div>
-                    <label htmlFor="hasAAPM" className={`text-xs sm:text-sm font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                    <label htmlFor="hasAAPM" className="text-xs sm:text-sm font-semibold text-white">
                       Benefício AAPM
                     </label>
-                    <p className={`text-xs mt-0.5 sm:mt-1 ${isDarkMode ? 'text-white' : 'text-white'}`}>
+                    <p className="text-xs mt-0.5 sm:mt-1 text-white">
                       Benefício AAPM?
                     </p>
                   </div>
@@ -338,7 +365,7 @@ export default function CadastroAdmPage() {
                   <span className={`inline-block px-2 sm:px-3 py-1 rounded-lg text-xs font-bold shadow-md ${
                     formData.hasAAPM 
                       ? 'bg-green-600/80 text-white border border-green-500/30' 
-                      : 'bg-gray-500/30 text-gray-200 border border-gray-400/30'
+                      : 'bg-gray-500/30 text-white border border-gray-400/30'
                   }`}>
                     {formData.hasAAPM ? '✓ Com AAPM' : '✗ Sem AAPM'}
                   </span>
@@ -348,7 +375,7 @@ export default function CadastroAdmPage() {
 
             {/* Campo Senha */}
             <div>
-              <label htmlFor="password" className={`block text-xs sm:text-sm font-bold mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+              <label htmlFor="password" className={`block text-xs sm:text-sm font-bold mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-white'}`}>
                 Senha *
               </label>
               <input
@@ -358,14 +385,14 @@ export default function CadastroAdmPage() {
                 value={formData.password}
                 onChange={handleInputChange}
                 placeholder="Senha"
-                className={`w-full p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500'}`}
+                className="w-full p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 bg-white/15 backdrop-blur-lg border-2 border-white/30 text-white placeholder-white/60 hover:bg-white/20 hover:border-white/40 focus:bg-white/25"
                 disabled={isLoading}
               />
             </div>
 
             {/* Campo Confirmar Senha */}
             <div>
-              <label htmlFor="confirmPassword" className={`block text-xs sm:text-sm font-bold mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+              <label htmlFor="confirmPassword" className={`block text-xs sm:text-sm font-bold mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-white'}`}>
                 Confirmar Senha *
               </label>
               <input
@@ -375,7 +402,7 @@ export default function CadastroAdmPage() {
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 placeholder="Confirme a senha"
-                className={`w-full p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500'}`}
+                className="w-full p-2.5 sm:p-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-all duration-300 bg-white/15 backdrop-blur-lg border-2 border-white/30 text-white placeholder-white/60 hover:bg-white/20 hover:border-white/40 focus:bg-white/25"
                 disabled={isLoading}
               />
             </div>
@@ -384,7 +411,7 @@ export default function CadastroAdmPage() {
             {(formData.nome || formData.cpf || formData.cursoId) && (
               <div className="rounded-lg p-3 sm:p-4 bg-gradient-to-br from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-blue-500/30 shadow-lg">
                 <h4 className={`text-xs sm:text-sm font-bold mb-2 sm:mb-3 ${isDarkMode ? 'text-blue-200' : 'text-blue-800'}`}>📋 Preview:</h4>
-                <div className={`text-xs sm:text-sm space-y-1 sm:space-y-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                <div className="text-xs sm:text-sm space-y-1 sm:space-y-2 text-white">
                   <div><strong>Nome:</strong> {formData.nome || '[Nome]'}</div>
                   <div><strong>CPF:</strong> {formData.cpf || '[CPF]'}</div>
                   <div><strong>Curso:</strong> {cursos.find(c => c.id.toString() === formData.cursoId)?.nome || '[Curso]'}</div>
