@@ -7,8 +7,6 @@ import { useDarkMode } from '../contexts/DarkModeContext';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { API_URL, apiUrl } from '@/lib/api';
 
-const socket = io(API_URL);
-
 interface Curso {
   id: number;
   nome: string;
@@ -47,6 +45,18 @@ export default function MuralDeAvisos() {
       fetchMessages(user);
     }
 
+    // Inicializar Socket.IO conectando ao backend na porta 3000
+    const socket = io(API_URL, {
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      reconnectionAttempts: 5
+    });
+
+    socket.on('connect', () => {
+      console.log('Conectado ao Socket.IO no backend');
+    });
+
     socket.on('novaMensagem', (message: Message) => {
       // Verificar se a mensagem é relevante para o usuário
       const userStr = localStorage.getItem('usuarioLogado');
@@ -55,8 +65,17 @@ export default function MuralDeAvisos() {
         console.log('Socket.IO novaMensagem recebida:', message);
         console.log('Verificando se é relevante para usuário:', user.id, 'turma:', user.turma, 'curso:', user.cursoId);
         if (isMessageRelevant(message, user)) {
-          console.log('✅ Mensagem RELEVANTE - adicionando à lista');
-          setMessages(prev => [message, ...prev]);
+          console.log('✅ Mensagem RELEVANTE - verificando duplicatas');
+          // Verificar se a mensagem já existe para evitar duplicatas
+          setMessages(prev => {
+            const messageExists = prev.some(m => m.id === message.id);
+            if (messageExists) {
+              console.log('Mensagem', message.id, 'já existe no estado, ignorando duplicata');
+              return prev;
+            }
+            console.log('Adicionando nova mensagem:', message.id);
+            return [message, ...prev];
+          });
         } else {
           console.log('❌ Mensagem NÃO RELEVANTE - ignorando (tipoPublico:', message.tipoPublico, 'cursoId:', message.cursoId, 'turma:', message.turma + ')');
         }
@@ -64,7 +83,9 @@ export default function MuralDeAvisos() {
     });
 
     return () => {
+      socket.off('connect');
       socket.off('novaMensagem');
+      socket.disconnect();
     };
   }, []);
 

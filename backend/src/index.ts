@@ -248,6 +248,7 @@ app.get('/perfil/:cpf', async (req, res) => {
         id: true,
         nome: true,
         cpf: true,
+        cursoId: true,
         createdAt: true,
         curso: {
           select: {

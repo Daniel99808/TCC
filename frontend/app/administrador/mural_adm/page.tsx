@@ -23,8 +23,6 @@ interface Message {
   curso?: Curso;
 }
 
-const socket = io(API_URL);
-
 export default function MuralAdm() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
@@ -43,28 +41,37 @@ export default function MuralAdm() {
     fetchMessages();
     fetchCursos();
 
-    // Socket.IO listener para novas mensagens
-    socket.on('novaMensagem', (message: Message) => {
-      console.log('Admin recebeu novaMensagem via Socket.IO:', message);
-      setMessages(prev => [message, ...prev]);
+    // Inicializar Socket.IO conectando ao backend na porta 3000
+    const socket = io(API_URL, {
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      reconnectionAttempts: 5
     });
 
-    // Configurar real-time subscription do Supabase (como fallback)
-    const subscription = supabase
-      .channel('mural-realtime')
-      .on('postgres_changes', 
-        { event: 'INSERT', schema: 'public', table: 'Mural' },
-        (payload) => {
-          const newMsg = payload.new as Message;
-          console.log('Admin recebeu INSERT via Supabase:', newMsg);
-          setMessages(prev => [newMsg, ...prev]);
+    // Socket.IO listener para novas mensagens
+    socket.on('connect', () => {
+      console.log('Conectado ao Socket.IO no backend');
+    });
+
+    socket.on('novaMensagem', (msg: Message) => {
+      console.log('Admin recebeu novaMensagem via Socket.IO:', msg);
+      // Verificar se a mensagem já existe para evitar duplicatas
+      setMessages(prev => {
+        const messageExists = prev.some(m => m.id === msg.id);
+        if (messageExists) {
+          console.log('Mensagem', msg.id, 'já existe no estado, ignorando duplicata');
+          return prev;
         }
-      )
-      .subscribe();
+        console.log('Adicionando nova mensagem:', msg.id);
+        return [msg, ...prev];
+      });
+    });
 
     return () => {
+      socket.off('connect');
       socket.off('novaMensagem');
-      subscription.unsubscribe();
+      socket.disconnect();
     };
   }, []);
 
