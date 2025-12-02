@@ -1,11 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
 import { supabase } from '../../../lib/supabase';
 import Header from '../../components/header_adm';
 import Footer from '../../components/footer';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { useDarkMode } from '../../contexts/DarkModeContext';
-import { apiUrl } from '@/lib/api';
+import { apiUrl, API_URL } from '@/lib/api';
 
 interface Curso {
   id: number;
@@ -21,6 +22,8 @@ interface Message {
   createdAt: string;
   curso?: Curso;
 }
+
+const socket = io(API_URL);
 
 export default function MuralAdm() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -40,19 +43,27 @@ export default function MuralAdm() {
     fetchMessages();
     fetchCursos();
 
-    // Configurar real-time subscription do Supabase
+    // Socket.IO listener para novas mensagens
+    socket.on('novaMensagem', (message: Message) => {
+      console.log('Admin recebeu novaMensagem via Socket.IO:', message);
+      setMessages(prev => [message, ...prev]);
+    });
+
+    // Configurar real-time subscription do Supabase (como fallback)
     const subscription = supabase
       .channel('mural-realtime')
       .on('postgres_changes', 
         { event: 'INSERT', schema: 'public', table: 'Mural' },
         (payload) => {
           const newMsg = payload.new as Message;
+          console.log('Admin recebeu INSERT via Supabase:', newMsg);
           setMessages(prev => [newMsg, ...prev]);
         }
       )
       .subscribe();
 
     return () => {
+      socket.off('novaMensagem');
       subscription.unsubscribe();
     };
   }, []);
@@ -69,8 +80,8 @@ export default function MuralAdm() {
 
   const fetchMessages = async () => {
     try {
-      // Tentar pegar userId do sessionStorage para validação
-      const userStr = typeof window !== 'undefined' ? sessionStorage.getItem('user') : null;
+      // Tentar pegar userId do localStorage (onde é salvo após login)
+      const userStr = typeof window !== 'undefined' ? localStorage.getItem('usuarioLogado') : null;
       let url = apiUrl('/mural');
       
       if (userStr) {

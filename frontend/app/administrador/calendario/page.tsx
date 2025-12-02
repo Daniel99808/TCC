@@ -22,6 +22,7 @@ export default function CalendarioAdm() {
   const [message, setMessage] = useState('');
   const [eventos, setEventos] = useState<CalendarioEvento[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isDarkMode } = useDarkMode();
 
   // Carregar eventos existentes
   useEffect(() => {

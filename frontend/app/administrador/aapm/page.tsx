@@ -11,6 +11,7 @@ interface Usuario {
   id: number;
   nome: string;
   cpf: string;
+  role?: string;
   hasAAPM: boolean;
   curso: {
     nome: string;
@@ -58,11 +59,11 @@ export default function AAPMPage() {
         console.log('Total de estudantes:', estudantes.length);
         
         // Extrair cursos únicos do banco de dados (apenas de estudantes)
-        const cursosUnicos = [...new Set(
+        const cursosUnicos: string[] = Array.from(new Set(
           estudantes
             .filter((u: Usuario) => u.curso && u.curso.nome)
             .map((u: Usuario) => u.curso!.nome)
-        )];
+        ));
         
         console.log('Cursos únicos encontrados no banco:', cursosUnicos);
         console.log('Amostra de estudantes com cursos:', estudantes.filter((u: Usuario) => u.curso).slice(0, 5).map((u: Usuario) => ({ nome: u.nome, curso: u.curso?.nome })));
