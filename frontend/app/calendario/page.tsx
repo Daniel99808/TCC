@@ -202,7 +202,7 @@ const CalendarioPage = () => {
 
           {carregando && (
             <div className="text-center mb-4">
-              <div className="text-xs sm:text-sm transition-colors duration-300 text-gray-400">Carregando eventos...</div>
+              <div className="text-xs sm:text-sm transition-colors duration-300 text-white">Carregando eventos...</div>
             </div>
           )}
 
@@ -233,13 +233,13 @@ const CalendarioPage = () => {
                       {evento.titulo}
                     </p>
                     <p className="text-xs sm:text-sm break-words transition-colors duration-300 text-gray-300">{evento.descricao}</p>
-                    <p className="text-xs mt-3 text-gray-400">
+                    <p className="text-xs mt-3 text-white">
                       {new Date(evento.data).toLocaleString('pt-BR')}
                     </p>
                   </div>
                 ))
               ) : (
-                <p className="col-span-full text-center text-sm sm:text-base py-8 transition-colors duration-300 text-gray-400">
+                <p className="col-span-full text-center text-sm sm:text-base py-8 transition-colors duration-300 text-white">
                   {diaSelecionado ? 'Nenhum evento para este dia.' : 'Clique em um dia para ver os eventos.'}
                 </p>
               )}

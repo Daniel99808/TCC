@@ -114,7 +114,7 @@ export default function PerfilPage() {
                 <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold transition-colors duration-300 text-white">
                   Meu Perfil
                 </h1>
-                <p className="mt-1 sm:mt-2 text-xs sm:text-base transition-colors duration-300 text-gray-400">
+                <p className="mt-1 sm:mt-2 text-xs sm:text-base transition-colors duration-300 text-white">
                   Gerencie suas informações e configurações
                 </p>
               </div>
@@ -216,7 +216,7 @@ export default function PerfilPage() {
                           Alterar senha
                         </span>
                       </div>
-                      <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </div>

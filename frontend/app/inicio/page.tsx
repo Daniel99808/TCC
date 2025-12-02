@@ -200,7 +200,7 @@ export default function InicioPage() {
                   <h3 className="text-3xl lg:text-4xl font-bold mb-2 text-white">
                     {eventosProximos}
                   </h3>
-                  <p className="text-sm lg:text-base font-medium text-gray-400">
+                  <p className="text-sm lg:text-base font-medium text-white">
                     Eventos Este Mês
                   </p>
                 </div>
@@ -225,7 +225,7 @@ export default function InicioPage() {
                   <h3 className="text-3xl lg:text-4xl font-bold mb-2 text-white">
                     {mensagensNaoLidas}
                   </h3>
-                  <p className="text-sm lg:text-base font-medium text-gray-400">
+                  <p className="text-sm lg:text-base font-medium text-white">
                     Mensagens Não Lidas
                   </p>
                 </div>
@@ -254,7 +254,7 @@ export default function InicioPage() {
                       <h3 className="text-base lg:text-lg font-semibold mb-1 text-white">
                         Mural de Avisos
                       </h3>
-                      <p className="text-xs lg:text-sm text-gray-400">
+                      <p className="text-xs lg:text-sm text-white">
                         Ver notícias e comunicados
                       </p>
                     </a>
@@ -266,7 +266,7 @@ export default function InicioPage() {
                         </svg>
                       </div>
                       <h3 className="font-semibold mb-1 text-white">Calendário</h3>
-                      <p className="text-sm text-gray-400">Eventos e datas importantes</p>
+                      <p className="text-sm text-white">Eventos e datas importantes</p>
                     </a>
 
                     <a href="/conversas" className="group p-4 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600">
@@ -276,7 +276,7 @@ export default function InicioPage() {
                         </svg>
                       </div>
                       <h3 className="font-semibold mb-1 text-white">Conversas</h3>
-                      <p className="text-sm text-gray-400">Mensagens e chat</p>
+                      <p className="text-sm text-white">Mensagens e chat</p>
                     </a>
 
                     <a href="/perfil" className="group p-4 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600">
@@ -286,7 +286,7 @@ export default function InicioPage() {
                         </svg>
                       </div>
                       <h3 className="font-semibold mb-1 text-white">Meu Perfil</h3>
-                      <p className="text-sm text-gray-400">Configurações e dados</p>
+                      <p className="text-sm text-white">Configurações e dados</p>
                     </a>
                   </div>
                 </div>
@@ -381,7 +381,7 @@ export default function InicioPage() {
                                 <h3 className="font-semibold text-sm lg:text-base mb-1 text-white">
                                   {atividade.titulo}
                                 </h3>
-                                <p className="text-xs lg:text-sm mb-1 line-clamp-2 text-gray-400">
+                                <p className="text-xs lg:text-sm mb-1 line-clamp-2 text-white">
                                   {atividade.descricao}
                                 </p>
                                 <p className={`text-xs font-medium ${texto}`}>{calcularTempoDecorrido(atividade.createdAt)}</p>
@@ -394,11 +394,11 @@ export default function InicioPage() {
                   ) : (
                     <div className="flex flex-col items-center justify-center h-64">
                       <div className="w-24 h-24 lg:w-28 lg:h-28 bg-gray-700/30 rounded-full flex items-center justify-center mb-6">
-                        <svg className="w-12 h-12 lg:w-14 lg:h-14 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-12 h-12 lg:w-14 lg:h-14 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                         </svg>
                       </div>
-                      <p className="text-base lg:text-lg text-gray-400">
+                      <p className="text-base lg:text-lg text-white">
                         Nenhuma atividade recente
                       </p>
                     </div>

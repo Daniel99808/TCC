@@ -220,7 +220,7 @@ export default function CalendarioAdm() {
               <h1 className="text-2xl sm:text-3xl font-bold mb-2 transition-colors duration-300 text-white">
                 Calendário ADM
               </h1>
-              <p className="text-sm sm:text-base transition-colors duration-300 text-gray-400">
+              <p className="text-sm sm:text-base transition-colors duration-300 text-white">
                 Gerencie eventos para alunos, professores e turmas
               </p>
             </div>
@@ -232,7 +232,7 @@ export default function CalendarioAdm() {
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 transition-colors duration-300 text-white">
                 Calendário - Painel ADM
               </h1>
-              <p className="text-sm sm:text-base lg:text-lg transition-colors duration-300 text-gray-400">
+              <p className="text-sm sm:text-base lg:text-lg transition-colors duration-300 text-white">
                 Gerencie eventos para alunos, professores e turmas
               </p>
             </div>

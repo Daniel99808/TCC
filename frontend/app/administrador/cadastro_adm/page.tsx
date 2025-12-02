@@ -280,7 +280,7 @@ export default function CadastroAdmPage() {
                 <option value="PROFESSOR">Professor</option>
                 <option value="ADMIN">Administrador</option>
               </select>
-              <p className={`text-xs mt-1 font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs mt-1 font-medium ${isDarkMode ? 'text-white' : 'text-white'}`}>
                 Nível de acesso do usuário
               </p>
             </div>
@@ -303,7 +303,7 @@ export default function CadastroAdmPage() {
                   <option value="A">Turma A</option>
                   <option value="B">Turma B</option>
                 </select>
-                <p className={`text-xs mt-1 font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs mt-1 font-medium ${isDarkMode ? 'text-white' : 'text-white'}`}>
                   Obrigatório para Professor e Estudante
                 </p>
               </div>
@@ -317,7 +317,7 @@ export default function CadastroAdmPage() {
                     <label htmlFor="hasAAPM" className={`text-xs sm:text-sm font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                       Benefício AAPM
                     </label>
-                    <p className={`text-xs mt-0.5 sm:mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    <p className={`text-xs mt-0.5 sm:mt-1 ${isDarkMode ? 'text-white' : 'text-white'}`}>
                       Benefício AAPM?
                     </p>
                   </div>

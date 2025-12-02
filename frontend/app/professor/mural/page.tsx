@@ -233,7 +233,7 @@ export default function MuralProfessor() {
                   </div>
                   <p className="text-sm sm:text-base whitespace-pre-line mb-3 transition-colors duration-300 text-gray-200">{message.conteudo}</p>
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                    <span className="text-xs sm:text-sm transition-colors duration-300 text-gray-400">
+                    <span className="text-xs sm:text-sm transition-colors duration-300 text-white">
                       {new Date(message.createdAt).toLocaleString('pt-BR')}
                     </span>
                     <span className="text-xs sm:text-sm bg-red-600/80 text-white px-3 py-1 rounded-full font-semibold shadow-md w-fit">

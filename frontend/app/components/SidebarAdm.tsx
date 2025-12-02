@@ -84,7 +84,7 @@ export default function SidebarAdm() {
               
               <div className="flex-1 min-w-0 relative z-10">
                 <h3 className="font-semibold text-xs sm:text-sm md:text-base truncate transition-colors duration-300 text-white">{usuarioLogado.nome.substring(0, 20)}</h3>
-                <p className="text-xs truncate transition-colors duration-300 text-gray-400">Administrador</p>
+                <p className="text-xs truncate transition-colors duration-300 text-white">Administrador</p>
               </div>
               
               {/* Ícone de seta que aparece no hover */}
@@ -102,7 +102,7 @@ export default function SidebarAdm() {
               <a 
                 href="/inicio" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="group flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl transition-all duration-300 relative overflow-hidden text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-gray-800/60 hover:to-gray-700/40 hover:shadow-lg hover:pl-6"
+                className="group flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl transition-all duration-300 relative overflow-hidden text-white hover:text-white hover:bg-gradient-to-r hover:from-gray-800/60 hover:to-gray-700/40 hover:shadow-lg hover:pl-6"
               >
                 {/* Barra indicadora animada laranja */}
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 group-hover:h-3/5 bg-gradient-to-b from-orange-500 to-orange-600 rounded-r-full transition-all duration-300" />
@@ -118,7 +118,7 @@ export default function SidebarAdm() {
               <a 
                 href="/administrador/cadastro_adm" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="group flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl transition-all duration-300 relative overflow-hidden text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-gray-800/60 hover:to-gray-700/40 hover:shadow-lg hover:pl-6"
+                className="group flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl transition-all duration-300 relative overflow-hidden text-white hover:text-white hover:bg-gradient-to-r hover:from-gray-800/60 hover:to-gray-700/40 hover:shadow-lg hover:pl-6"
               >
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 group-hover:h-3/5 bg-gradient-to-b from-orange-500 to-orange-600 rounded-r-full transition-all duration-300" />
                 
@@ -136,7 +136,7 @@ export default function SidebarAdm() {
               <a 
                 href="/administrador/mural_adm" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="group flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl transition-all duration-300 relative overflow-hidden text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-gray-800/60 hover:to-gray-700/40 hover:shadow-lg hover:pl-6"
+                className="group flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl transition-all duration-300 relative overflow-hidden text-white hover:text-white hover:bg-gradient-to-r hover:from-gray-800/60 hover:to-gray-700/40 hover:shadow-lg hover:pl-6"
               >
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 group-hover:h-3/5 bg-gradient-to-b from-orange-500 to-orange-600 rounded-r-full transition-all duration-300" />
                 
@@ -151,7 +151,7 @@ export default function SidebarAdm() {
               <a 
                 href="/administrador/calendario_adm" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="group flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl transition-all duration-300 relative overflow-hidden text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-gray-800/60 hover:to-gray-700/40 hover:shadow-lg hover:pl-6"
+                className="group flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl transition-all duration-300 relative overflow-hidden text-white hover:text-white hover:bg-gradient-to-r hover:from-gray-800/60 hover:to-gray-700/40 hover:shadow-lg hover:pl-6"
               >
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 group-hover:h-3/5 bg-gradient-to-b from-orange-500 to-orange-600 rounded-r-full transition-all duration-300" />
                 
@@ -166,7 +166,7 @@ export default function SidebarAdm() {
               <a 
                 href="/administrador/aapm" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="group flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl transition-all duration-300 relative overflow-hidden text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-gray-800/60 hover:to-gray-700/40 hover:shadow-lg hover:pl-6"
+                className="group flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl transition-all duration-300 relative overflow-hidden text-white hover:text-white hover:bg-gradient-to-r hover:from-gray-800/60 hover:to-gray-700/40 hover:shadow-lg hover:pl-6"
               >
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 group-hover:h-3/5 bg-gradient-to-b from-orange-500 to-orange-600 rounded-r-full transition-all duration-300" />
                 
@@ -181,7 +181,7 @@ export default function SidebarAdm() {
               <a 
                 href="/conversas" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="group flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl transition-all duration-300 relative overflow-hidden text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-gray-800/60 hover:to-gray-700/40 hover:shadow-lg hover:pl-6"
+                className="group flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl transition-all duration-300 relative overflow-hidden text-white hover:text-white hover:bg-gradient-to-r hover:from-gray-800/60 hover:to-gray-700/40 hover:shadow-lg hover:pl-6"
               >
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 group-hover:h-3/5 bg-gradient-to-b from-orange-500 to-orange-600 rounded-r-full transition-all duration-300" />
                 
@@ -196,7 +196,7 @@ export default function SidebarAdm() {
               <a 
                 href="/perfil" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="group flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl transition-all duration-300 relative overflow-hidden text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-gray-800/60 hover:to-gray-700/40 hover:shadow-lg hover:pl-6"
+                className="group flex items-center gap-4 sm:gap-5 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl transition-all duration-300 relative overflow-hidden text-white hover:text-white hover:bg-gradient-to-r hover:from-gray-800/60 hover:to-gray-700/40 hover:shadow-lg hover:pl-6"
               >
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 group-hover:h-3/5 bg-gradient-to-b from-orange-500 to-orange-600 rounded-r-full transition-all duration-300" />
                 

@@ -485,7 +485,7 @@ Como posso te ajudar hoje?`,
                     <div className="text-center">
                         <div className="text-red-600 text-6xl mb-4">&#x1F512;</div>
                         <h2 className="text-xl font-semibold mb-2 text-white">Login necessário</h2>
-                        <p className="mb-4 transition-colors duration-300 text-gray-300">Faça login para acessar suas conversas</p>
+                        <p className="mb-4 transition-colors duration-300 text-white">Faça login para acessar suas conversas</p>
                         <button 
                             onClick={() => window.location.href = '/login'}
                             className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
@@ -581,7 +581,7 @@ Como posso te ajudar hoje?`,
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="font-bold text-red-600 text-lg mb-1">NEXUS IA</h3>
-                          <p className={`text-sm truncate transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <p className={`text-sm truncate transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-white'}`}>
                             Sua assistente virtual
                           </p>
                         </div>
@@ -623,7 +623,7 @@ Como posso te ajudar hoje?`,
                             {usuarioItem.nome}
                           </h3>
                           {isConversaAtiva && ultimaMensagem && (
-                            <span className="text-xs flex-shrink-0 text-gray-400">
+                            <span className="text-xs flex-shrink-0 text-white">
                               {formatarHora(ultimaMensagem.createdAt)}
                             </span>
                           )}
@@ -631,7 +631,7 @@ Como posso te ajudar hoje?`,
                         
                         <div className="flex items-center gap-2">
                           {isConversaAtiva && ultimaMensagem ? (
-                            <p className="text-xs truncate flex-1 text-gray-400">
+                            <p className="text-xs truncate flex-1 text-white">
                               {isMinhaMensagem && <span className="mr-1">{ultimaMensagem.lida ? '✓✓' : '✓'}</span>}
                               {ultimaMensagem.conteudo}
                             </p>
@@ -653,7 +653,7 @@ Como posso te ajudar hoje?`,
                 })}
                 
                 {listaUnificada.length === 1 && ( 
-                  <div className="text-center p-8 transition-colors duration-300 text-gray-400">
+                  <div className="text-center p-8 transition-colors duration-300 text-white">
                     <div className="text-4xl mb-4">💬</div>
                     <p className="text-sm">Nenhuma conversa iniciada ainda.</p>
                   </div>
@@ -704,7 +704,7 @@ Como posso te ajudar hoje?`,
                           </div>
                           <div>
                             <h3 className="font-bold text-red-600 text-lg leading-tight">NEXUS IA</h3>
-                            <span className="text-sm text-gray-500">Assistente Virtual</span>
+                            <span className="text-sm text-white">Assistente Virtual</span>
                           </div>
                         </>
                       ) : (
@@ -745,7 +745,7 @@ Como posso te ajudar hoje?`,
                           <div key={mensagem.id} className={`flex ${mensagem.isNexus ? 'justify-start' : 'justify-end'}`}>
                             <div className="max-w-md lg:max-w-xl xl:max-w-2xl px-5 py-3 rounded-2xl shadow-lg bg-gradient-to-br from-red-600 to-red-700 text-white">
                               <p className="text-base break-words whitespace-pre-wrap leading-relaxed">{mensagem.conteudo}</p>
-                              <p className={`text-xs mt-2 ${mensagem.isNexus ? 'text-red-200' : 'text-gray-300'}`}>{formatarHora(mensagem.createdAt)}</p>
+                              <p className={`text-xs mt-2 ${mensagem.isNexus ? 'text-red-200' : 'text-white'}`}>{formatarHora(mensagem.createdAt)}</p>
                             </div>
                           </div>
                         ))}
@@ -780,7 +780,7 @@ Como posso te ajudar hoje?`,
                       </div>
                     ) : (
                       mensagensConversa.length === 0 ? (
-                        <div className="h-full flex items-center justify-center transition-colors duration-300 text-gray-400">
+                        <div className="h-full flex items-center justify-center transition-colors duration-300 text-white">
                           <div className="text-center">
                             <div className="text-6xl mb-4">👋</div>
                             <p className="text-lg">Comece uma conversa!</p>
@@ -795,10 +795,10 @@ Como posso te ajudar hoje?`,
                               <div key={mensagem.id} className={`flex ${isRemetente ? 'justify-end' : 'justify-start'}`}>
                                 <div className={`max-w-md lg:max-w-xl xl:max-w-2xl px-5 py-3 rounded-2xl shadow-lg ${isRemetente ? 'bg-gradient-to-br from-red-600 to-red-700 text-white' : 'bg-gray-700/80 text-white'}`}>
                                   <p className="text-base break-words leading-relaxed">{mensagem.conteudo}</p>
-                                  <div className={`text-xs mt-2 flex items-center justify-end gap-1.5 ${isRemetente ? 'text-red-200' : (isDarkMode ? 'text-gray-400' : 'text-gray-500')}`}>
+                                  <div className={`text-xs mt-2 flex items-center justify-end gap-1.5 ${isRemetente ? 'text-red-200' : (isDarkMode ? 'text-white' : 'text-white')}`}>
                                     <span>{formatarHora(mensagem.createdAt)}</span>
                                     {isRemetente && (
-                                      <span className={mensagem.lida ? 'text-blue-400' : 'text-gray-300'}>
+                                      <span className={mensagem.lida ? 'text-blue-400' : 'text-white'}>
                                         {mensagem.lida ? '✓✓' : '✓'}
                                       </span>
                                     )}
@@ -840,7 +840,7 @@ Como posso te ajudar hoje?`,
                 </>
               ) : (
                 // Mensagem de boas-vindas quando nenhum chat está selecionado (Desktop)
-                <div className="h-full flex items-center justify-center transition-colors duration-300 text-gray-400">
+                <div className="h-full flex items-center justify-center transition-colors duration-300 text-white">
                   <div className="text-center">
                     <div className="text-8xl mb-6">💬</div>
                     <h2 className="text-2xl font-semibold mb-2">Nexus Conversas</h2>
@@ -857,7 +857,7 @@ Como posso te ajudar hoje?`,
         {/* Modal de Nova Conversa */}
         {mostrarModalNovaConversa && (
           <div className="fixed inset-0 bg-black/75 backdrop-blur-2xl flex items-center justify-center z-50 p-4 transition-all duration-300">
-            <div className="rounded-2xl shadow-2xl max-w-md w-full max-h-[85vh] flex flex-col transition-all duration-300 border-2 border-white/40 bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-3xl overflow-hidden shadow-2xl shadow-black/60">
+            <div className="rounded-2xl max-w-md w-full max-h-[85vh] flex flex-col transition-all duration-300 border-2 border-white/40 bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-3xl overflow-hidden shadow-2xl shadow-black/60">
               {/* Header */}
               <div className="p-5 sm:p-6 border-b border-white/30 bg-gradient-to-r from-white/15 via-white/10 to-white/15 backdrop-blur-2xl flex items-center justify-between">
                 <h2 className="text-lg sm:text-xl font-bold text-white">Nova Conversa</h2>
@@ -866,7 +866,7 @@ Como posso te ajudar hoje?`,
                     setMostrarModalNovaConversa(false);
                     setBuscaUsuario('');
                   }}
-                  className="text-2xl text-gray-400 hover:text-white transition-colors duration-300 hover:rotate-90"
+                  className="text-2xl text-white hover:text-white transition-colors duration-300 hover:rotate-90"
                 >
                   ×
                 </button>
@@ -875,7 +875,7 @@ Como posso te ajudar hoje?`,
               {/* Barra de Busca com Lupa */}
               <div className="p-4 sm:p-5 border-b border-white/30 bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-2xl">
                 <div className="relative">
-                  <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                   <input
@@ -891,7 +891,7 @@ Como posso te ajudar hoje?`,
               {/* Lista de Usuários */}
               <div className="flex-1 overflow-y-auto p-3 sm:p-4 bg-gradient-to-b from-white/10 via-white/5 to-transparent">
                 {usuarios.length === 0 ? (
-                  <div className="text-center py-8 text-gray-300">
+                  <div className="text-center py-8 text-white">
                     <p className="text-sm">Nenhum usuário disponível</p>
                   </div>
                 ) : (
@@ -926,7 +926,7 @@ Como posso te ajudar hoje?`,
                               <h3 className="font-semibold truncate text-white text-sm sm:text-base">
                                 {usuario.nome}
                               </h3>
-                              <p className="text-xs sm:text-sm truncate text-gray-400">
+                              <p className="text-xs sm:text-sm truncate text-white">
                                 {usuario.curso?.nome || 'Sem curso'}
                               </p>
                             </div>
@@ -939,7 +939,7 @@ Como posso te ajudar hoje?`,
                         );
                       })}
                     {usuarios.filter(u => u.nome.toLowerCase().includes(buscaUsuario.toLowerCase()) && u.id !== usuarioLogado?.id).length === 0 && buscaUsuario && (
-                      <div className="text-center py-8 text-gray-400">
+                      <div className="text-center py-8 text-white">
                         <p className="text-sm">Nenhum usuário encontrado</p>
                       </div>
                     )}

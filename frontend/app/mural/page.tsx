@@ -115,7 +115,7 @@ export default function MuralDeAvisos() {
         
         {/* Título Mobile - Visível apenas no mobile */}
         <div className="lg:hidden pt-16 pb-3 px-4">
-          <p className="text-center text-sm mb-1 transition-colors duration-300 text-gray-400">
+          <p className="text-center text-sm mb-1 transition-colors duration-300 text-white">
             Bem-vindo {usuarioLogado?.nome}
           </p>
           <h2 className="text-2xl font-bold text-center transition-colors duration-300 text-white">
@@ -127,7 +127,7 @@ export default function MuralDeAvisos() {
         <main className="transition-all duration-300 flex-1 p-2 sm:p-4 md:p-6 lg:p-8 flex flex-col items-center overflow-auto animate-fade-in lg:ml-[360px]">
         {/* Bem-vindo section - Oculto no mobile */}
         <div className="text-center mb-3 sm:mb-4 md:mb-6 px-2 hidden lg:block">
-          <p className="text-xs sm:text-sm md:text-base transition-colors duration-300 text-gray-400">Bem-vindo {usuarioLogado?.nome}</p>
+          <p className="text-xs sm:text-sm md:text-base transition-colors duration-300 text-white">Bem-vindo {usuarioLogado?.nome}</p>
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold transition-colors duration-300 text-white">Avisos recentes</h2>
         </div>
         {/* Aviso Card com altura máxima controlada */}
@@ -135,7 +135,7 @@ export default function MuralDeAvisos() {
           {/* A div interna é o painel de scroll */}
           <div className="flex-1 overflow-y-auto space-y-4 sm:space-y-6 md:space-y-8 px-1">
             {messages.length === 0 ? (
-              <div className="text-center py-12 text-base sm:text-lg lg:text-xl transition-colors duration-300 text-gray-400">Nenhum aviso no momento.</div>
+              <div className="text-center py-12 text-base sm:text-lg lg:text-xl transition-colors duration-300 text-white">Nenhum aviso no momento.</div>
             ) : (
               messages.map((message) => (
                 <div key={message.id} className="border-b pb-4 sm:pb-6 last:border-b-0 last:pb-0 transition-colors duration-300 border-gray-600">

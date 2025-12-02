@@ -148,7 +148,7 @@ export default function CalendarioAdm() {
             
             <div className="space-y-3">
               {eventos.length === 0 ? (
-                <div className="text-center py-8 text-gray-400">
+                <div className="text-center py-8 text-white">
                   <div className="text-4xl mb-2">📅</div>
                   <p>Nenhum evento encontrado</p>
                   <p className="text-sm">Clique no botão &quot;+&quot; para criar o primeiro evento!</p>
@@ -160,7 +160,7 @@ export default function CalendarioAdm() {
                       <h3 className="font-semibold text-white text-lg">
                         {evento.titulo}
                       </h3>
-                      <span className="text-sm text-gray-400 bg-gray-700 px-3 py-1 rounded-full">
+                      <span className="text-sm text-white bg-gray-700 px-3 py-1 rounded-full">
                         {formatarData(evento.data)}
                       </span>
                     </div>
@@ -218,11 +218,11 @@ export default function CalendarioAdm() {
                 <h2 className="text-xl sm:text-2xl font-bold text-white">
                   Novo Evento
                 </h2>
-                <p className={`text-xs sm:text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Preencha os detalhes do evento</p>
+                <p className={`text-xs sm:text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-white'}`}>Preencha os detalhes do evento</p>
               </div>
               <button
                 onClick={closeModal}
-                className={`p-2 rounded-full transition-colors hover:bg-opacity-80 ${isDarkMode ? 'text-gray-400 hover:bg-gray-700' : 'text-gray-400 hover:bg-gray-100'}`}
+                className={`p-2 rounded-full transition-colors hover:bg-opacity-80 ${isDarkMode ? 'text-white hover:bg-gray-700' : 'text-white hover:bg-gray-100'}`}
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -250,7 +250,7 @@ export default function CalendarioAdm() {
                     placeholder="Ex: Reunião de Condomínio, Festa Junina..."
                     maxLength={100}
                   />
-                  <div className={`text-xs mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                  <div className={`text-xs mt-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-white'}`}>
                     {titulo.length}/100 caracteres
                   </div>
                 </div>
@@ -272,7 +272,7 @@ export default function CalendarioAdm() {
                     placeholder="Descreva os detalhes do evento: horário, local, o que trazer..."
                     maxLength={500}
                   />
-                  <div className={`text-xs mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                  <div className={`text-xs mt-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-white'}`}>
                     {descricao.length}/500 caracteres
                   </div>
                 </div>

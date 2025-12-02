@@ -245,7 +245,7 @@ export default function MuralAdm() {
                   </div>
                   <p className="text-xs sm:text-sm md:text-base whitespace-pre-line mb-2.5 sm:mb-3 transition-colors duration-300 text-gray-200">{message.conteudo}</p>
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 sm:gap-2">
-                    <span className="text-xs transition-colors duration-300 text-gray-400">
+                    <span className="text-xs transition-colors duration-300 text-white">
                       {new Date(message.createdAt).toLocaleString('pt-BR')}
                     </span>
                     <span className="text-xs bg-blue-600/80 text-white px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full font-semibold shadow-md w-fit">

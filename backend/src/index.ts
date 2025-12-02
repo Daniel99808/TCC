@@ -439,6 +439,7 @@ app.get('/usuarios', async (req, res) => {
         nome: true,
         cpf: true,
         hasAAPM: true,
+        role: true,
         turma: true,
         curso: {
           select: {
