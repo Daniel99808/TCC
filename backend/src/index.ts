@@ -839,6 +839,81 @@ app.post('/calendario', async (req, res) => {
   }
 });
 
+// Endpoint para atualizar evento do calendário
+app.put('/calendario/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { titulo, descricao, data, tipoPublico, turma } = req.body;
+
+    const eventoId = parseInt(id);
+
+    if (!eventoId) {
+      return res.status(400).json({ error: 'ID do evento inválido' });
+    }
+
+    // Verificar se o evento existe
+    const eventoExistente = await prisma.calendario.findUnique({
+      where: { id: eventoId }
+    });
+
+    if (!eventoExistente) {
+      return res.status(404).json({ error: 'Evento não encontrado' });
+    }
+
+    // Preparar dados para atualização
+    const dadosAtualizacao: any = {};
+    
+    if (titulo !== undefined) dadosAtualizacao.titulo = titulo;
+    if (descricao !== undefined) dadosAtualizacao.descricao = descricao;
+    if (data !== undefined) dadosAtualizacao.data = new Date(data);
+    if (tipoPublico !== undefined) dadosAtualizacao.tipoPublico = tipoPublico;
+    if (turma !== undefined) dadosAtualizacao.turma = turma;
+
+    const eventoAtualizado = await prisma.calendario.update({
+      where: { id: eventoId },
+      data: dadosAtualizacao
+    });
+
+    console.log('Evento atualizado com sucesso:', eventoAtualizado);
+    res.json(eventoAtualizado);
+  } catch (error) {
+    console.error('Error updating calendar event:', error);
+    res.status(500).json({ error: 'Failed to update event', details: String(error) });
+  }
+});
+
+// Endpoint para deletar evento do calendário
+app.delete('/calendario/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const eventoId = parseInt(id);
+
+    if (!eventoId) {
+      return res.status(400).json({ error: 'ID do evento inválido' });
+    }
+
+    // Verificar se o evento existe
+    const eventoExistente = await prisma.calendario.findUnique({
+      where: { id: eventoId }
+    });
+
+    if (!eventoExistente) {
+      return res.status(404).json({ error: 'Evento não encontrado' });
+    }
+
+    await prisma.calendario.delete({
+      where: { id: eventoId }
+    });
+
+    console.log('Evento deletado com sucesso:', eventoId);
+    res.json({ message: 'Evento deletado com sucesso', id: eventoId });
+  } catch (error) {
+    console.error('Error deleting calendar event:', error);
+    res.status(500).json({ error: 'Failed to delete event', details: String(error) });
+  }
+});
+
 
 // Rota para alterar senha
 app.put('/alterar-senha', async (req, res) => {

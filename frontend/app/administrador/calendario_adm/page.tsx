@@ -34,6 +34,8 @@ export default function CalendarioAdm() {
   const [eventos, setEventos] = useState<CalendarioEvento[]>([]);
   const [cursos, setCursos] = useState<Curso[]>([]);
   const [loadingCursos, setLoadingCursos] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const { isDarkMode } = useDarkMode();
 
   // Turmas padrão
@@ -170,6 +172,120 @@ export default function CalendarioAdm() {
     setCursoId('');
     setTurma('');
     setMessage('');
+    setEditingId(null);
+  };
+
+  const handleEdit = (evento: CalendarioEvento) => {
+    setTitulo(evento.titulo);
+    setDescricao(evento.descricao);
+    const dataFormatada = new Date(evento.data).toISOString().split('T')[0];
+    setData(dataFormatada);
+    setTipoPublico(evento.tipoPublico || 'TODOS');
+    setCursoId(evento.cursoId?.toString() || '');
+    setTurma(evento.turma || '');
+    setEditingId(evento.id);
+    setMessage('');
+  };
+
+  const handleSaveEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!editingId) return;
+
+    if (!titulo.trim() || !descricao.trim() || !data) {
+      setMessage('Por favor, preencha todos os campos obrigatórios.');
+      setTimeout(() => setMessage(''), 3000);
+      return;
+    }
+
+    if (tipoPublico !== 'TODOS' && !cursoId) {
+      setMessage('Selecione um curso quando o tipo não for "Todos".');
+      setTimeout(() => setMessage(''), 3000);
+      return;
+    }
+
+    if (tipoPublico === 'TURMA' && !turma) {
+      setMessage('Selecione uma turma para este tipo de evento.');
+      setTimeout(() => setMessage(''), 3000);
+      return;
+    }
+
+    setLoading(true);
+    setMessage('');
+
+    try {
+      const [ano, mes, dia] = data.split('-').map(Number);
+      const dataEvento = new Date(ano, mes - 1, dia, 12, 0, 0);
+
+      const payload: any = {
+        titulo: titulo.trim(),
+        descricao: descricao.trim(),
+        data: dataEvento.toISOString(),
+        tipoPublico,
+      };
+
+      if (tipoPublico !== 'TODOS' && cursoId) {
+        payload.cursoId = parseInt(cursoId);
+      }
+
+      if (tipoPublico === 'TURMA' && turma) {
+        payload.turma = turma;
+      }
+
+      const response = await fetch(apiUrl(`/calendario/${editingId}`), {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        setMessage('✅ Evento atualizado com sucesso!');
+        handleClear();
+        setTimeout(() => {
+          setMessage('');
+          fetchEventos();
+        }, 2000);
+      } else {
+        const errorData = await response.json();
+        setMessage(`❌ Erro: ${errorData.message || errorData.error || 'Erro ao atualizar evento'}`);
+      }
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+      setMessage('❌ Erro ao conectar com o servidor. Tente novamente.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (eventoId: number) => {
+    if (!confirm('Tem certeza que deseja deletar este evento?')) return;
+
+    setDeletingId(eventoId);
+    setMessage('');
+
+    try {
+      const response = await fetch(apiUrl(`/calendario/${eventoId}`), {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setMessage('✅ Evento deletado com sucesso!');
+        setTimeout(() => {
+          setMessage('');
+          fetchEventos();
+        }, 2000);
+      } else {
+        const errorData = await response.json();
+        setMessage(`❌ Erro: ${errorData.message || errorData.error || 'Erro ao deletar evento'}`);
+      }
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+      setMessage('❌ Erro ao conectar com o servidor. Tente novamente.');
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   const formatarData = (dataString: string) => {
@@ -244,10 +360,10 @@ export default function CalendarioAdm() {
             <div className="lg:col-span-1 order-2 lg:order-1">
               <div className="rounded-2xl shadow-2xl p-5 lg:p-6 bg-white/10 backdrop-blur-lg border border-white/20 sticky top-24">
                 <h2 className="text-base sm:text-lg lg:text-lg font-bold mb-4 transition-colors duration-300 text-white">
-                  Novo Evento
+                  {editingId ? '✏️ Editar Evento' : 'Novo Evento'}
                 </h2>
                 
-                <form onSubmit={handleSubmit} className="space-y-3">
+                <form onSubmit={editingId ? handleSaveEdit : handleSubmit} className="space-y-3">
                   <div>
                     <label htmlFor="titulo" className="block text-xs sm:text-sm font-bold mb-1.5 text-white">
                       Título *
@@ -380,7 +496,7 @@ export default function CalendarioAdm() {
                       disabled={loading || !titulo.trim() || !descricao.trim() || !data || (tipoPublico !== 'TODOS' && !cursoId) || (tipoPublico === 'TURMA' && !turma)}
                       className="flex-1 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white py-2.5 px-3 rounded-lg text-xs sm:text-sm font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                     >
-                      {loading ? 'Criando...' : 'Criar'}
+                      {loading ? (editingId ? 'Atualizando...' : 'Criando...') : (editingId ? 'Atualizar' : 'Criar')}
                     </button>
                     
                     <button
@@ -388,7 +504,7 @@ export default function CalendarioAdm() {
                       onClick={handleClear}
                       className="px-3 py-2.5 border-2 rounded-lg text-xs sm:text-sm font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] border-white/30 text-white hover:bg-white/10"
                     >
-                      Limpar
+                      {editingId ? 'Cancelar' : 'Limpar'}
                     </button>
                   </div>
                 </form>
@@ -428,6 +544,21 @@ export default function CalendarioAdm() {
                         <p className="text-xs sm:text-sm whitespace-pre-wrap text-gray-200 line-clamp-2">
                           {evento.descricao}
                         </p>
+                        <div className="flex gap-2 mt-3 pt-3 border-t border-white/20">
+                          <button
+                            onClick={() => handleEdit(evento)}
+                            className="flex-1 text-xs sm:text-sm bg-blue-600/80 hover:bg-blue-700 text-white py-1.5 px-2 rounded font-semibold transition-all duration-200 hover:scale-[1.02]"
+                          >
+                            ✏️ Editar
+                          </button>
+                          <button
+                            onClick={() => handleDelete(evento.id)}
+                            disabled={deletingId === evento.id}
+                            className="flex-1 text-xs sm:text-sm bg-red-600/80 hover:bg-red-700 text-white py-1.5 px-2 rounded font-semibold transition-all duration-200 hover:scale-[1.02] disabled:opacity-50"
+                          >
+                            {deletingId === evento.id ? '⏳...' : '🗑️ Deletar'}
+                          </button>
+                        </div>
                       </div>
                     ))
                   )}
