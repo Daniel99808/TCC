@@ -69,7 +69,20 @@ export default function MuralAdm() {
 
   const fetchMessages = async () => {
     try {
-      const response = await fetch(apiUrl('/mural'));
+      // Tentar pegar userId do sessionStorage para validação
+      const userStr = typeof window !== 'undefined' ? sessionStorage.getItem('user') : null;
+      let url = apiUrl('/mural');
+      
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          url += `?userId=${user.id}`;
+        } catch (e) {
+          // Se não conseguir fazer parse, continua sem userId
+        }
+      }
+      
+      const response = await fetch(url);
       const data = await response.json();
       // Verificar se data é um array antes de setar
       if (Array.isArray(data)) {

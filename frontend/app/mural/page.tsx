@@ -52,8 +52,13 @@ export default function MuralDeAvisos() {
       const userStr = localStorage.getItem('usuarioLogado');
       if (userStr) {
         const user = JSON.parse(userStr);
+        console.log('Socket.IO novaMensagem recebida:', message);
+        console.log('Verificando se é relevante para usuário:', user.id, 'turma:', user.turma, 'curso:', user.cursoId);
         if (isMessageRelevant(message, user)) {
+          console.log('✅ Mensagem RELEVANTE - adicionando à lista');
           setMessages(prev => [message, ...prev]);
+        } else {
+          console.log('❌ Mensagem NÃO RELEVANTE - ignorando (tipoPublico:', message.tipoPublico, 'cursoId:', message.cursoId, 'turma:', message.turma + ')');
         }
       }
     });
@@ -62,6 +67,7 @@ export default function MuralDeAvisos() {
       socket.off('novaMensagem');
     };
   }, []);
+
 
   const isMessageRelevant = (msg: Message, user: User): boolean => {
     if (msg.tipoPublico === 'TODOS') return true;
@@ -72,15 +78,21 @@ export default function MuralDeAvisos() {
 
   const fetchMessages = async (user: User) => {
     try {
+      console.log('Buscando mensagens para usuário:', user);
       const params = new URLSearchParams();
-      if (user.cursoId) params.append('cursoId', user.cursoId.toString());
-      if (user.turma) params.append('turma', user.turma);
+      params.append('userId', user.id.toString());
       
-      const response = await fetch(apiUrl(`/mural?${params.toString()}`));
+      const url = apiUrl(`/mural?${params.toString()}`);
+      console.log('URL da requisição:', url);
+      
+      const response = await fetch(url);
       const data = await response.json();
+      console.log('Dados recebidos do servidor:', data);
+      
       // Verificar se data é um array antes de setar
       if (Array.isArray(data)) {
         setMessages(data);
+        console.log('Mensagens setadas:', data.length, 'mensagens');
       } else {
         console.error('Dados recebidos não são um array:', data);
         setMessages([]);

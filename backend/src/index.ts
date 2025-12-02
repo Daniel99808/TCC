@@ -493,39 +493,60 @@ app.patch('/usuarios/:id/aapm', async (req, res) => {
 // Rotas do Mural
 app.get('/mural', async (req, res) => {
   try {
-    const { cursoId, turma } = req.query;
+    const { userId } = req.query;
     
-    // Construir filtro dinâmico
-    const where: any = {};
+    console.log('GET /mural chamado com userId:', userId);
     
-    // Se não tiver filtros, buscar apenas mensagens para TODOS
-    // Se tiver cursoId ou turma, buscar mensagens específicas + TODOS
-    if (cursoId || turma) {
-      where.OR = [
-        { tipoPublico: 'TODOS' }
-      ];
-      
-      if (cursoId && !turma) {
-        // Buscar mensagens para TODOS + mensagens do CURSO específico
-        where.OR.push(
-          { tipoPublico: 'CURSO', cursoId: parseInt(cursoId as string) }
-        );
+    let where: any = {};
+
+    // Se userId for fornecido, filtrar baseado nos dados do usuário
+    if (userId) {
+      const user = await prisma.user.findUnique({
+        where: { id: parseInt(userId as string) },
+        select: { cursoId: true, turma: true, role: true, nome: true }
+      });
+
+      console.log('Usuário encontrado:', user);
+
+      if (!user) {
+        return res.status(404).json({ error: 'Usuário não encontrado' });
       }
-      
-      if (cursoId && turma) {
-        // Buscar mensagens para TODOS + mensagens do CURSO + mensagens da TURMA específica
-        where.OR.push(
-          { tipoPublico: 'CURSO', cursoId: parseInt(cursoId as string) },
-          { tipoPublico: 'TURMA', cursoId: parseInt(cursoId as string), turma: turma as string }
-        );
+
+      // Se for admin, retornar todas as mensagens
+      if (user.role === 'ADMIN') {
+        console.log('Usuário é ADMIN, retornando todas as mensagens');
+        where = {}; // Sem filtro
+      } else {
+        // Para estudante ou professor, filtrar baseado em seu curso e turma
+        console.log('Usuário é', user.role, '- filtrando por curso:', user.cursoId, 'turma:', user.turma);
+        
+        where.OR = [
+          { tipoPublico: 'TODOS' }
+        ];
+        
+        if (user.cursoId) {
+          where.OR.push(
+            { tipoPublico: 'CURSO', cursoId: user.cursoId }
+          );
+          
+          // Se tiver turma, adicionar filtro de turma
+          if (user.turma) {
+            where.OR.push(
+              { tipoPublico: 'TURMA', cursoId: user.cursoId, turma: user.turma }
+            );
+          }
+        }
+        
+        console.log('Filtro WHERE construído:', JSON.stringify(where, null, 2));
       }
     } else {
-      // Sem filtros, buscar todas as mensagens
-      // (não filtrar por tipoPublico para mostrar tudo no admin)
+      // Se não tiver userId, retornar erro ou apenas mensagens para TODOS
+      console.log('Sem userId fornecido, retornando apenas mensagens TODOS');
+      where.tipoPublico = 'TODOS';
     }
     
     const mural = await prisma.mural.findMany({
-      where: Object.keys(where).length > 0 ? where : undefined,
+      where,
       select: {
         id: true,
         conteudo: true,
@@ -545,6 +566,7 @@ app.get('/mural', async (req, res) => {
       }
     });
     
+    console.log('Mensagens encontradas:', mural.length);
     res.json(mural);
   } catch (error) {
     console.error('Erro detalhado:', error);
@@ -588,9 +610,41 @@ app.post('/mural', async (req, res) => {
     });
     
     console.log('Mensagem criada:', newMessage);
+    console.log('Detalhes da mensagem criada - tipoPublico:', newMessage.tipoPublico, 'cursoId:', newMessage.cursoId, 'turma:', newMessage.turma);
 
-    console.log('Emitindo via socket.io:', newMessage);
-    io.emit('novaMensagem', newMessage);
+    // Determinar quem pode receber essa mensagem
+    let recipientUsers: any[] = [];
+    
+    if (newMessage.tipoPublico === 'TODOS') {
+      console.log('Mensagem TODOS - enviando para todos os clientes conectados');
+      // Enviar para todos
+      io.emit('novaMensagem', newMessage);
+    } else if (newMessage.tipoPublico === 'CURSO' && newMessage.cursoId) {
+      console.log('Mensagem CURSO - enviando para usuários do curso:', newMessage.cursoId);
+      // Buscar todos os usuários deste curso e enviar
+      recipientUsers = await prisma.user.findMany({
+        where: { cursoId: newMessage.cursoId }
+      });
+      // Emitir para cada socket dos usuários deste curso
+      // Por enquanto, emitir globalmente (melhorar com rooms depois)
+      io.emit('novaMensagem', newMessage);
+    } else if (newMessage.tipoPublico === 'TURMA' && newMessage.cursoId && newMessage.turma) {
+      console.log('Mensagem TURMA - enviando para usuários da turma:', newMessage.cursoId, newMessage.turma);
+      // Buscar usuários desta turma específica
+      recipientUsers = await prisma.user.findMany({
+        where: { 
+          cursoId: newMessage.cursoId,
+          turma: newMessage.turma
+        }
+      });
+      // Emitir para cada socket dos usuários desta turma
+      // Por enquanto, emitir globalmente (melhorar com rooms depois)
+      io.emit('novaMensagem', newMessage);
+    } else {
+      console.log('Mensagem com dados incompletos, emitindo apenas para TODOS');
+      io.emit('novaMensagem', newMessage);
+    }
+    console.log('Emissão Socket.IO completa - tipoPublico:', newMessage.tipoPublico);
 
     console.log('Retornando resposta 201');
     res.status(201).json(newMessage);
@@ -913,19 +967,8 @@ io.on('connection', (socket) => {
     socket.broadcast.emit(`typing-${conversaId}`, { userId, isTyping: false });
   });
 
-  socket.on('novaMensagem', async (data) => {
-    try {
-      const newMessage = await prisma.mural.create({
-        data: {
-          conteudo: data.conteudo,
-        },
-      });
-
-      io.emit('novaMensagem', newMessage);
-    } catch (error) {
-      console.error('Error creating and sending message:', error);
-    }
-  });
+  // Socket.IO novaMensagem listener - não usar aqui, usar POST /mural em vez disso
+  // Isso evita duplicação e garante que só clientes autenticados possam enviar
 });
 
 const PORT = process.env.PORT || 3001;
