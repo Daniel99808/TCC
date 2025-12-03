@@ -14,6 +14,18 @@ interface Evento {
   titulo: string;
   descricao: string;
   data: string;
+  tipoPublico?: string;
+  cursoId?: number;
+  turma?: string;
+}
+
+interface Usuario {
+  id: number;
+  nome: string;
+  cpf: string;
+  role: string;
+  cursoId?: number;
+  turma?: string;
 }
 
 const CalendarioPage = () => {
@@ -22,6 +34,7 @@ const CalendarioPage = () => {
   const [diaSelecionado, setDiaSelecionado] = useState<number | null>(null);
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+  const [usuario, setUsuario] = useState<Usuario | null>(null);
   const { isDarkMode } = useDarkMode();
 
   const meses = [
@@ -55,14 +68,37 @@ const CalendarioPage = () => {
   };
 
   useEffect(() => {
+    // Carregar usuário do localStorage
+    const userStr = localStorage.getItem('usuarioLogado');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      setUsuario(user);
+    }
+    
     buscarEventos(dataAtual);
   }, [dataAtual]);
+
+  const isEventoRelevante = (evento: Evento, user: Usuario | null): boolean => {
+    if (!user) return evento.tipoPublico === 'TODOS';
+    
+    // Mostrar evento se for público para todos
+    if (evento.tipoPublico === 'TODOS') return true;
+    
+    // Mostrar evento de curso se o usuário está no mesmo curso
+    if (evento.tipoPublico === 'CURSO' && evento.cursoId === user.cursoId) return true;
+    
+    // Mostrar evento de turma se o usuário está no mesmo curso E mesma turma
+    if (evento.tipoPublico === 'TURMA' && evento.cursoId === user.cursoId && evento.turma === user.turma) return true;
+    
+    return false;
+  };
 
   const eventosDoDia = eventosDoMes.filter(evento => {
     if (diaSelecionado === null) return false;
     const diaEvento = new Date(evento.data).getDate();
     const mesEvento = new Date(evento.data).getMonth();
-    return diaEvento === diaSelecionado && mesEvento === dataAtual.getMonth();
+    const ehDataCorreta = diaEvento === diaSelecionado && mesEvento === dataAtual.getMonth();
+    return ehDataCorreta && isEventoRelevante(evento, usuario);
   });
 
   const renderizarDias = () => {
@@ -87,7 +123,7 @@ const CalendarioPage = () => {
       const isHoje = new Date().toDateString() === new Date(ano, mes, i).toDateString();
       const temEvento = eventosDoMes.some(evento => {
         const dataEvento = new Date(evento.data);
-        return dataEvento.getDate() === i && dataEvento.getMonth() === mes;
+        return dataEvento.getDate() === i && dataEvento.getMonth() === mes && isEventoRelevante(evento, usuario);
       });
       const isSelecionado = diaSelecionado === i;
       const classes = `p-1 sm:p-2 md:p-3 lg:p-4 rounded-lg sm:rounded-xl text-center cursor-pointer transition-all duration-300 relative text-lg sm:text-xl md:text-2xl lg:text-3xl min-h-[40px] sm:min-h-[50px] md:min-h-[55px] lg:min-h-[60px] flex items-center justify-center font-bold
