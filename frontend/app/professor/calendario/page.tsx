@@ -474,17 +474,33 @@ export default function CalendarioProfessor() {
                       <button
                         type="submit"
                         disabled={loading || !titulo.trim() || !descricao.trim() || !data || (tipoPublico === 'TURMA' && !turma)}
-                        className="flex-1 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white py-2.5 px-3 rounded-lg text-xs sm:text-sm font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                        className="flex-1 flex items-center justify-center gap-2.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg transition-all duration-300 group relative overflow-hidden text-xs sm:text-sm text-red-500 hover:text-red-400 bg-gradient-to-r from-red-900/30 to-red-800/20 hover:from-red-900/50 hover:to-red-800/40 border border-red-700/40 hover:border-red-600/60 shadow-lg hover:shadow-xl hover:shadow-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg disabled:hover:shadow-red-500/0"
                       >
-                        {loading ? (editingId ? 'Atualizando...' : 'Criando...') : (editingId ? 'Atualizar' : 'Criar')}
+                        {/* Efeito de brilho ao hover */}
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                        </div>
+                        
+                        <svg className="w-4 h-4 sm:w-4.5 sm:h-4.5 flex-shrink-0 relative z-10 transition-all duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span className="font-bold relative z-10 transition-transform duration-300 group-hover:translate-x-1">{loading ? (editingId ? 'Atualizando...' : 'Criando...') : (editingId ? 'Atualizar' : 'Criar')}</span>
                       </button>
                       
                       <button
                         type="button"
                         onClick={handleClear}
-                        className="px-3 py-2.5 border-2 rounded-lg text-xs sm:text-sm font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] border-white/30 text-white hover:bg-white/10"
+                        className="flex items-center justify-center gap-2.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg transition-all duration-300 group relative overflow-hidden text-xs sm:text-sm text-gray-300 hover:text-white bg-gradient-to-r from-gray-700/30 to-gray-600/20 hover:from-gray-700/50 hover:to-gray-600/40 border border-gray-600/40 hover:border-gray-500/60 shadow-lg hover:shadow-xl hover:shadow-gray-500/10"
                       >
-                        {editingId ? 'Cancelar' : 'Limpar'}
+                        {/* Efeito de brilho ao hover */}
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                        </div>
+                        
+                        <svg className="w-4 h-4 sm:w-4.5 sm:h-4.5 flex-shrink-0 relative z-10 transition-all duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        <span className="font-bold relative z-10 transition-transform duration-300 group-hover:translate-x-1">{editingId ? 'Cancelar' : 'Limpar'}</span>
                       </button>
                     </div>
                   </form>
@@ -527,16 +543,32 @@ export default function CalendarioProfessor() {
                           <div className="flex gap-2 mt-3 pt-3 border-t border-white/20">
                             <button
                               onClick={() => handleEdit(evento)}
-                              className="flex-1 text-xs sm:text-sm bg-blue-600/80 hover:bg-blue-700 text-white py-1.5 px-2 rounded font-semibold transition-all duration-200 hover:scale-[1.02]"
+                              className="flex-1 flex items-center justify-center gap-1.5 text-xs sm:text-sm px-2 py-1.5 rounded-lg transition-all duration-300 group relative overflow-hidden text-blue-400 hover:text-blue-300 bg-gradient-to-r from-blue-900/30 to-blue-800/20 hover:from-blue-900/50 hover:to-blue-800/40 border border-blue-700/40 hover:border-blue-600/60 shadow-lg hover:shadow-xl hover:shadow-blue-500/20 font-semibold"
                             >
-                              ✏️ Editar
+                              {/* Efeito de brilho ao hover */}
+                              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                              </div>
+                              
+                              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 relative z-10 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                              </svg>
+                              <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-0.5">Editar</span>
                             </button>
                             <button
                               onClick={() => handleDelete(evento.id)}
                               disabled={deletingId === evento.id}
-                              className="flex-1 text-xs sm:text-sm bg-red-600/80 hover:bg-red-700 text-white py-1.5 px-2 rounded font-semibold transition-all duration-200 hover:scale-[1.02] disabled:opacity-50"
+                              className="flex-1 flex items-center justify-center gap-1.5 text-xs sm:text-sm px-2 py-1.5 rounded-lg transition-all duration-300 group relative overflow-hidden text-red-400 hover:text-red-300 bg-gradient-to-r from-red-900/30 to-red-800/20 hover:from-red-900/50 hover:to-red-800/40 border border-red-700/40 hover:border-red-600/60 shadow-lg hover:shadow-xl hover:shadow-red-500/20 font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg disabled:hover:shadow-red-500/0"
                             >
-                              {deletingId === evento.id ? '⏳...' : '🗑️ Deletar'}
+                              {/* Efeito de brilho ao hover */}
+                              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                              </div>
+                              
+                              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 relative z-10 transition-all duration-300 group-hover:scale-110 group-hover:-rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                              <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-0.5">{deletingId === evento.id ? 'Deletando...' : 'Deletar'}</span>
                             </button>
                           </div>
                         </div>
