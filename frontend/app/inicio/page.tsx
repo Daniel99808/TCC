@@ -9,7 +9,8 @@ import { apiUrl } from '@/lib/api';
 interface Usuario {
   id: number;
   nome: string;
-  tipo: string;
+  tipo?: string;
+  role?: string;
   curso?: { nome: string };
 }
 
@@ -104,6 +105,19 @@ export default function InicioPage() {
     }
   };
 
+  // Função para obter os links corretos baseado no tipo de usuário
+  const getLinks = () => {
+    // Tenta usar 'tipo' ou 'role' (para compatibilidade)
+    let tipoUsuario = (usuarioLogado?.tipo || usuarioLogado?.role || 'estudante').toLowerCase();
+    
+    return {
+      mural: tipoUsuario === 'professor' ? '/professor/mural' : tipoUsuario === 'administrador' || tipoUsuario === 'admin' ? '/administrador/mural_adm' : '/mural',
+      calendario: tipoUsuario === 'professor' ? '/professor/calendario' : tipoUsuario === 'administrador' || tipoUsuario === 'admin' ? '/administrador/calendario_adm' : '/calendario',
+      conversas: '/conversas',
+      perfil: '/perfil'
+    };
+  };
+
   const calcularTempoDecorrido = (data: string) => {
     const agora = new Date();
     const dataPassada = new Date(data);
@@ -158,7 +172,7 @@ export default function InicioPage() {
             {/* Cards de Estatísticas - Estilo Moderno */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-6 lg:mb-8">
               {/* Card Avisos */}
-              <a href="/mural" className="bg-gradient-to-br from-red-900/40 to-red-950/40 backdrop-blur-md border border-red-800/50 group relative overflow-hidden rounded-2xl p-5 lg:p-6 transition-all duration-300 hover:scale-[1.02] shadow-xl hover:shadow-2xl hover:shadow-red-500/20 cursor-pointer">
+              <a href={getLinks().mural} className="bg-gradient-to-br from-red-900/40 to-red-950/40 backdrop-blur-md border border-red-800/50 group relative overflow-hidden rounded-2xl p-5 lg:p-6 transition-all duration-300 hover:scale-[1.02] shadow-xl hover:shadow-2xl hover:shadow-red-500/20 cursor-pointer">
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center bg-red-500/20 group-hover:scale-110 transition-transform">
@@ -183,7 +197,7 @@ export default function InicioPage() {
               </a>
 
               {/* Card Eventos */}
-              <a href="/calendario" className="bg-gradient-to-br from-blue-900/40 to-blue-950/40 backdrop-blur-md border border-blue-800/50 group relative overflow-hidden rounded-2xl p-5 lg:p-6 transition-all duration-300 hover:scale-[1.02] shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 cursor-pointer">
+              <a href={getLinks().calendario} className="bg-gradient-to-br from-blue-900/40 to-blue-950/40 backdrop-blur-md border border-blue-800/50 group relative overflow-hidden rounded-2xl p-5 lg:p-6 transition-all duration-300 hover:scale-[1.02] shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 cursor-pointer">
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center bg-blue-500/20 group-hover:scale-110 transition-transform">
@@ -245,7 +259,7 @@ export default function InicioPage() {
                     Acesso Rápido
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4">
-                    <a href="/mural" className="group p-4 lg:p-5 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600">
+                    <a href={getLinks().mural} className="group p-4 lg:p-5 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600">
                       <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-2 bg-red-500/20 group-hover:scale-110 transition-transform">
                         <svg className="w-5 h-5 lg:w-6 lg:h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -259,7 +273,7 @@ export default function InicioPage() {
                       </p>
                     </a>
 
-                    <a href="/calendario" className="group p-4 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600">
+                    <a href={getLinks().calendario} className="group p-4 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600">
                       <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 bg-blue-500/20 group-hover:scale-110 transition-transform">
                         <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -269,7 +283,7 @@ export default function InicioPage() {
                       <p className="text-sm text-white">Eventos e datas importantes</p>
                     </a>
 
-                    <a href="/conversas" className="group p-4 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600">
+                    <a href={getLinks().conversas} className="group p-4 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600">
                       <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 bg-purple-500/20 group-hover:scale-110 transition-transform">
                         <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -279,7 +293,7 @@ export default function InicioPage() {
                       <p className="text-sm text-white">Mensagens e chat</p>
                     </a>
 
-                    <a href="/perfil" className="group p-4 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600">
+                    <a href={getLinks().perfil} className="group p-4 rounded-xl transition-all duration-300 hover:scale-105 bg-gray-700/50 hover:bg-gray-700 border border-gray-600">
                       <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 bg-green-500/20 group-hover:scale-110 transition-transform">
                         <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />

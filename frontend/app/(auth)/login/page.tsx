@@ -115,9 +115,14 @@ export default function AuthForm() {
 
         // REDIRECIONAMENTO APÓS 3 SEGUNDOS (usando navegação nativa)
         setTimeout(() => {
-          const userRole = data.user?.role || 'USER'; // Garante um fallback
-          if (userRole === 'ADMIN') window.location.href = '/administrador/mural_adm';
-          else window.location.href = '/mural';
+          const userRole = (data.user?.role || data.user?.tipo || 'ESTUDANTE').toUpperCase();
+          if (userRole === 'ADMIN' || userRole === 'ADMINISTRADOR') {
+            window.location.href = '/administrador/mural_adm';
+          } else if (userRole === 'PROFESSOR') {
+            window.location.href = '/professor/mural';
+          } else {
+            window.location.href = '/mural';
+          }
         }, TOAST_DURATION);
         
       } else {

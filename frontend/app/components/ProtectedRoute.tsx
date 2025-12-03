@@ -25,14 +25,18 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
 
       try {
         const usuario = JSON.parse(usuarioData);
-        const userRole = usuario.role || 'ESTUDANTE';
+        // Tenta usar 'role' ou 'tipo' (para compatibilidade)
+        let userRole = usuario.role || usuario.tipo || 'ESTUDANTE';
+        
+        // Normaliza o valor para maiúsculas para comparação
+        userRole = userRole.toUpperCase();
 
         if (!allowedRoles.includes(userRole)) {
           // Não tem permissão para acessar
           alert('Acesso negado! Você não tem permissão para acessar esta área.');
           
           // Redireciona baseado no role
-          if (userRole === 'ADMIN') {
+          if (userRole === 'ADMIN' || userRole === 'ADMINISTRADOR') {
             router.push('/administrador/mural_adm');
           } else if (userRole === 'PROFESSOR') {
             router.push('/professor/mural');
