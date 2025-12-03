@@ -101,5 +101,5 @@ ___
 - YOUTUBE
 - CANVA
 - MIRO
-- python/flutter/dart/node.js/javascript./django
+- /node.js/javascript/typescript/tailwindcss/nextjs
 ___
