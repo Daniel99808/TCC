@@ -10,6 +10,7 @@ interface Usuario {
   id: number;
   nome: string;
   cpf: string;
+  role?: string;
   curso: {
     id: number;
     nome: string;
@@ -145,25 +146,57 @@ export default function PerfilPage() {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                      {/* Tipo de Usuário */}
+                      <div className="p-3 sm:p-4 lg:p-5 rounded-lg sm:rounded-xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm border border-white/20 shadow-md sm:shadow-lg">
+                        <p className="text-xs sm:text-sm font-medium mb-1 sm:mb-2 transition-colors duration-300 text-gray-300">
+                          Tipo de Usuário
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <span className={`text-sm sm:text-lg lg:text-xl font-bold transition-colors duration-300 ${
+                            usuario?.role === 'ADMIN' ? 'text-amber-300' : 
+                            usuario?.role === 'PROFESSOR' ? 'text-blue-300' : 
+                            'text-green-300'
+                          }`}>
+                            {usuario?.role === 'ADMIN' && '👨‍💼 Administrador'}
+                            {usuario?.role === 'PROFESSOR' && '👨‍🏫 Professor'}
+                            {usuario?.role === 'ESTUDANTE' && '👨‍🎓 Estudante'}
+                          </span>
+                        </div>
+                      </div>
+
                       {/* Curso */}
                       <div className="p-3 sm:p-4 lg:p-5 rounded-lg sm:rounded-xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm border border-white/20 shadow-md sm:shadow-lg">
                         <p className="text-xs sm:text-sm font-medium mb-1 sm:mb-2 transition-colors duration-300 text-gray-300">
                           Curso
                         </p>
                         <p className={`text-sm sm:text-lg lg:text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                          {usuario?.curso?.nome || 'Não informado'}
+                          {usuario?.role === 'ADMIN' ? '📍 Sem curso (ADM)' : usuario?.curso?.nome || 'Não informado'}
                         </p>
                       </div>
 
-                      {/* Turma */}
-                      <div className="p-3 sm:p-4 lg:p-5 rounded-lg sm:rounded-xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm border border-white/20 shadow-md sm:shadow-lg">
-                        <p className="text-xs sm:text-sm font-medium mb-1 sm:mb-2 transition-colors duration-300 text-gray-300">
-                          Turma
-                        </p>
-                        <p className={`text-sm sm:text-lg lg:text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                          B
-                        </p>
-                      </div>
+                      {/* Turma - Mostrar apenas para estudantes */}
+                      {usuario?.role === 'ESTUDANTE' && (
+                        <div className="p-3 sm:p-4 lg:p-5 rounded-lg sm:rounded-xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm border border-white/20 shadow-md sm:shadow-lg">
+                          <p className="text-xs sm:text-sm font-medium mb-1 sm:mb-2 transition-colors duration-300 text-gray-300">
+                            Turma
+                          </p>
+                          <p className={`text-sm sm:text-lg lg:text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                            B
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Mensagem para Professor */}
+                      {usuario?.role === 'PROFESSOR' && (
+                        <div className="p-3 sm:p-4 lg:p-5 rounded-lg sm:rounded-xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm border border-white/20 shadow-md sm:shadow-lg">
+                          <p className="text-xs sm:text-sm font-medium mb-1 sm:mb-2 transition-colors duration-300 text-gray-300">
+                            Informação
+                          </p>
+                          <p className={`text-sm sm:text-lg lg:text-xl font-bold transition-colors duration-300 text-blue-300`}>
+                            📚 Gerencia turmas
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
