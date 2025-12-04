@@ -162,15 +162,19 @@ export default function CadastroAdmPage() {
 
       const data: ApiResponse = await response.json();
 
+      console.log('Resposta do servidor:', { status: response.status, data });
+
       if (response.ok) {
         setMessage({ type: 'success', text: data.message });
         setFormData({ nome: '', cpf: '', password: '', confirmPassword: '', cursoId: '', role: 'ESTUDANTE', hasAAPM: false, turma: '' });
         
         // Não redireciona - admin pode cadastrar mais usuários
       } else {
-        setMessage({ type: 'error', text: data.message || 'Erro ao cadastrar usuário' });
+        console.error('Erro na resposta:', data);
+        setMessage({ type: 'error', text: data.message || data.error || 'Erro ao cadastrar usuário' });
       }
     } catch (error) {
+      console.error('Erro de conexão:', error);
       setMessage({ type: 'error', text: 'Erro de conexão com o servidor' });
     } finally {
       setIsLoading(false);

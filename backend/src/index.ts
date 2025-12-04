@@ -80,10 +80,18 @@ app.post('/cadastro', async (req, res) => {
   try {
     const { nome, cpf, password, cursoId, role, hasAAPM, turma } = req.body;
 
-    if (!nome || !cpf || !password || !cursoId || !role) {
+    if (!nome || !cpf || !password || !role) {
       return res.status(400).json({ 
         error: 'Missing required fields', 
-        message: 'Nome, CPF, senha, curso e cargo são obrigatórios' 
+        message: 'Nome, CPF, senha e cargo são obrigatórios' 
+      });
+    }
+
+    // Curso é obrigatório apenas se não for ADMIN
+    if (role !== 'ADMIN' && !cursoId) {
+      return res.status(400).json({ 
+        error: 'Missing course', 
+        message: 'Curso é obrigatório para Professor e Estudante' 
       });
     }
 
@@ -116,16 +124,19 @@ app.post('/cadastro', async (req, res) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Verificar se o curso existe
-    const curso = await prisma.curso.findUnique({
-      where: { id: parseInt(cursoId) }
-    });
-
-    if (!curso) {
-      return res.status(400).json({ 
-        error: 'Invalid course', 
-        message: 'Curso selecionado não existe' 
+    // Verificar se o curso existe (se não for ADMIN)
+    let curso = null;
+    if (role !== 'ADMIN' && cursoId) {
+      curso = await prisma.curso.findUnique({
+        where: { id: parseInt(cursoId) }
       });
+
+      if (!curso) {
+        return res.status(400).json({ 
+          error: 'Invalid course', 
+          message: 'Curso selecionado não existe' 
+        });
+      }
     }
 
     // Validar role
@@ -141,7 +152,7 @@ app.post('/cadastro', async (req, res) => {
         nome,
         cpf,
         password: hashedPassword,
-        cursoId: parseInt(cursoId),
+        cursoId: role !== 'ADMIN' ? parseInt(cursoId) : null, // null para ADMIN
         role: role, // Salva o cargo escolhido
         hasAAPM: hasAAPM || false, // Salva status AAPM (padrão false)
         turma: role !== 'ADMIN' ? turma : null, // Salva turma (null para ADMIN)
@@ -1048,7 +1059,7 @@ io.on('connection', (socket) => {
   // Isso evita duplicação e garante que só clientes autenticados possam enviar
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
