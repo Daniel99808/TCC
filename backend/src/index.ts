@@ -6,7 +6,28 @@ import { PrismaClient } from '@prisma/client';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
 
-const prisma = new PrismaClient();
+console.log('=== INICIANDO SERVIDOR ===');
+console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'Configurada' : 'NÃO CONFIGURADA');
+
+// Inicializar Prisma com tratamento de erro
+let prisma: any;
+try {
+  prisma = new PrismaClient({
+    log: ['error', 'warn']
+  });
+  console.log('Prisma Client instanciado');
+  
+  // Testar conexão sem bloquear
+  prisma.$connect().then(() => {
+    console.log('✓ Conectado ao banco de dados');
+  }).catch((err: any) => {
+    console.error('⚠ Erro ao conectar ao banco:', err.message);
+  });
+} catch (error) {
+  console.error('Erro ao instanciar Prisma:', error);
+  prisma = null;
+}
+
 const app = express();
 const server = http.createServer(app);
 
@@ -30,6 +51,8 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+
+console.log('Express e Socket.IO configurados');
 
 // Mapa para armazenar atividades em memória (usuarioId -> atividades[])
 const atividadesMemoria = new Map<number, Array<{
@@ -179,39 +202,61 @@ app.post('/cadastro', async (req, res) => {
 
 app.post('/login', async (req, res) => {
   try {
+    console.log('=== LOGIN ATTEMPT ===');
+    console.log('Request Body:', { cpf: req.body?.cpf?.slice?.(0, 3) + '***', password: '***' });
+    
     const { cpf, password } = req.body;
 
     if (!cpf || !password) {
+      console.warn('Missing credentials:', { cpf: !!cpf, password: !!password });
       return res.status(400).json({ 
         error: 'Missing required fields', 
         message: 'CPF e senha são obrigatórios' 
       });
     }
 
+    console.log('Looking up user with CPF:', cpf);
     const user = await prisma.user.findUnique({
       where: { cpf },
-      include: {
-        curso: true
+      select: {
+        id: true,
+        nome: true,
+        cpf: true,
+        password: true,
+        role: true,
+        hasAAPM: true,
+        turma: true,
+        cursoId: true,
+        createdAt: true,
+        curso: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
       }
     });
 
     if (!user) {
+      console.warn('User not found with CPF:', cpf);
       return res.status(401).json({ 
         error: 'Invalid credentials', 
         message: 'CPF ou senha incorretos' 
       });
     }
 
+    console.log('User found:', user.nome);
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
+      console.warn('Invalid password for user:', user.nome);
       return res.status(401).json({ 
         error: 'Invalid credentials', 
         message: 'CPF ou senha incorretos' 
       });
     }
 
-    const { password: _, ...userResponse } = user;
+    console.log('Password valid, preparing response');
 
     // Registrar atividade de login
     const atividade = {
@@ -226,18 +271,39 @@ app.post('/login', async (req, res) => {
     }
     atividadesMemoria.get(user.id)!.unshift(atividade);
 
-    res.json({
+    // Construir resposta sem a senha
+    const responseData = {
       message: 'Login realizado com sucesso',
       user: {
-        ...userResponse,
-        role: user.role // ADMIN, PROFESSOR ou ESTUDANTE
+        id: user.id,
+        nome: user.nome,
+        cpf: user.cpf,
+        role: user.role,
+        hasAAPM: user.hasAAPM,
+        turma: user.turma,
+        cursoId: user.cursoId,
+        createdAt: user.createdAt,
+        curso: user.curso
       }
-    });
+    };
+    
+    console.log('Login successful for:', user.nome);
+    console.log('=== LOGIN SUCCESS ===');
+    
+    return res.status(200).json(responseData);
   } catch (error) {
-    console.error('Error during login:', error);
+    console.error('=== LOGIN ERROR ===');
+    console.error('Error type:', error?.constructor?.name);
+    console.error('Error message:', error instanceof Error ? error.message : String(error));
+    console.error('Full error:', error);
+    
+    // Garantir que sempre retorna um JSON válido
+    const errorMessage = error instanceof Error ? error.message : 'Erro interno desconhecido';
+    
     res.status(500).json({ 
       error: 'Login failed',
-      message: 'Erro interno do servidor'
+      message: 'Erro interno do servidor',
+      details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
     });
   }
 });
@@ -1060,6 +1126,9 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 3000;
+console.log('Iniciando listener na porta:', PORT);
+
 server.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`✓ Server is running on http://localhost:${PORT}`);
+  console.log('=== SERVIDOR PRONTO ===');
 });

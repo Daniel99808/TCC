@@ -127,13 +127,43 @@ export default function AuthForm() {
         
       } else {
         // DEBUG 3: Imprime o erro que veio do backend (Status 4xx ou 5xx)
-        console.error("Erro do Backend (resposta não OK):", data);
-        showToast(data.error || 'CPF ou senha inválidos.', 'error');
+        console.error("Erro do Backend (resposta não OK). Status:", response.status);
+        console.error("Dados da resposta:", data);
+        console.error("Corpo completo:", response);
+        
+        // Determinar mensagem de erro apropriada
+        let errorMessage = 'CPF ou senha inválidos.';
+        
+        if (response.status === 500) {
+          errorMessage = data?.message || data?.error || 'Erro interno do servidor. O backend pode estar indisponível.';
+        } else if (response.status === 400) {
+          errorMessage = data?.message || data?.error || 'Dados inválidos. Verifique CPF e senha.';
+        } else if (response.status === 401) {
+          errorMessage = data?.message || data?.error || 'CPF ou senha inválidos.';
+        } else {
+          errorMessage = data?.message || data?.error || `Erro desconhecido (Status ${response.status})`;
+        }
+        
+        console.error("Mensagem de erro final:", errorMessage);
+        showToast(errorMessage, 'error');
         setIsLoading(false); 
       }
     } catch (error) {
-      console.error('Erro de conexão (o fetch falhou completamente):', error);
-      showToast('Erro na conexão com o servidor.', 'error');
+      console.error('=== Erro de Rede (Fetch falhou completamente) ===');
+      console.error('Tipo de erro:', error?.constructor?.name);
+      console.error('Mensagem:', error instanceof Error ? error.message : String(error));
+      console.error('Erro completo:', error);
+      
+      let errorMessage = 'Erro na conexão com o servidor.';
+      
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        errorMessage = 'Não foi possível conectar ao servidor. Verifique se o backend está rodando em http://localhost:3000 ou se a URL está correta.';
+      } else if (error instanceof Error) {
+        errorMessage = `Erro de rede: ${error.message}`;
+      }
+      
+      console.error('Mensagem final:', errorMessage);
+      showToast(errorMessage, 'error');
       setIsLoading(false); 
     }
   };
