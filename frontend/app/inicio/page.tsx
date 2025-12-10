@@ -161,7 +161,7 @@ export default function InicioPage() {
             <div className="mb-6 lg:mb-8">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 transition-colors duration-300 text-white">
-                  Olá, {usuarioLogado.nome.split(' ')[0]}! 👋
+                  Olá, {usuarioLogado.nome.split(' ')[0]}! 
                 </h1>
                 <p className="text-sm sm:text-base lg:text-lg transition-colors duration-300 text-gray-400">
                   Aqui está o resumo das suas atividades
