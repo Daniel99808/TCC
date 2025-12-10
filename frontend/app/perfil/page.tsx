@@ -157,9 +157,9 @@ export default function PerfilPage() {
                             usuario?.role === 'PROFESSOR' ? 'text-blue-300' : 
                             'text-green-300'
                           }`}>
-                            {usuario?.role === 'ADMIN' && '👨‍💼 Administrador'}
-                            {usuario?.role === 'PROFESSOR' && '👨‍🏫 Professor'}
-                            {usuario?.role === 'ESTUDANTE' && '👨‍🎓 Estudante'}
+                            {usuario?.role === 'ADMIN' && ' Administrador'}
+                            {usuario?.role === 'PROFESSOR' && ' Professor'}
+                            {usuario?.role === 'ESTUDANTE' && ' Estudante'}
                           </span>
                         </div>
                       </div>
@@ -170,7 +170,7 @@ export default function PerfilPage() {
                           Curso
                         </p>
                         <p className={`text-sm sm:text-lg lg:text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                          {usuario?.role === 'ADMIN' ? '📍 Sem curso (ADM)' : usuario?.curso?.nome || 'Não informado'}
+                          {usuario?.role === 'ADMIN' ? ' Sem curso (ADM)' : usuario?.curso?.nome || 'Não informado'}
                         </p>
                       </div>
 

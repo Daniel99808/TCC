@@ -373,7 +373,7 @@ export default function MuralAdm() {
               <div className="flex items-center justify-between relative z-50">
                 <div>
                   <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white flex items-center gap-2 drop-shadow-lg">
-                    <span className="text-2xl">{editingId ? '✎' : '📝'}</span> {editingId ? 'Editar' : 'Nova'} Mensagem
+                    <span className="text-2xl">{editingId ? '✎' : '✎'}</span> {editingId ? 'Editar' : 'Nova'} Mensagem
                   </h3>
                   <p className="text-red-100/95 text-xs sm:text-sm mt-1">{editingId ? 'Atualizar aviso para a comunidade' : 'Publicar aviso para a comunidade'}</p>
                 </div>
@@ -396,7 +396,7 @@ export default function MuralAdm() {
             <form onSubmit={handleSubmit} className="p-4 sm:p-6 md:p-8 space-y-5 sm:space-y-6 relative z-0">
               {/* Informações de quem está publicando */}
               <div className="bg-blue-600/30 backdrop-blur-lg border-2 border-blue-400/40 rounded-xl p-3 sm:p-4 flex items-start gap-3 hover:bg-blue-600/40 hover:border-blue-400/60 transition-all duration-300">
-                <span className="text-xl mt-0.5">ℹ️</span>
+                <span className="text-xl mt-0.5"></span>
                 <div>
                   <p className="font-bold text-white text-sm sm:text-base drop-shadow">Você está publicando como Administrador</p>
                   <p className="text-blue-100/90 text-xs sm:text-sm mt-1">Esta mensagem será visível para todos os usuários selecionados</p>
@@ -406,7 +406,7 @@ export default function MuralAdm() {
               {/* Tipo de Público */}
               <div className="space-y-3">
                 <label className="block text-sm sm:text-base font-bold text-white flex items-center gap-2 drop-shadow">
-                  <span className="text-red-400">★</span> Publicar para
+                  <span className="text-red-400"></span> Publicar para
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   {['TODOS', 'CURSO', 'TURMA'].map((tipo) => (
@@ -424,7 +424,7 @@ export default function MuralAdm() {
                           : 'bg-white/10 border-white/30 text-gray-200 hover:bg-white/20 hover:border-red-400/50'
                       }`}
                     >
-                      {tipo === 'TODOS' ? '👥 Todos' : tipo === 'CURSO' ? '📚 Curso' : '👨‍🎓 Turma'}
+                      {tipo === 'TODOS' ? ' Todos' : tipo === 'CURSO' ? ' Curso' : ' Turma'}
                     </button>
                   ))}
                 </div>
@@ -434,7 +434,7 @@ export default function MuralAdm() {
               {(tipoPublico === 'CURSO' || tipoPublico === 'TURMA') && (
                 <div className="space-y-3 animate-fade-in">
                   <label htmlFor="curso" className="block text-sm sm:text-base font-bold text-white flex items-center gap-2 drop-shadow">
-                    <span className="text-red-400">★</span> Selecionar Curso
+                    <span className="text-red-400"></span> Selecionar Curso
                   </label>
                   <select
                     id="curso"
@@ -443,7 +443,7 @@ export default function MuralAdm() {
                     className="w-full px-4 py-3 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-400/80 font-medium transition-all duration-300 bg-gray-900/70 backdrop-blur-lg border-2 border-white/40 text-white [color-scheme:dark] hover:bg-gray-900/80 hover:border-white/50 focus:bg-gray-900/90"
                     required
                   >
-                    <option value="">🔍 Selecione um curso...</option>
+                    <option value=""> Selecione um curso...</option>
                     {cursos.map((curso) => (
                       <option key={curso.id} value={curso.id}>
                         📖 {curso.nome}
@@ -482,7 +482,7 @@ export default function MuralAdm() {
               <div className="space-y-3">
                 <label htmlFor="mensagem" className="block text-sm sm:text-base font-bold text-white flex items-center justify-between drop-shadow">
                   <span className="flex items-center gap-2">
-                    <span className="text-red-400">★</span> Mensagem
+                    <span className="text-red-400"></span> Mensagem
                   </span>
                   <span className={`text-xs font-semibold ${newMessage.length > 400 ? 'text-yellow-300' : newMessage.length > 450 ? 'text-red-400' : 'text-gray-300'}`}>
                     {newMessage.length}/500
